@@ -1,0 +1,170 @@
+# Devil's Advocate — .gitignore
+# Documentation-only skill (pure Markdown). No compiled code, no runtime.
+
+# ─── OS ────────────────────────────────────────────────────────────────────────
+
+# macOS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+.AppleDouble
+.LSOverride
+
+# Windows
+ehthumbs.db
+ehthumbs_vista.db
+Thumbs.db
+Thumbs.db:encryptable
+desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+
+# ─── Editors & IDEs ─────────────────────────────────────────────────────────────
+
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.swp
+*.swo
+*.orig
+
+# ─── Node / tooling (if build scripts are ever added) ─────────────────────────
+
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+.npm/
+.yarn/
+
+# ─── Agent skill installation paths ────────────────────────────────────────────
+# Created locally when running: npx skills add ./
+# These are installation output — not source. Do not commit.
+
+# Universal / GitHub Copilot / Cursor / Codex / Amp / Gemini CLI / OpenCode
+.agents/
+
+# Antigravity
+.agent/
+
+# Augment
+.augment/
+
+# Claude Code
+.claude/
+
+# Cline
+.cline/
+
+# CodeBuddy
+.codebuddy/
+
+# Command Code
+.commandcode/
+
+# Continue
+.continue/
+
+# Cortex
+.cortex/
+
+# Crush
+.crush/
+
+# Droid (Factory AI)
+.factory/
+
+# Goose
+.goose/
+
+# iFlow CLI
+.iflow/
+
+# Junie
+.junie/
+
+# Kilo Code
+.kilocode/
+
+# Kiro CLI
+.kiro/
+
+# Kode
+.kode/
+
+# MCPJam
+.mcpjam/
+
+# Mistral Vibe
+.vibe/
+
+# Mux
+.mux/
+
+# OpenClaw (uses root skills/ directory)
+skills/
+
+# OpenHands
+.openhands/
+
+# Pi
+.pi/
+
+# Pochi
+.pochi/
+
+# Qoder
+.qoder/
+
+# Qwen Code
+.qwen/
+
+# Roo Code
+.roo/
+
+# Trae / Trae CN
+.trae/
+.trae-cn/
+
+# Windsurf
+.windsurf/
+
+# Zencoder
+.zencoder/
+
+# Neovate
+.neovate/
+
+# AdaL
+.adal/
+
+# ─── GitHub Copilot CLI session state ─────────────────────────────────────────
+
+.copilot/
+
+# ─── Environment — never commit real values ────────────────────────────────────
+
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+
+# ─── Temporary & logs ─────────────────────────────────────────────────────────
+
+*.tmp
+*.temp
+*.log
+*.bak
+dist/
+build/
+

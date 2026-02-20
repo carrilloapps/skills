@@ -1,0 +1,68 @@
+name: Feature Request
+description: Propose a new framework, example, checklist, or protocol improvement
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Have an idea to make Devil's Advocate more useful? We'd love to hear it.
+        Please check that a similar request doesn't already exist before submitting.
+
+  - type: dropdown
+    id: contribution-type
+    attributes:
+      label: Type of Contribution
+      options:
+        - "New domain framework (frameworks/*.md)"
+        - "New example (examples/*.md)"
+        - "Improvement to existing framework"
+        - "New checklist"
+        - "Core protocol change (SKILL.md, handbrake-protocol.md, etc.)"
+        - "Other"
+    validations:
+      required: true
+
+  - type: input
+    id: domain
+    attributes:
+      label: Domain or Role
+      description: Which role or domain would benefit most from this addition?
+      placeholder: "e.g. DevOps Engineer, Data Engineer, CTO"
+    validations:
+      required: false
+
+  - type: textarea
+    id: problem-statement
+    attributes:
+      label: What problem does this solve?
+      description: Describe the gap or limitation in the current skill that this would address.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed-solution
+    attributes:
+      label: Proposed Solution
+      description: Describe what you would like to add or change. If you have draft content, paste it here.
+      render: markdown
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: What other approaches did you consider, and why did you choose this one?
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: overlap-check
+    attributes:
+      label: Overlap Check
+      options:
+        - label: I have reviewed all existing frameworks and this does not duplicate one
+          required: true
+        - label: I have reviewed the existing examples and this covers a new scenario
+          required: false

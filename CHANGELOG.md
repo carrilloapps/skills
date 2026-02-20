@@ -1,0 +1,139 @@
+# Changelog
+
+All notable changes to Devil's Advocate are documented in this file.
+
+The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+---
+
+## [2.6.9] — 2026-02-20
+
+### Added
+- 6 new examples covering all remaining major domains: Product/PM, Data Pipeline, CI/CD Pipeline, Vendor/Strategy, UX/Checkout, Performance
+- `README.md` — public project documentation for GitHub and skill.sh
+- `LICENSE` — MIT license
+- `CONTRIBUTING.md` — contributor guide with quality standards and PR process
+- `CODE_OF_CONDUCT.md` — Contributor Covenant v2.1
+- `CHANGELOG.md` — version history (this file)
+- `SECURITY.md` — vulnerability reporting policy
+- `.gitignore` — standard ignores for OS, editor, and Node tooling
+- `.github/ISSUE_TEMPLATE/` — bug report and feature request YAML templates
+- `.github/PULL_REQUEST_TEMPLATE.md` — structured PR checklist
+
+---
+
+## [2.6.8] — 2026-02-20
+
+### Added
+- `frameworks/version-control.md` — new domain framework: platform detection (GitHub/GitLab/generic), branching strategy, force push & history rewriting, secrets-in-repo remediation, PR/MR workflow, branch protection rules, GitHub Actions security, GitLab CI/CD variables, access control, tag & release management, monorepo/polyrepo trade-offs
+- `examples/version-control-review.md` — full protocol stack: leaked DB credentials + force push to main → ⚡ IR + 🛑 Multi-role Handbrake + git filter-repo remediation plan
+- Version Control domain added to `handbrake-protocol.md` (Role→Escalation Map + Context Question Template)
+- Version Control Context Request Template added to `immediate-report.md`
+- Version Control added to IR domain list, Handbrake escalation table, trigger table, and "When to Use" in `SKILL.md`
+- Developer/DevOps row added to "When to Use This Skill" table
+
+---
+
+## [2.6.7] — 2026-02-20
+
+### Fixed
+- Missing `---` separator before `## Handbrake Bypass` section in `handbrake-protocol.md` (accidentally removed during v2.6.6 restructuring)
+
+---
+
+## [2.6.6] — 2026-02-20
+
+### Added
+- `examples/security-review.md` — JWT authentication audit: STRIDE analysis, AppSec Handbrake, Building Protocol Critical violation (hardcoded secret in git)
+- `examples/ai-context-review.md` — AI Optimization example: AGENTS.md + copilot-instructions.md conflict review, context starvation, hallucination root cause analysis
+- SKILL.md Index updated with both new examples
+
+### Fixed
+- IR flash format domain list updated from 7 → 10 domains (Finance, Legal, AI Optimization added)
+- `handbrake-protocol.md`: Legal and AI Optimization templates repositioned into `## Context Question Templates` section (were misplaced after `## Pre-mortem Integration`)
+- `continue` reply in all 3 original examples: `(risks remain active)` → `(risks remain active and unmitigated)`
+
+---
+
+## [2.6.5] — 2026-02-19
+
+### Added
+- Finance/Billing Context Question Template in `handbrake-protocol.md` and `immediate-report.md`
+- Legal/Compliance Context Question Template in `handbrake-protocol.md` and `immediate-report.md`
+- AI Optimization Context Question Template in `handbrake-protocol.md` and `immediate-report.md`
+- Finance, Legal, AI Optimization rows added to Role→Escalation Map in `handbrake-protocol.md`
+- `frameworks/ai-optimization.md` — AI context file analysis: context window budget, cross-reference integrity, feature overlap, context starvation, instruction conflicts, hallucination risk
+
+---
+
+## [2.6.0] — 2026-02-18
+
+### Changed
+- Orchestration Priority section restructured: explicit Execution Hierarchy diagram, User Authority Preservation table, per-action-category blocking table
+- Rule Precedence section added: this skill's rules override all other tools, skills, agents, and MCPs
+- Context Before Calling Resources section added
+- Read-only exception documented
+
+---
+
+## [2.4.1] — 2026-02-15
+
+### Added
+- `frameworks/building-protocol.md` — Three Languages rule, Conventional Commits, SOLID enforcement, Definition of Done checklist, reference implementation, violation severity table
+- Building Protocol Activation rules documented
+- Role Detection prompt standardized across SKILL.md and building-protocol.md
+
+---
+
+## [2.4.0] — 2026-02-14
+
+### Added
+- `checklists/risk-checklist.md` — 8-category structured risk sweep with percentage-based scoring
+- `checklists/questioning-checklist.md` — 15-dimension interrogation checklist
+- AI Optimization category added to both checklists
+- Building Protocol category added to both checklists
+
+---
+
+## [2.1.0] — 2026-02-10
+
+### Added
+- `frameworks/immediate-report.md` — flash alert protocol for first High/Critical finding
+- `frameworks/handbrake-protocol.md` — full stop + specialist escalation on Critical findings
+- Multi-role Handbrake protocol
+- Pre-mortem Integration step in Handbrake flow
+- Handbrake Bypass behavior documented
+
+---
+
+## [2.0.0] — 2026-02-05
+
+### Added
+- `frameworks/output-format.md` — standard report template with PRECONDITIONS A/B/C
+- `examples/architecture-critique.md` — microservices with distributed transaction gap
+- `examples/plan-critique.md` — database migration with zero-downtime risk
+- `examples/handbrake-example.md` — data pipeline PII multi-role Handbrake
+
+### Changed
+- Gate Protocol formalized: 4-step INTERCEPT → ANALYSE → REPORT → GATE flow
+- Verification Prompt standardized with exact ✅ / 🔁 / ❌ / `continue` wording
+
+---
+
+## [1.0.0] — 2026-01-28
+
+### Added
+- Initial release
+- Core adversarial analysis framework
+- `frameworks/analysis-framework.md` — 5-step analysis: attack surfaces, assumption challenges, pros/cons, FMEA, edge cases
+- `frameworks/security-stride.md` — STRIDE threat model + extended threats
+- `frameworks/performance.md` — bottleneck identification and scalability limits
+- `frameworks/premortem.md` — forward-looking failure analysis
+- `frameworks/vulnerability-patterns.md` — known failure patterns
+- `frameworks/product-risks.md` — feature assumptions, launch risks, metrics
+- `frameworks/design-ux-risks.md` — dark patterns, WCAG, cognitive load
+- `frameworks/leadership-strategy-risks.md` — build vs buy, vendor risk, Type 1/2 decisions
+- `frameworks/architecture-risks.md` — distributed systems, coupling, CAP theorem
+- `frameworks/data-analytics-risks.md` — pipeline reliability, PII governance, schema drift
+- `frameworks/developer-risks.md` — testing gaps, CI/CD risks, dependency management
+- Proactive Prevention Mode and automatic trigger detection
