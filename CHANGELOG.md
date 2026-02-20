@@ -11,6 +11,15 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ---
 
+## [2.7.5] — 2026-02-20
+
+### Fixed
+- **Low — validate.sh `head()` shadowed system `head` binary**: renamed function to `section()` — eliminates silent collision if a contributor adds `| head -N` to the script
+- **Low — Check 4 emitted `ok` before canonical source checks ran**: moved `ok` call to after both example and canonical checks complete — CI output no longer shows `✅` followed by `❌` within the same check
+- **Low — Check 10 section label inconsistent with ok-message**: `head "Framework index coverage"` updated to `section "Framework and checklist index coverage"` to match the extended scope
+
+---
+
 ## [2.7.4] — 2026-02-20
 
 ### Fixed

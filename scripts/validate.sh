@@ -13,10 +13,10 @@ FAIL=0
 
 ok()   { echo "  ✅ $1"; ((++PASS)); }
 fail() { echo "  ❌ $1"; ISSUES+=("$1"); ((++FAIL)); }
-head() { echo; echo "── $1 ──────────────────────────────────────"; }
+section() { echo; echo "── $1 ──────────────────────────────────────"; }
 
 # ─── Check 1: Version consistency ────────────────────────────────────────────
-head "Version"
+section "Version"
 VERSION=$(grep -m1 '^version:' "$ROOT/SKILL.md" | awk '{print $2}')
 CHANGELOG_VER=$(grep -m1 '^## \[[0-9]' "$ROOT/CHANGELOG.md" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' || true)
 if [ "$VERSION" = "$CHANGELOG_VER" ]; then
@@ -26,7 +26,7 @@ else
 fi
 
 # ─── Check 2: Fence balance (even number of ``` per file) ────────────────────
-head "Fence balance"
+section "Fence balance"
 FENCE_ISSUES=0
 while IFS= read -r -d '' file; do
   count=$(grep -c '^```' "$file" 2>/dev/null || true)
@@ -38,7 +38,7 @@ done < <(find "$ROOT" -name "*.md" -not -path "*/.git/*" -print0)
 (( FENCE_ISSUES == 0 )) && ok "All .md files have balanced fences"
 
 # ─── Check 3: Gate blocks in all examples ────────────────────────────────────
-head "Gate blocks (examples)"
+section "Gate blocks (examples)"
 EXAMPLE_ISSUES=0
 for file in "$ROOT/examples/"*.md; do
   name=$(basename "$file")
@@ -56,7 +56,7 @@ done
 (( EXAMPLE_ISSUES == 0 )) && ok "All examples have complete Gate blocks"
 
 # ─── Check 4: `continue` wording ─────────────────────────────────────────────
-head "Continue wording"
+section "Continue wording"
 CONTINUE_ISSUES=0
 for file in "$ROOT/examples/"*.md; do
   name=$(basename "$file")
@@ -66,7 +66,6 @@ for file in "$ROOT/examples/"*.md; do
     ((++CONTINUE_ISSUES))
   fi
 done
-(( CONTINUE_ISSUES == 0 )) && ok "'continue' wording correct in all examples"
 # Check canonical sources too
 for canonical in "$ROOT/SKILL.md" "$ROOT/frameworks/output-format.md"; do
   cname=$(basename "$canonical")
@@ -75,9 +74,10 @@ for canonical in "$ROOT/SKILL.md" "$ROOT/frameworks/output-format.md"; do
     ((++CONTINUE_ISSUES))
   fi
 done
+(( CONTINUE_ISSUES == 0 )) && ok "'continue' wording correct in all examples and canonical sources"
 
 # ─── Check 5: All examples referenced in SKILL.md index ─────────────────────
-head "SKILL.md index completeness"
+section "SKILL.md index completeness"
 INDEX_ISSUES=0
 for file in "$ROOT/examples/"*.md; do
   name=$(basename "$file")
@@ -89,7 +89,7 @@ done
 (( INDEX_ISSUES == 0 )) && ok "All examples are indexed in SKILL.md"
 
 # ─── Check 6: No stale legacy text ───────────────────────────────────────────
-head "Stale text"
+section "Stale text"
 STALE_EXCLUDE="CONTRIBUTING.md PULL_REQUEST_TEMPLATE.md CHANGELOG.md validate.sh"
 STALE_ISSUES=0
 while IFS= read -r -d '' file; do
@@ -106,7 +106,7 @@ done < <(find "$ROOT" -name "*.md" -not -path "*/.git/*" -print0)
 (( STALE_ISSUES == 0 )) && ok "No stale text found"
 
 # ─── Check 7: Required GitHub project files ──────────────────────────────────
-head "GitHub project files"
+section "GitHub project files"
 for f in README.md LICENSE CONTRIBUTING.md CODE_OF_CONDUCT.md CHANGELOG.md SECURITY.md .gitignore \
           .gitattributes scripts/validate.sh \
           .github/ISSUE_TEMPLATE/bug_report.yml .github/ISSUE_TEMPLATE/feature_request.yml \
@@ -120,7 +120,7 @@ done
 
 
 # ─── Check 8: Example version stamps match SKILL.md ─────────────────────────
-head "Example version stamps"
+section "Example version stamps"
 SKILL_VER=$(grep -m1 '^version:' "$ROOT/SKILL.md" | sed 's/version: *//')
 VERSION_ISSUES=0
 while IFS= read -r -d '' file; do
@@ -138,7 +138,7 @@ done < <(find "$ROOT/examples" -name "*.md" -print0)
 (( VERSION_ISSUES == 0 )) && ok "All example version stamps match v$SKILL_VER"
 
 # ─── Check 9: Framework files referenced in SKILL.md Index exist on disk ─────
-head "Framework files on disk"
+section "Framework files on disk"
 MISSING_ISSUES=0
 while IFS= read -r f; do
   if [ -f "$ROOT/$f" ]; then
@@ -150,7 +150,7 @@ while IFS= read -r f; do
 done < <(grep -oE '(frameworks|checklists)/[a-zA-Z0-9_-]+\.md' "$ROOT/SKILL.md" | sort -u)
 (( MISSING_ISSUES == 0 )) && ok "All SKILL.md framework references resolve to files on disk"
 # ─── Check 10: Frameworks on disk are indexed in SKILL.md ─────────────────────
-head "Framework index coverage"
+section "Framework and checklist index coverage"
 UNINDEXED_ISSUES=0
 for file in "$ROOT/frameworks/"*.md "$ROOT/checklists/"*.md; do
   name=$(basename "$file")
@@ -162,7 +162,7 @@ done
 (( UNINDEXED_ISSUES == 0 )) && ok "All framework and checklist files on disk are indexed in SKILL.md"
 
 # ─── Check 11: README.md version badge matches SKILL.md ────────────────────────
-head "README version badge"
+section "README version badge"
 README_VER=$(grep -oE 'version-[0-9]+\.[0-9]+\.[0-9]+-blue' "$ROOT/README.md" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
 SKILL_VER2=$(grep -m1 '^version:' "$ROOT/SKILL.md" | sed 's/version: *//')
 if [ "$README_VER" = "$SKILL_VER2" ]; then
