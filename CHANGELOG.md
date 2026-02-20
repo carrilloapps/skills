@@ -11,6 +11,14 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ---
 
+## [2.7.4] — 2026-02-20
+
+### Fixed
+- **Medium — validate.sh Check 10 missing `checklists/` coverage**: CHANGELOG 2.7.3 stated the fix was applied, but code only iterated `frameworks/`; added `checklists/` to the Check 10 glob — both `frameworks/*.md` and `checklists/*.md` on disk are now verified against SKILL.md Index
+- **Low — CHANGELOG [2.7.2] Check 1 description inaccurate**: described an intermediate implementation that was superseded by the final SIGPIPE-free fix
+
+---
+
 ## [2.7.3] — 2026-02-20
 
 ### Fixed
@@ -29,7 +37,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 ## [2.7.2] — 2026-02-20
 
 ### Fixed
-- **High — validate.sh Check 1 gawk-specific**: replaced 3-arg `match()` (gawk extension) with POSIX `grep | grep -v Unreleased | head -1 | grep -oE` — now compatible with macOS default awk and all POSIX environments
+- **High — validate.sh Check 1 gawk-specific**: replaced 3-arg `match()` (gawk extension) with `grep -m1 '^## \[[0-9]'` — matches only versioned headers (digit after bracket), exits cleanly after first match, no SIGPIPE under `set -euo pipefail`; compatible with macOS default awk and all POSIX environments
 - **High — README.md version badge stale at 2.7.0**: updated to `2.7.2`; added validate.sh Check 11 to detect badge/version drift going forward
 - **High — Handbrake Output Block missing Performance domain**: added `/ Performance` to closed domain list in `handbrake-protocol.md` Output Block template
 - **High — Check 9 did not cover `checklists/`**: broadened regex from `frameworks/...` to `(frameworks|checklists)/...` — risk-checklist.md and questioning-checklist.md now covered

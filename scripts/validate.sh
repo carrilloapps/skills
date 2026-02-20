@@ -152,14 +152,14 @@ done < <(grep -oE '(frameworks|checklists)/[a-zA-Z0-9_-]+\.md' "$ROOT/SKILL.md" 
 # ─── Check 10: Frameworks on disk are indexed in SKILL.md ─────────────────────
 head "Framework index coverage"
 UNINDEXED_ISSUES=0
-for file in "$ROOT/frameworks/"*.md; do
+for file in "$ROOT/frameworks/"*.md "$ROOT/checklists/"*.md; do
   name=$(basename "$file")
   if ! grep -q "$name" "$ROOT/SKILL.md"; then
-    fail "Framework not indexed in SKILL.md: $name"
+    fail "File not indexed in SKILL.md: $name"
     ((++UNINDEXED_ISSUES))
   fi
 done
-(( UNINDEXED_ISSUES == 0 )) && ok "All framework files on disk are indexed in SKILL.md"
+(( UNINDEXED_ISSUES == 0 )) && ok "All framework and checklist files on disk are indexed in SKILL.md"
 
 # ─── Check 11: README.md version badge matches SKILL.md ────────────────────────
 head "README version badge"
