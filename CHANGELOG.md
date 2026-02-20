@@ -1,4 +1,4 @@
-# Changelog
+﻿# Changelog
 
 All notable changes to Devil's Advocate are documented in this file.
 
@@ -109,6 +109,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ---
 
+## [2.5.0] — 2026-02-17
+
+> Internal iteration — not externally released. Changes incorporated into v2.6.0.
+
+---
+
 ## [2.4.1] — 2026-02-15
 
 ### Added
@@ -118,6 +124,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ---
 
+
 ## [2.4.0] — 2026-02-14
 
 ### Added
@@ -125,6 +132,18 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 - `checklists/questioning-checklist.md` — 15-dimension interrogation checklist
 - AI Optimization category added to both checklists
 - Building Protocol category added to both checklists
+
+---
+
+## [2.3.0] — 2026-02-12
+
+> Internal iteration — not externally released. Changes incorporated into v2.4.0.
+
+---
+
+## [2.2.0] — 2026-02-11
+
+> Internal iteration — not externally released. Changes incorporated into v2.4.0.
 
 ---
 
@@ -138,6 +157,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 - Handbrake Bypass behavior documented
 
 ---
+
 
 ## [2.0.0] — 2026-02-05
 

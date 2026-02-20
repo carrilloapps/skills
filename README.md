@@ -159,14 +159,15 @@ The skill uses a layered protocol that escalates based on finding severity:
 | AI Optimization | `frameworks/ai-optimization.md` | All — AI context files |
 | Version Control | `frameworks/version-control.md` | Dev / Tech Lead / DevOps |
 | Vulnerability Patterns | `frameworks/vulnerability-patterns.md` | Dev / Tech Lead |
-| Pre-mortem | `frameworks/premortem.md` | All |
 | General Analysis | `frameworks/analysis-framework.md` | All |
 | **Building Protocol** | `frameworks/building-protocol.md` | Always active with code |
 | **Output Format** | `frameworks/output-format.md` | All reports |
 | **Handbrake Protocol** | `frameworks/handbrake-protocol.md` | Auto on 🔴 Critical |
 | **Immediate Report** | `frameworks/immediate-report.md` | Auto on 🟠 High / 🔴 Critical |
+| **Pre-mortem** | `frameworks/premortem.md` | Auto on 🔴 Critical (Handbrake Step 6) |
+| **Handbrake Checklist** | `frameworks/handbrake-checklist.md` | Rapid Handbrake activation decision sweep |
 
-**Context budget**: Load a maximum of 2 domain frameworks per analysis to avoid context window saturation. Protocol files (`output-format.md`, `handbrake-protocol.md`, `immediate-report.md`) are free and do not count toward the budget.
+**Context budget**: Load a maximum of 2 domain frameworks per analysis to avoid context window saturation. Protocol files (`output-format.md`, `handbrake-protocol.md`, `immediate-report.md`, `premortem.md`, `handbrake-checklist.md`) are free and do not count toward the budget.
 
 ---
 

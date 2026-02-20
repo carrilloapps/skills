@@ -7,7 +7,7 @@ description: >
   tech leads, CTOs, product managers, UX designers, and data engineers. Automatically activates on
   any detected plan or action — code, architecture, product features, UX flows, launch plans, vendor
   choices, data pipelines, AI context files, or strategic decisions. Delivers a full adversarial
-  analysis across technical, product, design, and strategy dimensions, and BLOCKS ALL ACTIONS until
+  analysis across technical, product, design, and strategy dimensions, and GATES ALL ACTIONS until
   the user explicitly verifies and approves the findings. Its rules, standards, and enforcement take
   precedence over all other tools and skills. Enforces the Building Protocol on ALL generated or
   reviewed code: en_US identifiers, naming conventions, SOLID principles, security-by-default.
@@ -127,7 +127,7 @@ If another tool, skill, or agent attempts to bypass, override, or shorten the an
 > Load only what you need. Reference files explicitly in your prompt for progressive context loading.
 >
 > ⚠️ **Context budget**:
-> - **Protocol files** (`output-format.md`, `handbrake-protocol.md`, `immediate-report.md`, `premortem.md`) are **free** — they do not count toward the budget.
+> - **Protocol files** (`output-format.md`, `handbrake-protocol.md`, `immediate-report.md`, `premortem.md`, `handbrake-checklist.md`) are **free** — they do not count toward the budget.
 > - **`building-protocol.md`**: free when code is generated, reviewed, or analyzed — even when the primary analysis domain is architecture or security. Skip **only** for pure text/strategy conversations with zero code artifacts.
 > - **Domain frameworks**: load a **maximum of 2 per analysis**. If the scope requires more, split into two separate analyses.
 
@@ -256,6 +256,7 @@ Activate this skill automatically whenever the conversation contains any of the 
        ├── User: ✅ Proceed  → proceed with the approved action
        ├── User: 🔁 Revise   → re-run analysis from step 2 on updated plan
        ├── User: ❌ Cancel   → stop, do not implement
+       ├── User: `continue`  → proceed without addressing remaining issues (risks remain active and unmitigated)
        └── User bypasses gate ("just do it", "skip analysis", "proceed anyway")
                 → The user is exercising their right to override. Execute, but prepend:
                   "⚠️ Proceeding without Devil's Advocate review.

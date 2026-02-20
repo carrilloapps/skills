@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env bash
+#!/usr/bin/env bash
 # validate.sh — Devil's Advocate quality sweep
 # Checks all quality standards before a PR is merged.
 # Usage: bash scripts/validate.sh
@@ -33,7 +33,7 @@ while IFS= read -r -d '' file; do
     fail "Odd fence count ($count) in: ${file#$ROOT/}"
   fi
 done < <(find "$ROOT" -name "*.md" -not -path "*/.git/*" -print0)
-if (( FAIL == 0 )); then ok "All .md files have balanced fences"; fi
+(( FENCE_ISSUES == 0 )) && ok "All .md files have balanced fences"
 
 # ─── Check 3: Gate blocks in all examples ────────────────────────────────────
 head "Gate blocks (examples)"
@@ -123,6 +123,19 @@ while IFS= read -r -d '' file; do
   fi
 done < <(find "$ROOT/examples" -name "*.md" -print0)
 (( VERSION_ISSUES == 0 )) && ok "All example version stamps match v$SKILL_VER"
+
+# ─── Check 9: Framework files referenced in SKILL.md Index exist on disk ─────
+head "Framework files on disk"
+MISSING_ISSUES=0
+while IFS= read -r f; do
+  if [ -f "$ROOT/$f" ]; then
+    ok "$f"
+  else
+    fail "Referenced in SKILL.md but missing: $f"
+    ((MISSING_ISSUES++))
+  fi
+done < <(grep -oE 'frameworks/[^)]+\.md' "$ROOT/SKILL.md" | sort -u)
+(( MISSING_ISSUES == 0 )) && ok "All SKILL.md framework references resolve to files on disk"
 # ─── Summary ──────────────────────────────────────────────────────────────────
 echo
 echo "════════════════════════════════════════════"
