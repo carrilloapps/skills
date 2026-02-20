@@ -304,7 +304,7 @@ When the Handbrake activates, emit this block **immediately**, before the full r
 ## 🛑 HANDBRAKE ACTIVATED
 
 **Critical finding**: [One-sentence description of the critical issue]
-**Domain**: [Architecture / Data / Security / Code / Product / UX / Strategy / Finance / Legal / AI Optimization / Version Control]
+**Domain**: [Architecture / Data / Security / Code / Product / UX / Strategy / Finance / Legal / AI Optimization / Version Control / Performance]
 **Responsible role**: [Role title]
 **Why Handbrake level**: [Irreversible / Legal / Safety / Data loss / Multi-domain]
 

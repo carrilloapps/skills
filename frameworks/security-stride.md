@@ -1,5 +1,10 @@
 # Security Analysis — STRIDE Threat Model
 
+> **Role**: Developer / Security Engineer / AppSec / Tech Lead
+> **Load when**: The plan involves authentication, authorization, data handling, APIs, cryptography, secrets, supply chain, or infrastructure security.
+> **Always paired with**: `frameworks/vulnerability-patterns.md` for anti-patterns and known failure modes; `frameworks/building-protocol.md` when code is involved.
+
+
 Load this file when the analysis involves authentication, authorization, data handling, APIs, or infrastructure security. Anti-patterns are consolidated in `frameworks/vulnerability-patterns.md` — load both together for a full security review.
 
 Reference: [STRIDE Threat Modeling](https://docs.microsoft.com/en-us/azure/security/develop/threat-modeling-tool-threats) | [OWASP Top 10](https://owasp.org/www-project-top-ten/)

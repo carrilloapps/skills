@@ -4,6 +4,23 @@ All notable changes to Devil's Advocate are documented in this file.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.7.2] — 2026-02-20
+
+### Fixed
+- **High — validate.sh Check 1 gawk-specific**: replaced 3-arg `match()` (gawk extension) with POSIX `grep | grep -v Unreleased | head -1 | grep -oE` — now compatible with macOS default awk and all POSIX environments
+- **High — README.md version badge stale at 2.7.0**: updated to `2.7.2`; added validate.sh Check 11 to detect badge/version drift going forward
+- **High — Handbrake Output Block missing Performance domain**: added `/ Performance` to closed domain list in `handbrake-protocol.md` Output Block template
+- **High — Check 9 did not cover `checklists/`**: broadened regex from `frameworks/...` to `(frameworks|checklists)/...` — risk-checklist.md and questioning-checklist.md now covered
+- **Medium — validate.yml missing `permissions: contents: read`**: added minimal-permission block at job level per `version-control.md` GitHub Actions guidance
+- **Medium — Check 8 silent pass on missing stamp**: added `else: fail()` branch — examples without a `Skill version` line now correctly fail CI
+
+### Added
+- validate.sh **Check 10**: iterates `frameworks/*.md` on disk and verifies each file appears in SKILL.md Index — catches unindexed new frameworks
+- validate.sh **Check 11**: verifies README.md version badge matches SKILL.md version — catches badge drift on every version bump
+- Standard framework headers (`> **Role** / **Load when** / **Always paired with**`) added to `performance.md` and `security-stride.md`
+
+---
+
 ---
 
 ## [Unreleased]
@@ -20,7 +37,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 - **High — CHANGELOG.md had UTF-8 BOM**: bytes xEF 0xBB 0xBF present since initial write; stripped to plain UTF-8 without BOM
 - **High — Performance domain missing from Handbrake escalation map**: added Performance bottlenecks, scalability, resource limits, N+1 queries row with Senior Developer / Tech Lead as responsible role
 - **High — Performance domain missing from IR context templates**: added ### ⚡ Performance — Bottlenecks / Scalability / Resource Limits template (6 questions) to immediate-report.md; updated template count from 13 → 14
-- **Medium — actions/checkout mutable tag in CI**: SHA-pinned to 11bd71901bbe5b1630ceea73d27597364c9af683 (v4.2.2) per ersion-control.md guidance
+- **Medium — actions/checkout mutable tag in CI**: SHA-pinned to `11bd71901bbe5b1630ceea73d27597364c9af683` (v4.2.2) per `version-control.md` guidance
 - **Medium — building-protocol.md described as unconditionally free**: CONTRIBUTING.md now correctly states it is conditionally free (loaded with code, skipped for pure text/strategy)
 
 ### Added

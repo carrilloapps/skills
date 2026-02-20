@@ -18,7 +18,7 @@ head() { echo; echo "── $1 ────────────────�
 # ─── Check 1: Version consistency ────────────────────────────────────────────
 head "Version"
 VERSION=$(grep -m1 '^version:' "$ROOT/SKILL.md" | awk '{print $2}')
-CHANGELOG_VER=$(awk '/^## \[/ && !/Unreleased/ {match($0, /\[([^]]+)\]/, a); print a[1]; exit}' "$ROOT/CHANGELOG.md")
+CHANGELOG_VER=$(grep -m1 '^## \[[0-9]' "$ROOT/CHANGELOG.md" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' || true)
 if [ "$VERSION" = "$CHANGELOG_VER" ]; then
   ok "SKILL.md version ($VERSION) matches latest CHANGELOG entry"
 else
@@ -122,6 +122,9 @@ while IFS= read -r -d '' file; do
       fail "Version mismatch in ${file#$ROOT/}: example=$ex_ver, skill=$SKILL_VER"
       ((++VERSION_ISSUES))
     fi
+  else
+    fail "Missing 'Skill version' stamp in ${file#$ROOT/}"
+    ((++VERSION_ISSUES))
   fi
 done < <(find "$ROOT/examples" -name "*.md" -print0)
 (( VERSION_ISSUES == 0 )) && ok "All example version stamps match v$SKILL_VER"
@@ -136,8 +139,30 @@ while IFS= read -r f; do
     fail "Referenced in SKILL.md but missing: $f"
     ((++MISSING_ISSUES))
   fi
-done < <(grep -oE 'frameworks/[a-zA-Z0-9_-]+\.md' "$ROOT/SKILL.md" | sort -u)
+done < <(grep -oE '(frameworks|checklists)/[a-zA-Z0-9_-]+\.md' "$ROOT/SKILL.md" | sort -u)
 (( MISSING_ISSUES == 0 )) && ok "All SKILL.md framework references resolve to files on disk"
+# ─── Check 10: Frameworks on disk are indexed in SKILL.md ─────────────────────
+head "Framework index coverage"
+UNINDEXED_ISSUES=0
+for file in "$ROOT/frameworks/"*.md; do
+  name=$(basename "$file")
+  if ! grep -q "$name" "$ROOT/SKILL.md"; then
+    fail "Framework not indexed in SKILL.md: $name"
+    ((++UNINDEXED_ISSUES))
+  fi
+done
+(( UNINDEXED_ISSUES == 0 )) && ok "All framework files on disk are indexed in SKILL.md"
+
+# ─── Check 11: README.md version badge matches SKILL.md ────────────────────────
+head "README version badge"
+README_VER=$(grep -oE 'version-[0-9]+\.[0-9]+\.[0-9]+-blue' "$ROOT/README.md" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
+SKILL_VER2=$(grep -m1 '^version:' "$ROOT/SKILL.md" | sed 's/version: *//')
+if [ "$README_VER" = "$SKILL_VER2" ]; then
+  ok "README.md version badge ($README_VER) matches SKILL.md version"
+else
+  fail "README.md version badge ($README_VER) does not match SKILL.md ($SKILL_VER2)"
+fi
+
 # ─── Summary ──────────────────────────────────────────────────────────────────
 echo
 echo "════════════════════════════════════════════"
