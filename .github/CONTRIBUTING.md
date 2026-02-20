@@ -111,7 +111,7 @@ An example file in `examples/` must:
 
 6. **Include the version stamp** in the full report header:
    ```markdown
-   **Skill version**: [current version from SKILL.md frontmatter — e.g. 2.7.8]
+   **Skill version**: [current version from SKILL.md frontmatter — e.g. X.Y.Z]
    ```
    `validate.sh` Check 8 enforces this and will fail if it is missing or mismatched.
 
@@ -194,7 +194,7 @@ When merging a batch of fixes, follow this checklist to cut a release:
    bash scripts/validate.sh
    ```
 
-2. **Bump the version** — update `version:` in `SKILL.md` frontmatter (e.g. `2.7.8` → `2.7.9`)
+2. **Bump the version** — update `version:` in `SKILL.md` frontmatter (e.g. `X.Y.Z` → `X.Y.(Z+1)`)
 
 3. **Cascade the version** to all versioned files:
    - `README.md` — badge `version-X.Y.Z-blue`

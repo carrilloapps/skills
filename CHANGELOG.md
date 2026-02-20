@@ -11,6 +11,13 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ---
 
+## [2.7.10] — 2026-02-20
+
+### Fixed
+- **Low — CONTRIBUTING.md hardcoded `2.7.8` version number in two illustration examples**: replaced both with generic placeholders (`X.Y.Z` and `X.Y.(Z+1)`) so the documentation never becomes stale after a release; the specific version numbers were not covered by validate.sh and would require manual maintenance after every release
+
+---
+
 ## [2.7.9] — 2026-02-20
 
 ### Fixed
