@@ -1,4 +1,4 @@
-﻿# Changelog
+# Changelog
 
 All notable changes to Devil's Advocate are documented in this file.
 
@@ -12,6 +12,23 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 - `postmortem-writing` companion skill for post-incident analysis
 
 ---
+## [2.7.1] — 2026-02-20
+
+### Fixed
+- **High — validate.sh Check 1 broken**: grep -m1 returned only [Unreleased] before -v filter; fixed to grep | grep -v Unreleased | head -1 so CHANGELOG_VER correctly resolves to latest released version
+- **High — validate.sh Check 2 FENCE_ISSUES never counted**: FENCE_ISSUES was referenced but never initialized or incremented; added FENCE_ISSUES=0 init and ((FENCE_ISSUES++)) increment so fence-balance failures now correctly set non-zero count
+- **High — CHANGELOG.md had UTF-8 BOM**: bytes xEF 0xBB 0xBF present since initial write; stripped to plain UTF-8 without BOM
+- **High — Performance domain missing from Handbrake escalation map**: added Performance bottlenecks, scalability, resource limits, N+1 queries row with Senior Developer / Tech Lead as responsible role
+- **High — Performance domain missing from IR context templates**: added ### ⚡ Performance — Bottlenecks / Scalability / Resource Limits template (6 questions) to immediate-report.md; updated template count from 13 → 14
+- **Medium — actions/checkout mutable tag in CI**: SHA-pinned to 11bd71901bbe5b1630ceea73d27597364c9af683 (v4.2.2) per ersion-control.md guidance
+- **Medium — building-protocol.md described as unconditionally free**: CONTRIBUTING.md now correctly states it is conditionally free (loaded with code, skipped for pure text/strategy)
+
+### Added
+- validate.sh check 9 (retroactively documented): verifies all framework files referenced in SKILL.md Index exist on disk
+- CONTRIBUTING.md: 8K token budget warning for SKILL.md — contributors must not add content without delegating equivalent content to framework files
+
+---
+
 
 ## [2.7.0] — 2026-02-20
 

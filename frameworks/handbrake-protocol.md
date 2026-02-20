@@ -85,6 +85,7 @@ DEVIL'S ADVOCATE ANALYSIS
 | Legal / licensing / cross-border data / compliance | **Legal / Compliance team** | "This must be reviewed by Legal or the Compliance team before proceeding." |
 | AI context / agent instructions quality | **Tech Lead / AI Tooling Lead** | "This must be reviewed by the Tech Lead or AI Tooling Lead responsible for the AI context strategy." |
 | Version control / repository operations | **Senior Developer / Tech Lead** | "This must be reviewed by the Tech Lead before any irreversible git operation (force push, history rewrite, branch deletion) is executed." |
+| Performance bottlenecks, scalability, resource limits, N+1 queries | **Senior Developer / Tech Lead** | "This must be reviewed by the Tech Lead before any deployment affecting performance-critical paths." |
 
 ---
 
@@ -270,6 +271,24 @@ I need the following context from the Tech Lead / Senior Developer before the an
 4. **Blast radius**: What downstream systems depend on the current commit SHAs (CI/CD pipelines in flight, open PRs/MRs, tags, release artifacts, external references)?
 5. **Rewrite completeness**: If this is a history rewrite, are ALL branches that contain the affected commits in scope — not only main but all feature and release branches?
 6. **Irreversibility**: Once the force push is executed, is there a backup ref or reflog window in which the operation can be undone? What is the recovery plan if a contributor's work is accidentally overwritten?
+```
+
+---
+
+### ⚡ For Performance Critical Findings
+
+Ask the **Senior Developer / Tech Lead**:
+
+```markdown
+🛑 HANDBRAKE — Performance Critical Finding
+I need the following context from the Tech Lead / Senior Developer before the analysis can continue:
+
+1. **Current load profile**: What are the expected requests/sec, concurrent users, and data volume for the affected endpoint or process in production?
+2. **Performance baseline**: Is there an existing benchmark, SLA, or p95/p99 latency target for this path? Has it been measured recently?
+3. **Bottleneck location**: Is the performance issue in the application tier (CPU, memory), database tier (queries, indexes, connection pool), or network/external calls?
+4. **Query / N+1 analysis**: Has the query plan been inspected (EXPLAIN ANALYZE)? Is ORM lazy-loading involved? What is the number of queries per request under realistic load?
+5. **Caching strategy**: Is there an existing caching layer (Redis, CDN, in-memory) that could absorb this load? Is it currently bypassed or misconfigured?
+6. **Deployment risk**: Will this change affect a hot path that is currently serving live traffic? Is there a feature flag or canary rollout strategy available?
 ```
 
 ---

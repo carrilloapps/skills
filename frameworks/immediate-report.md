@@ -99,7 +99,7 @@ Reply with:
 
 ## Context Request Templates
 
-> One template per domain (13 total: Unmitigated Critical + 12 domain-specific). Use the template that matches the finding domain. If the finding spans multiple domains, use the closest match or the generic Unmitigated Critical template.
+> One template per domain (14 total: Unmitigated Critical + 13 domain-specific). Use the template that matches the finding domain. If the finding spans multiple domains, use the closest match or the generic Unmitigated Critical template.
 
 These are the questions to ask per finding type. Select the most relevant 3–6.
 
@@ -260,6 +260,17 @@ These are the questions to ask per finding type. Select the most relevant 3–6.
 ```
 
 ---
+### ⚡ Performance — Bottlenecks / Scalability / Resource Limits
+
+```markdown
+1. **Current load profile**: What are the expected requests/sec, concurrent users, and data volume for the affected endpoint or process in production?
+2. **Performance baseline**: Is there an existing benchmark, SLA, or p95/p99 latency target for this path? Has it been measured recently?
+3. **Bottleneck location**: Is the performance issue in the application tier (CPU, memory), database tier (queries, indexes, connection pool), or network/external calls?
+4. **Query / N+1 analysis**: Has the query plan been inspected (EXPLAIN ANALYZE)? Is ORM lazy-loading involved? What is the number of queries per request under realistic load?
+5. **Caching strategy**: Is there an existing caching layer (Redis, CDN, in-memory) that could absorb this load? Is it currently bypassed or misconfigured?
+6. **Deployment risk**: Will this change affect a hot path serving live traffic? Is there a feature flag or canary rollout strategy available?
+```
+
 
 ### 🔍 General Analysis — Assumptions / Cross-Cutting / Unknown Unknowns
 

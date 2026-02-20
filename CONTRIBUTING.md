@@ -75,10 +75,11 @@ A new framework file in `frameworks/` must:
 2. **Not duplicate** existing framework coverage — check all **12 existing domain frameworks**:
    Architecture · Security · Performance · Developer/Code · Data & Analytics · Product · UX/Design · Strategy/Leadership · AI Optimization · Version Control · Vulnerability Patterns · General Analysis
 
-   > Protocol files (`output-format.md`, `handbrake-protocol.md`, `immediate-report.md`, `building-protocol.md`, `premortem.md`, `handbrake-checklist.md`) are separate — they define the skill's execution protocol, not a risk domain. Do not count them toward the 12.
+   > Protocol files (`output-format.md`, `handbrake-protocol.md`, `immediate-report.md`, `premortem.md`, `handbrake-checklist.md`) are always free and do not count toward the 12-domain budget. `building-protocol.md` is conditionally free: loaded at no cost when the analysis involves code; skipped for pure text or strategy reviews.
 3. **Include an adversarial lens** — not just "here are best practices" but "here are the risks and how they fail"
 4. **Be accompanied by a new example** in `examples/` that demonstrates the framework in use
 5. **Be added to the Index** in `SKILL.md` under `### 📂 Domain Frameworks` — and update the count in that heading (currently `12 domains`) and in item 2 above
+6. **Keep SKILL.md under 8,000 tokens** — it is always loaded in full by every agent. Currently ~7,068 tokens. Do not add content to SKILL.md without delegating equivalent content to a framework file first.
 
 ### New Example
 

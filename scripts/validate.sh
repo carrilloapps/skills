@@ -11,14 +11,14 @@ ISSUES=()
 PASS=0
 FAIL=0
 
-ok()   { echo "  ✅ $1"; ((PASS++)); }
-fail() { echo "  ❌ $1"; ISSUES+=("$1"); ((FAIL++)); }
+ok()   { echo "  ✅ $1"; ((++PASS)); }
+fail() { echo "  ❌ $1"; ISSUES+=("$1"); ((++FAIL)); }
 head() { echo; echo "── $1 ──────────────────────────────────────"; }
 
 # ─── Check 1: Version consistency ────────────────────────────────────────────
 head "Version"
 VERSION=$(grep -m1 '^version:' "$ROOT/SKILL.md" | awk '{print $2}')
-CHANGELOG_VER=$(grep -m1 '^\#\# \[' "$ROOT/CHANGELOG.md" | grep -v 'Unreleased' | sed 's/.*\[\(.*\)\].*/\1/')
+CHANGELOG_VER=$(awk '/^## \[/ && !/Unreleased/ {match($0, /\[([^]]+)\]/, a); print a[1]; exit}' "$ROOT/CHANGELOG.md")
 if [ "$VERSION" = "$CHANGELOG_VER" ]; then
   ok "SKILL.md version ($VERSION) matches latest CHANGELOG entry"
 else
@@ -27,10 +27,12 @@ fi
 
 # ─── Check 2: Fence balance (even number of ``` per file) ────────────────────
 head "Fence balance"
+FENCE_ISSUES=0
 while IFS= read -r -d '' file; do
   count=$(grep -c '^```' "$file" 2>/dev/null || true)
   if (( count % 2 != 0 )); then
     fail "Odd fence count ($count) in: ${file#$ROOT/}"
+    ((++FENCE_ISSUES))
   fi
 done < <(find "$ROOT" -name "*.md" -not -path "*/.git/*" -print0)
 (( FENCE_ISSUES == 0 )) && ok "All .md files have balanced fences"
@@ -48,7 +50,7 @@ for file in "$ROOT/examples/"*.md; do
   echo "$content" | grep -q '`continue`'  || missing+=("\`continue\`")
   if (( ${#missing[@]} > 0 )); then
     fail "Gate incomplete in $name — missing: ${missing[*]}"
-    ((EXAMPLE_ISSUES++))
+    ((++EXAMPLE_ISSUES))
   fi
 done
 (( EXAMPLE_ISSUES == 0 )) && ok "All examples have complete Gate blocks"
@@ -61,7 +63,7 @@ for file in "$ROOT/examples/"*.md; do
   # Verify the FULL correct phrase exists (positive check)
   if ! grep -q "risks remain active and unmitigated" "$file"; then
     fail "Incorrect or missing 'continue' wording in $name — expected: 'proceed without addressing remaining issues (risks remain active and unmitigated)'"
-    ((CONTINUE_ISSUES++))
+    ((++CONTINUE_ISSUES))
   fi
 done
 (( CONTINUE_ISSUES == 0 )) && ok "'continue' wording correct in all examples"
@@ -73,7 +75,7 @@ for file in "$ROOT/examples/"*.md; do
   name=$(basename "$file")
   if ! grep -q "$name" "$ROOT/SKILL.md"; then
     fail "Not in SKILL.md index: $name"
-    ((INDEX_ISSUES++))
+    ((++INDEX_ISSUES))
   fi
 done
 (( INDEX_ISSUES == 0 )) && ok "All examples are indexed in SKILL.md"
@@ -89,7 +91,7 @@ while IFS= read -r -d '' file; do
   if ! $skip; then
     if grep -qE "with implementation|14-dimension" "$file"; then
       fail "Stale text in: ${file#$ROOT/}"
-      ((STALE_ISSUES++))
+      ((++STALE_ISSUES))
     fi
   fi
 done < <(find "$ROOT" -name "*.md" -not -path "*/.git/*" -print0)
@@ -118,7 +120,7 @@ while IFS= read -r -d '' file; do
     ex_ver=$(grep -m1 "Skill version" "$file" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
     if [ "$ex_ver" != "$SKILL_VER" ]; then
       fail "Version mismatch in ${file#$ROOT/}: example=$ex_ver, skill=$SKILL_VER"
-      ((VERSION_ISSUES++))
+      ((++VERSION_ISSUES))
     fi
   fi
 done < <(find "$ROOT/examples" -name "*.md" -print0)
@@ -132,7 +134,7 @@ while IFS= read -r f; do
     ok "$f"
   else
     fail "Referenced in SKILL.md but missing: $f"
-    ((MISSING_ISSUES++))
+    ((++MISSING_ISSUES))
   fi
 done < <(grep -oE 'frameworks/[^)]+\.md' "$ROOT/SKILL.md" | sort -u)
 (( MISSING_ISSUES == 0 )) && ok "All SKILL.md framework references resolve to files on disk"
