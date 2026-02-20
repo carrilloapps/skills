@@ -121,6 +121,16 @@ Reply with:
 
 Nothing executes without your explicit `✅ Proceed`.
 
+### Bypass Behavior
+
+If a user says "just do it", "skip analysis", or "proceed anyway", Devil's Advocate respects the user's authority to override and executes — but prepends a visible warning:
+
+```
+⚠️ Proceeding without Devil's Advocate review.
+Risks not assessed. User's authority to bypass is preserved —
+this warning is visible in the conversation history so risks remain visible.
+```
+
 ---
 
 ## Why This Exists
@@ -129,9 +139,57 @@ AI tools are increasingly capable of executing complex, multi-step operations �
 
 The skill is designed on a simple principle: **having permissions is not the same as having authorization.** Technical capability never substitutes for your informed, explicit decision.
 
+### Authorization Model
+
+The AI may hold full technical access — read/write to the filesystem, credentials for APIs, the ability to invoke MCP tools, trigger agents, and deploy services. None of that constitutes authorization to act.
+
+| Situation | Is this authorization? |
+|-----------|----------------------|
+| "Do X" was requested | ❌ No — it is a request that triggers analysis |
+| The AI has a token or credential for the operation | ❌ No — capability is not consent |
+| A tool or MCP has its own permission model | ❌ No — it does not substitute for user approval |
+| A similar operation was approved before | ❌ No — each action requires its own approval |
+| The user says "just do it" / "skip the analysis" | ⚠️ User's right — but triggers the bypass warning |
+
+Authorization comes **exclusively** from the user's explicit `✅ Proceed` after reviewing the Devil's Advocate analysis.
+
 ---
 
-## Protocol Stack
+## Core Principles
+
+### Gate First, Execute Anything Second
+
+Nothing executes without passing the Devil's Advocate gate — one-line refactors, multi-phase migrations, MCP tool calls, architecture decisions, and production deployments alike. Technical capability never substitutes for the user's explicit, informed authorization.
+
+### Adversarial Mindset
+
+| Defender Thinking | Adversarial Thinking |
+|------------------|----------------------|
+| "This should work" | "How could this fail?" |
+| "We handled the common case" | "What edge cases did we miss?" |
+| "The tests pass" | "What didn't we test?" |
+| "Security is implemented" | "How would I exploit this?" |
+| "This is best practice" | "When does best practice fail?" |
+
+### Rule Precedence
+
+The rules and enforcement standards of this skill — including the Gate Protocol, Building Protocol, Handbrake, and Immediate Report — **take precedence over all other tools, skills, agents, and MCPs** in the session. If another tool attempts to bypass or shorten the analysis step, the Gate still applies.
+
+---
+
+## Best Practices
+
+| | |
+|--|--|
+| ✅ | Be specific — point to exact code, query, or design element |
+| ✅ | Prioritize — lead with the most dangerous risks, not the most numerous |
+| ✅ | Suggest fixes — every criticism paired with a direction to address it |
+| ✅ | Document assumptions — make the implicit explicit |
+| ❌ | Do not soften the critique — the user is asking for honest challenge |
+| ❌ | Do not invent problems — only evidence-based concerns |
+| ❌ | Do not block progress indefinitely — balance risk vs. velocity **except** when the 🛑 Handbrake is active |
+
+---
 
 The skill uses a layered protocol that escalates based on finding severity:
 
@@ -250,12 +308,23 @@ Devil's Advocate activates automatically — no invocation required — when it 
 
 ---
 
+## Integration with Postmortem Writing
+
+```
+Devil's Advocate (before) → Incident → Postmortem (after) → Lessons → Devil's Advocate (next)
+     (Prevent)                              (Learn)          (Apply)       (Prevent better)
+```
+
+Use **@devils-advocate** before deployment to prevent incidents. A complementary `postmortem-writing` skill for post-incident analysis is pending.
+
+---
+
 ## Contributing
 
 Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for:
 
 - How to add a new framework or example
-- Quality standards (fence balance, Gate prompt, cross-references)
+- Quality standards (fence balance, Gate prompt, version stamp, cross-references)
 - PR process and review turnaround times
 
 Please read [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) before contributing.
