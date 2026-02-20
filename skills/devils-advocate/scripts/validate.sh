@@ -7,6 +7,7 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+REPO_ROOT="$(cd "$ROOT/../.." && pwd)"
 ISSUES=()
 PASS=0
 FAIL=0
@@ -107,11 +108,18 @@ done < <(find "$ROOT" -name "*.md" -not -path "*/.git/*" -print0)
 
 # ─── Check 7: Required GitHub project files ──────────────────────────────────
 section "GitHub project files"
-for f in README.md LICENSE .github/CONTRIBUTING.md .github/CODE_OF_CONDUCT.md CHANGELOG.md .github/SECURITY.md .gitignore \
-          .gitattributes scripts/validate.sh \
+for f in README.md CHANGELOG.md scripts/validate.sh; do
+  if [ -f "$ROOT/$f" ]; then
+    ok "$f present"
+  else
+    fail "Missing: $f"
+  fi
+done
+for f in LICENSE .gitignore .gitattributes \
+          .github/CONTRIBUTING.md .github/CODE_OF_CONDUCT.md .github/SECURITY.md \
           .github/ISSUE_TEMPLATE/bug_report.yml .github/ISSUE_TEMPLATE/feature_request.yml \
           .github/PULL_REQUEST_TEMPLATE.md .github/workflows/validate.yml; do
-  if [ -f "$ROOT/$f" ]; then
+  if [ -f "$REPO_ROOT/$f" ]; then
     ok "$f present"
   else
     fail "Missing: $f"

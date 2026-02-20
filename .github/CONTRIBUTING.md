@@ -49,8 +49,8 @@ No build tools required. This is a pure Markdown skill.
 
 ```bash
 # Clone the repository
-git clone https://github.com/carrilloapps/devils-advocate.git
-cd devils-advocate
+git clone https://github.com/carrilloapps/skills.git
+cd skills
 
 # Edit files using any Markdown editor
 # Preview with any Markdown renderer (VS Code, GitHub preview, etc.)
@@ -149,7 +149,7 @@ All contributions must pass these checks before merge:
 The maintainers run an automated sweep script on every PR that checks all of the above. You can run it locally before submitting:
 
 ```bash
-bash scripts/validate.sh
+bash skills/devils-advocate/scripts/validate.sh
 ```
 
 ---
@@ -176,7 +176,7 @@ bash scripts/validate.sh
 The skill is distributed directly from GitHub — no manual submission to skills.sh is required. Once the repository is public and contains a valid `SKILL.md`, anyone can install it with:
 
 ```bash
-npx skills add carrilloapps/devils-advocate
+npx skills add https://github.com/carrilloapps/skills --skill devils-advocate
 ```
 
 The [skills.sh](https://skills.sh) leaderboard and `npx skills find` search index are **telemetry-driven**: skills appear automatically once they accumulate installs through the CLI. There is no registration form or publish command.
@@ -191,7 +191,7 @@ When merging a batch of fixes, follow this checklist to cut a release:
 
 1. **Run the validator** — must be 0 failures before bumping:
    ```bash
-   bash scripts/validate.sh
+   bash skills/devils-advocate/scripts/validate.sh
    ```
 
 2. **Bump the version** — update `version:` in `SKILL.md` frontmatter (e.g. `X.Y.Z` → `X.Y.(Z+1)`)

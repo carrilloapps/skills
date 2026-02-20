@@ -11,6 +11,13 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ---
 
+## [2.8.0] — 2026-02-20
+
+### Changed
+- **Breaking — Repository restructured to skills.sh monorepo format**: all skill files moved from repo root to `skills/devils-advocate/`; install command updated from `npx skills add carrilloapps/devils-advocate` to `npx skills add https://github.com/carrilloapps/skills --skill devils-advocate`; enables the repository to host multiple skills under `skills/<name>/`
+
+---
+
 ## [2.7.10] — 2026-02-20
 
 ### Fixed
