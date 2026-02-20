@@ -136,7 +136,7 @@ while IFS= read -r f; do
     fail "Referenced in SKILL.md but missing: $f"
     ((++MISSING_ISSUES))
   fi
-done < <(grep -oE 'frameworks/[^)]+\.md' "$ROOT/SKILL.md" | sort -u)
+done < <(grep -oE 'frameworks/[a-zA-Z0-9_-]+\.md' "$ROOT/SKILL.md" | sort -u)
 (( MISSING_ISSUES == 0 )) && ok "All SKILL.md framework references resolve to files on disk"
 # ─── Summary ──────────────────────────────────────────────────────────────────
 echo
