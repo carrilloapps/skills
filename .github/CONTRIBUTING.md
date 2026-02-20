@@ -123,7 +123,7 @@ An example file in `examples/` must:
 
 ### Bug Reports
 
-Use the [Bug Report issue template](.github/ISSUE_TEMPLATE/bug_report.yml). A good bug report includes:
+Use the [Bug Report issue template](ISSUE_TEMPLATE/bug_report.yml). A good bug report includes:
 
 - The file and line number containing the incorrect guidance
 - Why it is incorrect (citation, evidence, or clear reasoning)

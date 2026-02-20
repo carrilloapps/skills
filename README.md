@@ -364,19 +364,19 @@ Use **@devils-advocate** before deployment to prevent incidents. A complementary
 
 ## Contributing
 
-Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for:
+Contributions are welcome! See [CONTRIBUTING.md](.github/CONTRIBUTING.md) for:
 
 - How to add a new framework or example
 - Quality standards (fence balance, Gate prompt, version stamp, cross-references)
 - PR process and review turnaround times
 
-Please read [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) before contributing.
+Please read [CODE_OF_CONDUCT.md](.github/CODE_OF_CONDUCT.md) before contributing.
 
 ---
 
 ## Security
 
-For vulnerability reports (harmful, misleading, or exploitable guidance), see [SECURITY.md](SECURITY.md). Do not open a public issue for security concerns.
+For vulnerability reports (harmful, misleading, or exploitable guidance), see [SECURITY.md](.github/SECURITY.md). Do not open a public issue for security concerns.
 
 ---
 
