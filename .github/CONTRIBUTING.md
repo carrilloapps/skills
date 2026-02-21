@@ -203,7 +203,7 @@ When merging a batch of fixes, follow this checklist to cut a release:
    - `README.md` (root) — skill catalog badge `v X.Y.Z`
    - All `skills/devils-advocate/examples/*.md` — `**Skill version**: X.Y.Z` line (run `validate.sh` to catch any missed)
 
-4. **Add a CHANGELOG entry** — under a new `## [X.Y.Z] — YYYY-MM-DD` section (above all prior versions, below `[Unreleased]`):
+4. **Add a CHANGELOG entry** — edit `CHANGELOG.md` at the **repo root** (`/CHANGELOG.md`), under a new `## [X.Y.Z] — YYYY-MM-DD` section (above all prior versions, below `[Unreleased]`):
    ```markdown
    ## [X.Y.Z] — YYYY-MM-DD
 
