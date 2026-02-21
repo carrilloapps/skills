@@ -31,6 +31,7 @@
 ### If adding or modifying an example
 - [ ] Example ends with the exact Gate prompt (✅ Proceed / 🔁 Revise / ❌ Cancel / `continue`)
 - [ ] `continue` line reads: `proceed without addressing remaining issues (risks remain active and unmitigated)`
+- [ ] `**Skill version**: X.Y.Z` present and matches current `SKILL.md` version
 - [ ] Example added to the `SKILL.md` Index under `### 📂 examples/`
 - [ ] Example covers a scenario not already covered by existing examples
 

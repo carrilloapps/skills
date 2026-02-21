@@ -11,6 +11,13 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ---
 
+## [2.8.6] — 2026-02-21
+
+### Fixed
+- **Low — PR template missing version stamp checkbox**: "If adding or modifying an example" section now includes `**Skill version**: X.Y.Z present and matches current SKILL.md version` — prevents Check 8 CI surprises for contributors
+
+---
+
 ## [2.8.5] — 2026-02-21
 
 ### Fixed
