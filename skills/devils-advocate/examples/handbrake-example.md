@@ -1,6 +1,8 @@
 # Example: Full Protocol Stack — Data Pipeline Migration
 
-> **Original proposal (from Data Engineer):** Migrate our user events pipeline from batch (daily Spark job → Redshift) to real-time streaming (Kafka + Flink → Redshift). Estimated timeline: 6 weeks. The pipeline processes 500M events/day including click events, purchases, and session data. PII fields: email, IP address, user_id.
+> 🔍 **Adversarial analysis example.** The pipeline design below is intentionally flawed — it contains GDPR and PII compliance gaps. This file demonstrates how Devil's Advocate activates the Handbrake protocol on critical data protection issues before implementation.
+
+> **Original proposal (from Data Engineer):**Migrate our user events pipeline from batch (daily Spark job → Redshift) to real-time streaming (Kafka + Flink → Redshift). Estimated timeline: 6 weeks. The pipeline processes 500M events/day including click events, purchases, and session data. PII fields: email, IP address, user_id.
 
 ---
 

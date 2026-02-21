@@ -1,6 +1,8 @@
 # Example Devil's Advocate Analysis: CI/CD Pipeline — GitHub Actions with Over-Permissive Tokens and Hardcoded Secrets
 
-> **Original proposal (from Developer):** Set up a GitHub Actions workflow that runs our test suite, builds a Docker image, pushes it to Docker Hub, and deploys to our staging environment via SSH. The workflow YAML includes our `DOCKER_PASSWORD` as a plain environment variable, uses `permissions: write-all` for the `GITHUB_TOKEN`, and uses `actions/checkout@v3` (mutable tag reference). Deploying via: `ssh staging-user@staging.server.com` with the private key stored as a repository variable.
+> 🔍 **Adversarial analysis example.** The scenario below is intentionally flawed to demonstrate how Devil's Advocate identifies security risks. The code marked `❌ Wrong` must never be used in production.
+
+> **Original proposal (from Developer):**Set up a GitHub Actions workflow that runs our test suite, builds a Docker image, pushes it to Docker Hub, and deploys to our staging environment via SSH. The workflow YAML includes our `DOCKER_PASSWORD` as a plain environment variable, uses `permissions: write-all` for the `GITHUB_TOKEN`, and uses `actions/checkout@v3` (mutable tag reference). Deploying via: `ssh staging-user@staging.server.com` with the private key stored as a repository variable.
 
 ---
 
@@ -95,7 +97,7 @@ Reply: 📝 [answers] to raise confidence | `continue` to proceed at worst-case 
    ```yaml
    # ❌ Wrong
    env:
-     DOCKER_PASSWORD: "mypassword123"
+     DOCKER_PASSWORD: "<HARDCODED_SECRET — this is the vulnerability being analyzed>"
 
    # ✅ Correct
    - name: Log in to Docker Hub
