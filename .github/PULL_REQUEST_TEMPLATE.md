@@ -41,7 +41,9 @@
 - [ ] Matching example added to `examples/`
 - [ ] Framework follows the header convention (Role, Load when, Always paired with)
 
-### If modifying core protocol files
+### If modifying core protocol files or DA gate activation files
+> Core protocol: `SKILL.md`, `handbrake-protocol.md`, `immediate-report.md`, `output-format.md`
+> DA gate files: `AGENTS.md`, `copilot-instructions.md`
 - [ ] Issue was opened and discussed before this PR
 - [ ] All cross-references are updated (SKILL.md, any file referencing the changed section)
 - [ ] Version bumped in `SKILL.md` frontmatter

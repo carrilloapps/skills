@@ -11,6 +11,14 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ---
 
+## [2.8.7] — 2026-02-21
+
+### Fixed
+- **Low — Contributor table missing DA gate files**: `CONTRIBUTING.md` "What Can I Contribute?" table now includes `AGENTS.md` and `copilot-instructions.md` as ⚠️ Discuss first
+- **Low — PR template core protocol section missing DA gate files**: "If modifying core protocol files" section now explicitly covers `AGENTS.md` and `copilot-instructions.md` with the same issue-first requirement
+
+---
+
 ## [2.8.6] — 2026-02-21
 
 ### Fixed

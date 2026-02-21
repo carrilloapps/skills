@@ -32,6 +32,7 @@ Thank you for your interest in improving Devil's Advocate! This skill is built o
 | Translations | ⚠️ Discuss first | Open an issue to coordinate |
 | New checklists | ⚠️ Discuss first | High bar — must not overlap existing ones |
 | Changes to core protocol files | ⚠️ Discuss first | `SKILL.md`, `output-format.md`, `handbrake-protocol.md`, `immediate-report.md` — open an issue first |
+| Changes to DA gate activation files | ⚠️ Discuss first | `AGENTS.md`, `copilot-instructions.md` — these activate the DA gate for all contributors; open an issue first |
 
 ---
 
