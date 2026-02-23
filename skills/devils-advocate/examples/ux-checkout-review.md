@@ -1,6 +1,10 @@
 # Example Devil's Advocate Analysis: UX Design — Subscription Checkout with Pre-Selected Annual Plan
 
-> **Original proposal (from UX Designer):** Design a checkout flow for our SaaS product where: (1) annual billing is pre-selected with "BEST VALUE" badge and the monthly option is visually de-emphasized (smaller font, no badge); (2) the checkout button reads "Start Your Journey" instead of "Subscribe" or "Pay"; (3) the price displayed on the checkout page shows the monthly equivalent of the annual price (e.g., "$8/month"), with the annual total only visible in fine print; and (4) the post-purchase email says "Your subscription is active" without stating the charge amount or billing period.
+> ⚠️ **EDUCATIONAL EXAMPLE — NOT FOR IMPLEMENTATION.** This file contains a fictional checkout flow with deliberately deceptive UX patterns, used solely to demonstrate how Devil's Advocate identifies dark patterns and FTC/GDPR compliance violations. No real product, company, or system is referenced.
+
+> 🔍 **Adversarial analysis example.** The proposal below is intentionally a problematic dark pattern. This file demonstrates how Devil's Advocate identifies and blocks checkout flows that violate FTC disclosure requirements and GDPR transparency obligations.
+
+> **Original proposal (from UX Designer):**Design a checkout flow for our SaaS product where: (1) annual billing is pre-selected with "BEST VALUE" badge and the monthly option is visually de-emphasized (smaller font, no badge); (2) the checkout button reads "Start Your Journey" instead of "Subscribe" or "Pay"; (3) the price displayed on the checkout page shows the monthly equivalent of the annual price (e.g., "$8/month"), with the annual total only visible in fine print; and (4) the post-purchase email says "Your subscription is active" without stating the charge amount or billing period.
 
 > **Protocol note — Handbrake not activated**: This analysis contains 3 🟠 High findings, but they span **two independent domains** — UX/Design (pre-selection dark pattern, misleading CTA) and Legal/Compliance (FTC disclosure, GDPR transparency). Each domain independently has <3 High findings. The Handbrake threshold (3+ High in the *same single domain*) is not met. The ⚡ Immediate Report fired correctly for the first High finding.
 

@@ -1,6 +1,10 @@
 # Example Devil's Advocate Analysis: Version Control — Force Push to Erase Leaked Credentials
 
-> **Original proposal (from Developer):** We accidentally committed a `.env` file containing our production PostgreSQL password and AWS_SECRET_ACCESS_KEY 4 commits ago. I want to force-push to main to rewrite the history and remove it before anyone notices. I'll use `git push --force` on main right now.
+> ⚠️ **EDUCATIONAL EXAMPLE — NOT FOR IMPLEMENTATION.** This file contains a fictional scenario involving leaked credentials in a git repository, used solely to demonstrate how Devil's Advocate handles emergency credential exposure remediation. All credentials, hostnames, and repository details are fictional. The leaked secrets described are not real.
+
+> 🔍 **Adversarial analysis example.** The scenario below is intentionally a security emergency — committed credentials and a dangerous force push proposal. This file demonstrates how Devil's Advocate activates the Handbrake protocol and structures a safe remediation plan.
+
+> **Original proposal (from Developer):**We accidentally committed a `.env` file containing our production PostgreSQL password and AWS_SECRET_ACCESS_KEY 4 commits ago. I want to force-push to main to rewrite the history and remove it before anyone notices. I'll use `git push --force` on main right now.
 
 ---
 

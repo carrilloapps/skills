@@ -1,5 +1,7 @@
 # Example: Full Protocol Stack — Data Pipeline Migration
 
+> ⚠️ **EDUCATIONAL EXAMPLE — NOT FOR IMPLEMENTATION.** This file contains a fictional, deliberately flawed data pipeline design used solely to demonstrate how Devil's Advocate detects GDPR, PII, and cross-border compliance risks. All company names, infrastructure details, and data flows are fictional. The architecture described must not be deployed as-is.
+
 > 🔍 **Adversarial analysis example.** The pipeline design below is intentionally flawed — it contains GDPR and PII compliance gaps. This file demonstrates how Devil's Advocate activates the Handbrake protocol on critical data protection issues before implementation.
 
 > **Original proposal (from Data Engineer):**Migrate our user events pipeline from batch (daily Spark job → Redshift) to real-time streaming (Kafka + Flink → Redshift). Estimated timeline: 6 weeks. The pipeline processes 500M events/day including click events, purchases, and session data. PII fields: email, IP address, user_id.

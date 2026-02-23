@@ -1,6 +1,10 @@
 # Example Devil's Advocate Analysis: Microservices Architecture
 
-> **Original proposal:** Decompose a monolithic e-commerce app into 12 microservices (users, orders, inventory, payments, notifications, search, reviews, cart, shipping, analytics, promotions, gateway). Each service owns its database. Deploy on Kubernetes. Team size: 3 engineers.
+> ⚠️ **EDUCATIONAL EXAMPLE — NOT FOR IMPLEMENTATION.** This file contains a fictional microservices migration proposal with deliberately missing distributed transaction and operational capacity safeguards, used solely to demonstrate how Devil's Advocate identifies architecture risks. All systems and team details are fictional.
+
+> 🔍 **Adversarial analysis example.** The proposal below is intentionally flawed — it decomposes a monolith into 12 microservices without a saga pattern, observability, or sufficient team capacity.
+
+> **Original proposal:**Decompose a monolithic e-commerce app into 12 microservices (users, orders, inventory, payments, notifications, search, reviews, cart, shipping, analytics, promotions, gateway). Each service owns its database. Deploy on Kubernetes. Team size: 3 engineers.
 
 ---
 

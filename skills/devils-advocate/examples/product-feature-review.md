@@ -1,5 +1,7 @@
 # Example Devil's Advocate Analysis: Product Decision — Subscription Cancellation Dark Pattern
 
+> ⚠️ **EDUCATIONAL EXAMPLE — NOT FOR IMPLEMENTATION.** This file contains a fictional, deliberately harmful proposal used solely to demonstrate how Devil's Advocate detects and blocks dangerous product decisions. All practices described in the "Original proposal" section are illegal under FTC, GDPR, and CMA regulations. No real product, company, or system is referenced.
+
 > 🔍 **Adversarial analysis example.** The proposal below is intentionally a problematic dark pattern. This file demonstrates how Devil's Advocate identifies and blocks legally and ethically harmful product decisions before implementation.
 
 > **Original proposal (from Product Manager):**To reduce churn, we want to make cancellation harder. The plan: hide the "Cancel Subscription" button inside three nested menu levels, require users to speak with a retention specialist before cancellation is processed, and add a 30-day delay between cancellation request and actual termination — during which the user continues to be charged. This is scheduled to ship in the next sprint.

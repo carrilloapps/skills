@@ -1,6 +1,10 @@
 # Example Devil's Advocate Analysis: Performance — N+1 Query in Cart Pricing API
 
-> **Original proposal (from Developer):** Add real-time pricing to the shopping cart API. For each item in the cart, call `getProductPrice(productId)` which executes a `SELECT price, discount FROM products WHERE id = ?` query. The cart can have up to 50 items. This will be called on every cart page render and every checkout initiation.
+> ⚠️ **EDUCATIONAL EXAMPLE — NOT FOR IMPLEMENTATION.** This file contains a fictional API implementation with a deliberate N+1 query anti-pattern, used solely to demonstrate how Devil's Advocate identifies performance risks on hot paths. All code, endpoints, and infrastructure details are fictional.
+
+> 🔍 **Adversarial analysis example.** The proposal below is intentionally flawed — it contains an N+1 query pattern that would cause database connection pool exhaustion at production scale.
+
+> **Original proposal (from Developer):**Add real-time pricing to the shopping cart API. For each item in the cart, call `getProductPrice(productId)` which executes a `SELECT price, discount FROM products WHERE id = ?` query. The cart can have up to 50 items. This will be called on every cart page render and every checkout initiation.
 
 ---
 

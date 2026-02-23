@@ -1,6 +1,10 @@
 # Example Devil's Advocate Analysis: Strategy — CTO Migrating Entire Infrastructure from AWS to GCP
 
-> **Original proposal (from CTO):** We are moving our entire infrastructure from AWS to GCP in Q2 (12 weeks). Motivation: GCP's BigQuery pricing is better for our analytics workload, and a GCP salesperson offered 40% cloud credit for 12 months. The plan is to migrate all 23 AWS services (EC2, RDS, S3, SQS, Lambda, CloudFront, Route 53, IAM, and more) in parallel teams over the quarter. No rollback plan. Engineers will learn GCP on the job.
+> ⚠️ **EDUCATIONAL EXAMPLE — NOT FOR IMPLEMENTATION.** This file contains a fictional infrastructure migration proposal driven by vendor pressure, used solely to demonstrate how Devil's Advocate identifies Type 1 irreversible decisions being made under artificial urgency. All company names, vendor details, and financial figures are fictional.
+
+> 🔍 **Adversarial analysis example.** The proposal below is intentionally a high-risk strategic decision made under vendor-driven time pressure without proper due diligence.
+
+> **Original proposal (from CTO):**We are moving our entire infrastructure from AWS to GCP in Q2 (12 weeks). Motivation: GCP's BigQuery pricing is better for our analytics workload, and a GCP salesperson offered 40% cloud credit for 12 months. The plan is to migrate all 23 AWS services (EC2, RDS, S3, SQS, Lambda, CloudFront, Route 53, IAM, and more) in parallel teams over the quarter. No rollback plan. Engineers will learn GCP on the job.
 
 ---
 

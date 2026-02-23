@@ -1,6 +1,10 @@
 # Example Devil's Advocate Analysis: Data Pipeline — Customer Analytics Migration to BigQuery
 
-> **Original proposal (from Data Engineer):** Migrate our customer behavior analytics pipeline from MySQL to BigQuery. The pipeline processes 2M events/day including click streams, purchase history, and support ticket content. Timeline: 2 weeks. Plan: extract full MySQL tables to GCS, load into BigQuery, point dashboards at BigQuery, decommission MySQL tables. No masking or access control changes planned — "we'll handle governance later."
+> ⚠️ **EDUCATIONAL EXAMPLE — NOT FOR IMPLEMENTATION.** This file contains a fictional data migration plan with deliberately missing privacy controls, used solely to demonstrate how Devil's Advocate detects GDPR, PII, and data governance risks. All company names, infrastructure details, and data flows are fictional.
+
+> 🔍 **Adversarial analysis example.** The proposal below is intentionally flawed — it migrates PII without masking, access controls, or a GDPR compliance plan. This file demonstrates how Devil's Advocate activates the Handbrake protocol on data protection gaps.
+
+> **Original proposal (from Data Engineer):**Migrate our customer behavior analytics pipeline from MySQL to BigQuery. The pipeline processes 2M events/day including click streams, purchase history, and support ticket content. Timeline: 2 weeks. Plan: extract full MySQL tables to GCS, load into BigQuery, point dashboards at BigQuery, decommission MySQL tables. No masking or access control changes planned — "we'll handle governance later."
 
 ---
 

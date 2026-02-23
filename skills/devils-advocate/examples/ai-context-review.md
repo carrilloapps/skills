@@ -1,6 +1,10 @@
 # Example Devil's Advocate Analysis: AI Context File Review
 
-> **Original request (from AI Tooling Lead):** "Review our AI context setup. We have a AGENTS.md at the repo root, a .github/copilot-instructions.md, and a README.md. The team says Copilot has been generating inconsistent code — sometimes camelCase, sometimes snake_case — and recently hallucinated a function that doesn't exist in our codebase."
+> ⚠️ **EDUCATIONAL EXAMPLE — NOT FOR IMPLEMENTATION.** This file contains a fictional AI context file review with deliberately conflicting instructions, used solely to demonstrate how Devil's Advocate identifies instruction conflicts, context starvation, and hallucination root causes. All file contents, function names, and team details are fictional.
+
+> 🔍 **Adversarial analysis example.** The scenario below is intentionally flawed — it contains conflicting naming conventions across AI context files and missing function inventories that cause hallucinations.
+
+> **Original request (from AI Tooling Lead):**"Review our AI context setup. We have a AGENTS.md at the repo root, a .github/copilot-instructions.md, and a README.md. The team says Copilot has been generating inconsistent code — sometimes camelCase, sometimes snake_case — and recently hallucinated a function that doesn't exist in our codebase."
 
 ---
 

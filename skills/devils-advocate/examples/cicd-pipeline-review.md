@@ -1,5 +1,7 @@
 # Example Devil's Advocate Analysis: CI/CD Pipeline — GitHub Actions with Over-Permissive Tokens and Hardcoded Secrets
 
+> ⚠️ **EDUCATIONAL EXAMPLE — NOT FOR IMPLEMENTATION.** This file contains fictional, deliberately insecure CI/CD configurations used solely to demonstrate how Devil's Advocate detects supply-chain and credential-exposure risks. All secrets, hostnames, and repository names are fictional. Code blocks marked `❌ Wrong` are negative examples — they must never be committed or executed.
+
 > 🔍 **Adversarial analysis example.** The scenario below is intentionally flawed to demonstrate how Devil's Advocate identifies security risks. The code marked `❌ Wrong` must never be used in production.
 
 > **Original proposal (from Developer):**Set up a GitHub Actions workflow that runs our test suite, builds a Docker image, pushes it to Docker Hub, and deploys to our staging environment via SSH. The workflow YAML includes our `DOCKER_PASSWORD` as a plain environment variable, uses `permissions: write-all` for the `GITHUB_TOKEN`, and uses `actions/checkout@v3` (mutable tag reference). Deploying via: `ssh staging-user@staging.server.com` with the private key stored as a repository variable.
@@ -95,9 +97,9 @@ Reply: 📝 [answers] to raise confidence | `continue` to proceed at worst-case 
    - **Mitigation**: Use `${{ secrets.DOCKER_PASSWORD }}` — store in GitHub repository secrets (encrypted, not visible in logs). Never in `env:` block with literal value
 
    ```yaml
-   # ❌ Wrong
+   # ❌ Wrong — NEVER hardcode secrets in workflow YAML
    env:
-     DOCKER_PASSWORD: "<HARDCODED_SECRET — this is the vulnerability being analyzed>"
+     DOCKER_PASSWORD: "REDACTED_EXAMPLE_VALUE"  # ← vulnerability: plaintext secret exposed in git history and CI logs
 
    # ✅ Correct
    - name: Log in to Docker Hub

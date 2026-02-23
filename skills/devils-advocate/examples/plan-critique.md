@@ -1,6 +1,10 @@
 # Example Devil's Advocate Analysis: Database Migration Plan
 
-> **Original plan:** Migrate production PostgreSQL 13 database (2TB, 40M daily active records) to PostgreSQL 16 on a new cloud provider during a 4-hour maintenance window on a Sunday.
+> ⚠️ **EDUCATIONAL EXAMPLE — NOT FOR IMPLEMENTATION.** This file contains a fictional database migration plan with deliberately infeasible rollback assumptions, used solely to demonstrate how Devil's Advocate identifies migration risks. All systems, timelines, and infrastructure details are fictional.
+
+> 🔍 **Adversarial analysis example.** The proposal below is intentionally flawed — it attempts a 2TB database migration in a 4-hour window with no viable rollback strategy.
+
+> **Original plan:**Migrate production PostgreSQL 13 database (2TB, 40M daily active records) to PostgreSQL 16 on a new cloud provider during a 4-hour maintenance window on a Sunday.
 
 ---
 

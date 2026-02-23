@@ -1,6 +1,10 @@
 # Example Devil's Advocate Analysis: API Authentication Security Review
 
-> **Original proposal (from Developer):** Add JWT authentication to our internal REST API. Plan: generate a JWT with HS256 signing using a shared secret stored in the codebase, 30-day expiry, no refresh token. The API serves both web clients and mobile apps.
+> ⚠️ **EDUCATIONAL EXAMPLE — NOT FOR IMPLEMENTATION.** This file contains a fictional, deliberately insecure JWT authentication design used solely to demonstrate how Devil's Advocate detects credential exposure and authentication vulnerabilities. All secrets, endpoints, and systems referenced are fictional. The code and architecture described must not be used in production.
+
+> 🔍 **Adversarial analysis example.** The proposal below is intentionally flawed — it contains hardcoded secrets and insecure authentication patterns. This file demonstrates how Devil's Advocate activates the Handbrake protocol on critical security findings.
+
+> **Original proposal (from Developer):**Add JWT authentication to our internal REST API. Plan: generate a JWT with HS256 signing using a shared secret stored in the codebase, 30-day expiry, no refresh token. The API serves both web clients and mobile apps.
 
 ---
 
