@@ -34,6 +34,7 @@ This repository contains the following skills:
 |-------|------|---------|
 | Devil's Advocate | `skills/devils-advocate/SKILL.md` | Mandatory adversarial analysis gate — runs first, before any action |
 | SAR Cybersecurity | `skills/sar-cybersecurity/SKILL.md` | Automated Security Assessment Report generator — deep cybersecurity analysis |
+| Postmortem Writing | *Planned* | Post-incident analysis — structured postmortem reports with root cause analysis and lessons learned |
 
 ## Conventions
 

@@ -400,6 +400,7 @@ skills/sar-cybersecurity/
 | Skill | Relationship |
 |-------|-------------|
 | [🔴 **devils-advocate**](../devils-advocate/) | Run Devil's Advocate first as an adversarial gate, then use SAR Cybersecurity for deep security-specific analysis |
+| 🔜 **postmortem-writing** | After an incident, use Postmortem Writing to document root cause analysis and feed lessons learned back into future SAR assessments |
 
 ---
 

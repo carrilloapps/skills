@@ -18,6 +18,7 @@
 |-------|-------------|---------|---------|
 | [🔴 **devils-advocate**](skills/devils-advocate/) | Mandatory adversarial risk gate — intercepts every plan before execution, blocks all actions until you explicitly approve | [![v2.8.8](https://img.shields.io/badge/v2.8.8-blue.svg)](CHANGELOG.md) | `npx skills add carrilloapps/skills@devils-advocate` |
 | [🛡️ **sar-cybersecurity**](skills/sar-cybersecurity/) | Automated Security Assessment Report (SAR) generator — deep cybersecurity analysis mapped to 20+ compliance standards | [![v1.0.0](https://img.shields.io/badge/v1.0.0-blue.svg)](CHANGELOG.md) | `npx skills add carrilloapps/skills@sar-cybersecurity` |
+| 🔜 **postmortem-writing** | Post-incident analysis — structured postmortem reports with root cause analysis, timeline reconstruction, and lessons learned | *Planned* | — |
 
 ---
 
@@ -161,10 +162,18 @@ points  call   controls   net     EN + ES
 │  Deep security-specific analysis when requested     │
 │  20+ standards · 6 injection families · 7 storage   │
 │  categories · bilingual EN/ES reports               │
+└──────────────────────┬──────────────────────────────┘
+                       │
+                       │  Incident occurs
+                       ▼
+┌─────────────────────────────────────────────────────┐
+│  🔜 Postmortem Writing (planned)                    │
+│  Post-incident analysis — root cause, timeline,     │
+│  lessons learned → feed back into Devil's Advocate  │
 └─────────────────────────────────────────────────────┘
 ```
 
-Use Devil's Advocate as the adversarial gate for every decision, then invoke SAR Cybersecurity when you need a full, professional security assessment report mapped to compliance standards.
+Use Devil's Advocate as the adversarial gate for every decision, invoke SAR Cybersecurity for deep security assessments, and (when available) use Postmortem Writing after incidents to close the feedback loop.
 
 ---
 

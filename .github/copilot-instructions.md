@@ -20,6 +20,7 @@ This repository contains the following skills:
 |-------|------|
 | Devil's Advocate | `skills/devils-advocate/SKILL.md` |
 | SAR Cybersecurity | `skills/sar-cybersecurity/SKILL.md` |
+| Postmortem Writing | *Planned* |
 
 ## Quality gate
 
