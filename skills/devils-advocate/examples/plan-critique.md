@@ -1,18 +1,18 @@
 # Example Devil's Advocate Analysis: Database Migration Plan
 
-> ⚠️ **EDUCATIONAL EXAMPLE — NOT FOR IMPLEMENTATION.** This file contains a fictional database migration plan with deliberately infeasible rollback assumptions, used solely to demonstrate how Devil's Advocate identifies migration risks. All systems, timelines, and infrastructure details are fictional.
+> ⚠️ **EDUCATIONAL EXAMPLE — NOT FOR IMPLEMENTATION.** This file contains a fictional database migration plan with deliberately infeasible rollback assumptions, used solely to demonstrate how Devil's Advocate identifies migration risks. All company names, systems, timelines, infrastructure details, and technical specifications are entirely fictional. No real migration is described.
 
-> 🔍 **Adversarial analysis example.** The proposal below is intentionally flawed — it attempts a 2TB database migration in a 4-hour window with no viable rollback strategy.
+> 🔍 **Adversarial analysis example.** The proposal below is intentionally flawed — it attempts a large database migration in a narrow window with no viable rollback strategy. The scenario is fabricated to showcase the skill's risk detection capabilities.
 
-> **Original plan:**Migrate production PostgreSQL 13 database (2TB, 40M daily active records) to PostgreSQL 16 on a new cloud provider during a 4-hour maintenance window on a Sunday.
+> **Original plan [FICTIONAL SCENARIO]:** Acme Corp's platform team proposes migrating their production PostgreSQL 13 database (2TB, 40M daily active records) to PostgreSQL 16 on a new cloud provider during a 4-hour maintenance window on a Sunday.
 
 ---
 
 ## ⚡ IMMEDIATE REPORT — 🔴 Critical Finding
 
-**Finding**: Rollback is not physically feasible — restoring a 2TB database takes 2–4 hours, which cannot fit inside the remaining maintenance window after any migration attempt.
+**Finding** *(fictional analysis)*: Rollback is not physically feasible — restoring a 2TB database takes 2–4 hours, which cannot fit inside the remaining maintenance window after any migration attempt.
 **Domain**: Architecture
-**Why immediate**: Irreversible — if the migration fails at hour 3, there is no recovery path. The team is forced to either go live on a potentially corrupted target or extend the outage into Monday business hours.
+**Why immediate**: Irreversible — if the migration fails at hour 3, there is no recovery path. Acme Corp's team is forced to either go live on a potentially corrupted target or extend the outage into Monday business hours.
 **Risk if not addressed**: Uncontrolled production outage beyond the maintenance window, with no safe state to return to.
 
 ---
@@ -32,10 +32,10 @@ Reply: 📝 [answers] to raise confidence | `continue` to proceed at worst-case 
 
 ## 🛑 HANDBRAKE ACTIVATED
 
-**Critical finding**: No viable rollback strategy for a 2TB database within a 4-hour window
+**Critical finding** *(fictional analysis)*: No viable rollback strategy for a 2TB database within a 4-hour window
 **Domain**: Architecture / Database
 **Responsible role**: DBA / Platform Architect
-**Why Handbrake level**: Irreversible — once a 2TB pg_dump starts and the source is quiesced, there is no safe abort. Any failure leaves production in an undefined state.
+**Why Handbrake level**: Irreversible — once a 2TB pg_dump starts and the source is quiesced, there is no safe abort. Any failure leaves Acme Corp's production in an undefined state.
 
 **Context received**: No dry-run, no rollback decision tree, but logical replication is feasible. Risk confirmed.
 
@@ -51,11 +51,11 @@ Reply: 📝 [answers] to raise confidence | `continue` to proceed at worst-case 
 
 ---
 
-# 🔴 Devil's Advocate Analysis: PostgreSQL Migration Plan
+# 🔴 Devil's Advocate Analysis: PostgreSQL Migration Plan *(Fictional Example)*
 
 **Analyzed**: 2026-02-20
 **Skill version**: 2.9.0
-**Scope**: Production database migration — 2TB, new provider, 4-hour maintenance window
+**Scope**: Acme Corp production database migration — 2TB, new provider, 4-hour maintenance window *(all details fictional)*
 
 ---
 
@@ -156,7 +156,7 @@ Reply: 📝 [answers] to raise confidence | `continue` to proceed at worst-case 
 - **Spoofing**: 🟢 — Migration uses authenticated provider credentials
 - **Tampering**: 🟡 — Data in transit during migration should use TLS; verify the dump/restore connection is encrypted
 - **Repudiation**: 🟡 — No audit log of who executed the migration or at what timestamp
-- **Information Disclosure**: 🟠 — 2TB dump file on intermediate storage is a data exposure risk; ensure encryption at rest and immediate deletion post-migration
+- **Information Disclosure**: 🟠 — Dump file on intermediate storage is a data exposure risk in this fictional scenario; ensure encryption at rest and immediate deletion post-migration
 - **Denial of Service**: 🟠 — Migration load may saturate the old primary if no read replica is used for the dump
 - **Elevation of Privilege**: 🟢 — No new permissions being introduced
 
