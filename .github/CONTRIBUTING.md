@@ -63,9 +63,9 @@ cd skills
 
 ## Contribution Types
 
-### New Framework
+### New Framework (devils-advocate only)
 
-A new framework file in `frameworks/` must:
+A new framework file in `skills/devils-advocate/frameworks/` must:
 
 1. **Follow the header convention**:
    ```markdown
@@ -79,10 +79,10 @@ A new framework file in `frameworks/` must:
 2. **Not duplicate** existing framework coverage — check all **12 existing domain frameworks**:
    Architecture · Security · Performance · Developer/Code · Data & Analytics · Product · UX/Design · Strategy/Leadership · AI Optimization · Version Control · Vulnerability Patterns · General Analysis
 
-   > Protocol files (`output-format.md`, `handbrake-protocol.md`, `immediate-report.md`, `premortem.md`, `handbrake-checklist.md`) are always free and do not count toward the 12-domain budget. `building-protocol.md` is conditionally free: loaded at no cost when the analysis involves code; skipped for pure text or strategy reviews.
+   > Protocol files (`output-format.md`, `handbrake-protocol.md`, `immediate-report.md`, `premortem.md`, `handbrake-checklist.md`) are always free. `building-protocol.md` is conditionally free: loaded at no cost when the analysis involves code; skipped for pure text or strategy reviews.
 3. **Include an adversarial lens** — not just "here are best practices" but "here are the risks and how they fail"
 4. **Be accompanied by a new example** in `examples/` that demonstrates the framework in use
-5. **Be added to the Index** in `SKILL.md` under `### 📂 Domain Frameworks` — and update the domain count in **three places**:
+5. **Be added to the Index** in `skills/devils-advocate/SKILL.md` under `### 📂 Domain Frameworks` — and update the domain count in **three places**:
    - The `### 📂 Domain Frameworks` heading in `SKILL.md` (e.g., `12 domains` → `13 domains`)
    - Item 2 above: "check all **N** existing domain frameworks"
    - Item 2 above: the domain list at the end of that paragraph
@@ -127,6 +127,31 @@ An example file in `examples/` must:
 - Explain in the PR description what was wrong and why your version is better
 - Do not change the Gate prompt wording, version stamps in examples, or core protocol flow without opening an issue first
 - Do not weaken references to `SKILL.md` in `AGENTS.md` or `copilot-instructions.md` without opening an issue first — these files activate the DA gate for all contributors
+
+### New Assessment Pattern or Edge Case (sar-cybersecurity)
+
+A new example in `skills/sar-cybersecurity/examples/` must:
+
+1. Follow the canonical edge case format — see existing examples for structure
+2. Cover a vulnerability class or scoring scenario not already represented
+3. Include a complete finding with CWE mapping, score justification, and compliance mapping
+4. Be added to the Index in `skills/sar-cybersecurity/SKILL.md`
+
+A change to `skills/sar-cybersecurity/frameworks/` (scoring rules, output format, compliance standards, injection patterns, storage categories, database protocol, dependency audit) must:
+
+1. Not contradict existing scoring or output format rules without a version bump
+2. Be consistent with the 6 security safeguards required for skills.sh audit compliance
+
+### New Behavioral Rule (ai-rules)
+
+A change to `skills/ai-rules/SKILL.md` must:
+
+1. Not conflict with Devil's Advocate protocols — ai-rules defines HOW to act; DA defines WHETHER to act
+2. Preserve all 6 mandatory security safeguards (untrusted input boundary, no arbitrary code execution, bounded autonomy, web search scoping, example code boundaries, report-only output)
+3. Remain within the 8K-token / 32,000-char budget — ai-rules loads in full on every session start
+4. Include a version bump (patch for clarifications, minor for new behavioral rules) with full cascade
+
+---
 
 ### Bug Reports
 

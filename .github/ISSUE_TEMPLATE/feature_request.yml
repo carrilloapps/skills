@@ -1,24 +1,40 @@
 name: Feature Request
-description: Propose a new framework, example, checklist, or protocol improvement
+description: Propose an improvement or addition to any skill in this repository
 title: "[Feature]: "
 labels: ["enhancement"]
 body:
   - type: markdown
     attributes:
       value: |
-        Have an idea to make Devil's Advocate more useful? We'd love to hear it.
+        Have an idea to improve one of the skills? We'd love to hear it.
         Please check that a similar request doesn't already exist before submitting.
+
+  - type: dropdown
+    id: target-skill
+    attributes:
+      label: Target Skill
+      description: Which skill would this improve?
+      options:
+        - "🔴 devils-advocate"
+        - "🛡️ sar-cybersecurity"
+        - "📋 ai-rules"
+        - "📦 Repository infrastructure (CI, templates, root docs)"
+        - "🔜 postmortem-writing (planned)"
+    validations:
+      required: true
 
   - type: dropdown
     id: contribution-type
     attributes:
       label: Type of Contribution
       options:
-        - "New domain framework (frameworks/*.md)"
-        - "New example (examples/*.md)"
-        - "Improvement to existing framework"
-        - "New checklist"
-        - "Core protocol change (SKILL.md, handbrake-protocol.md, etc.)"
+        - "New domain framework — devils-advocate (frameworks/*.md)"
+        - "New example — devils-advocate (examples/*.md)"
+        - "New assessment pattern or edge case — sar-cybersecurity"
+        - "New behavioral rule or estimation guidance — ai-rules"
+        - "Improvement to existing framework, checklist, or rule"
+        - "New checklist — devils-advocate"
+        - "Core protocol change (SKILL.md or core framework file)"
         - "Other"
     validations:
       required: true
@@ -27,8 +43,8 @@ body:
     id: domain
     attributes:
       label: Domain or Role
-      description: Which role or domain would benefit most from this addition?
-      placeholder: "e.g. DevOps Engineer, Data Engineer, CTO"
+      description: Which role, domain, or area would benefit most from this addition?
+      placeholder: "e.g. DevOps Engineer, sar-cybersecurity supply chain, ai-rules estimation"
     validations:
       required: false
 
@@ -62,7 +78,7 @@ body:
     attributes:
       label: Overlap Check
       options:
-        - label: I have reviewed all existing frameworks and this does not duplicate one
+        - label: I have reviewed existing content and this does not duplicate it
           required: true
-        - label: I have reviewed the existing examples and this covers a new scenario
+        - label: I have reviewed the existing examples (if applicable) and this covers a new scenario
           required: false

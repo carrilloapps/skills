@@ -1,5 +1,5 @@
 name: Bug Report
-description: Report incorrect, misleading, or broken guidance in Devil's Advocate
+description: Report incorrect, misleading, or broken guidance in any skill
 title: "[Bug]: "
 labels: ["bug"]
 body:
@@ -8,12 +8,25 @@ body:
       value: |
         Thank you for taking the time to report an issue. Please fill in the details below — the more specific you are, the faster we can fix it.
 
+  - type: dropdown
+    id: affected-skill
+    attributes:
+      label: Affected Skill
+      description: Which skill contains the issue?
+      options:
+        - "🔴 devils-advocate"
+        - "🛡️ sar-cybersecurity"
+        - "📋 ai-rules"
+        - "📦 Repository infrastructure (CI, templates, root docs)"
+    validations:
+      required: true
+
   - type: input
     id: affected-file
     attributes:
       label: Affected File
       description: Which file contains the incorrect content?
-      placeholder: "frameworks/handbrake-protocol.md"
+      placeholder: "skills/devils-advocate/frameworks/handbrake-protocol.md"
     validations:
       required: true
 

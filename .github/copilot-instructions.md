@@ -1,16 +1,17 @@
 # Copilot Instructions
 
-This repository is the source for the **devil's advocate** skill — a mandatory adversarial analysis gate for 40+ AI coding agents.
+This repository publishes three AI agent skills: **devils-advocate**, **sar-cybersecurity**, and **ai-rules**. A fourth skill (**postmortem-writing**) is planned.
 
-## Devil's Advocate gate (required)
+## Skill load order (required)
 
-Before implementing any plan, proposal, or code change in this repository, load and apply:
+Before implementing any plan, proposal, or code change in this repository, load skills in this order:
 
 ```
-skills/devils-advocate/SKILL.md
+1. skills/ai-rules/SKILL.md          ← behavioral baseline (always first)
+2. skills/devils-advocate/SKILL.md   ← adversarial gate (runs before every action)
 ```
 
-The skill runs **first** — before any file edit, refactor, or git operation. All actions require adversarial analysis and explicit user approval (`✅ Proceed`) before proceeding.
+ai-rules establishes the behavioral baseline (documentation, code quality, language rules, estimation). Devil's Advocate then gates every action — all changes require a full adversarial analysis and explicit user approval (`✅ Proceed`) before proceeding.
 
 ## Available skills
 
@@ -35,7 +36,7 @@ All checks must pass.
 
 ## Conventions
 
-- **Version cascade**: bump `version:` in `skills/devils-advocate/SKILL.md` frontmatter, then follow the cascade checklist in `.github/CONTRIBUTING.md`
+- **Version cascade**: bump `version:` in the affected skill's `SKILL.md` frontmatter, then follow the per-skill cascade checklist in `.github/CONTRIBUTING.md`
 - **Documentation**: `en_US` recommended; code identifiers always `en_US`
 - **Commits**: Conventional Commits format (`feat:`, `fix:`, `docs:`)
 - **Branch**: `main` only — enable branch protection in GitHub Settings → Branches (required status check: `validate`)

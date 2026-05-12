@@ -1,16 +1,23 @@
 # AGENTS.md
 
-This repository is the source for the **devil's advocate** skill — a mandatory adversarial analysis gate for 40+ AI coding agents.
+This repository publishes three AI agent skills: **devils-advocate**, **sar-cybersecurity**, and **ai-rules**. A fourth skill (**postmortem-writing**) is planned.
+
+## Skill load order (required)
+
+When working in this repository, load skills in this order:
+
+```
+1. skills/ai-rules/SKILL.md          ← behavioral baseline (always first)
+2. skills/devils-advocate/SKILL.md   ← adversarial gate (runs before every action)
+```
+
+ai-rules defines HOW to act (documentation, code quality, language, estimation). Devil's Advocate defines WHETHER to act (adversarial analysis, risk gate). Both must be loaded; ai-rules must load first.
 
 ## Devil's Advocate gate (required)
 
-Before proposing or implementing **any** change to this repository, load and apply:
+Before proposing or implementing **any** change to this repository, apply the Devil's Advocate gate from `skills/devils-advocate/SKILL.md`.
 
-```
-skills/devils-advocate/SKILL.md
-```
-
-The skill runs **first** — before any file edit, refactor, or git operation. All actions require a full adversarial analysis and explicit user approval (`✅ Proceed`) before proceeding. This includes changes to `SKILL.md`, `frameworks/`, `checklists/`, `examples/`, `scripts/`, and all root files.
+The gate runs **before** any file edit, refactor, or git operation. All actions require a full adversarial analysis and explicit user approval (`✅ Proceed`) before proceeding. This includes changes to `SKILL.md`, `frameworks/`, `checklists/`, `examples/`, `scripts/`, and all root files.
 
 ## Quality gate
 

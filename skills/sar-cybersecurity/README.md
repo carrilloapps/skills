@@ -2,7 +2,7 @@
 
 > **Automated Security Assessment Report (SAR) generator — deep cybersecurity analysis mapped to 20+ compliance standards.**
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-red.svg)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-red.svg)](../../LICENSE)
 [![Version](https://img.shields.io/badge/version-1.9.0-blue.svg)](../../CHANGELOG.md)
 [![skill.sh](https://img.shields.io/badge/skill.sh-sar--cybersecurity-black.svg)](https://skills.sh/carrilloapps/skills/sar-cybersecurity)
 [![GitHub](https://img.shields.io/badge/GitHub-carrilloapps-181717.svg?logo=github)](https://github.com/carrilloapps/skills)
@@ -532,7 +532,7 @@ For vulnerability reports (harmful, misleading, or exploitable guidance), see [S
 
 ## License
 
-[MIT](LICENSE) — free to use, modify, and distribute. Attribution appreciated.
+[MIT](../../LICENSE) — free to use, modify, and distribute. Attribution appreciated.
 
 ---
 

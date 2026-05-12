@@ -2,7 +2,7 @@
 
 > **The mandatory adversarial analysis gate for 40+ AI coding agents — runs first, before any action.**
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-red.svg)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-red.svg)](../../LICENSE)
 [![Version](https://img.shields.io/badge/version-2.9.2-blue.svg)](../../CHANGELOG.md)
 [![skill.sh](https://img.shields.io/badge/skill.sh-devils--advocate-black.svg)](https://skills.sh/carrilloapps/skills/devils-advocate)
 [![GitHub](https://img.shields.io/badge/GitHub-carrilloapps-181717.svg?logo=github)](https://github.com/carrilloapps/skills)
@@ -385,7 +385,7 @@ For vulnerability reports (harmful, misleading, or exploitable guidance), see [S
 
 ## License
 
-[MIT](LICENSE) — free to use, modify, and distribute. Attribution appreciated.
+[MIT](../../LICENSE) — free to use, modify, and distribute. Attribution appreciated.
 
 ---
 

@@ -2,7 +2,7 @@
 
 > **Personal behavioral rules for AI tools — documentation discipline, secure practices, code quality, version control, and structured estimation across any project.**
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-red.svg)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-red.svg)](../../LICENSE)
 [![Version](https://img.shields.io/badge/version-1.0.1-blue.svg)](../../CHANGELOG.md)
 [![skills.sh](https://img.shields.io/badge/skills.sh-ai--rules-black.svg)](https://skills.sh/carrilloapps/skills/ai-rules)
 [![GitHub](https://img.shields.io/badge/GitHub-carrilloapps-181717.svg?logo=github)](https://github.com/carrilloapps/skills)
@@ -261,7 +261,7 @@ For vulnerability reports (harmful, misleading, or exploitable guidance), see [S
 
 ## License
 
-[MIT](LICENSE) — free to use, modify, and distribute. Attribution appreciated.
+[MIT](../../LICENSE) — free to use, modify, and distribute. Attribution appreciated.
 
 ---
 

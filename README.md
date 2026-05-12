@@ -5,7 +5,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-red.svg)](LICENSE)
 [![skills.sh](https://img.shields.io/badge/skills.sh-carrilloapps-black.svg)](https://skills.sh/carrilloapps/skills)
-[![Validation](https://img.shields.io/badge/checks-49%2F49_passed-brightgreen.svg)](scripts/validate.sh)
+[![Validation](https://img.shields.io/badge/checks-55%2F55_passed-brightgreen.svg)](scripts/validate.sh)
 [![Skills](https://img.shields.io/badge/skills-3-blue.svg)](#available-skills)
 [![GitHub](https://img.shields.io/badge/GitHub-carrilloapps-181717.svg?logo=github)](https://github.com/carrilloapps/skills)
 [![X / Twitter](https://img.shields.io/badge/@carrilloapps-000000.svg?logo=x)](https://x.com/carrilloapps)
@@ -255,7 +255,7 @@ Each skill is self-contained and independently installable via `@<skill-name>`.
 
 ## Quality Gate
 
-Every change is validated against **49 automated checks** before merging:
+Every change is validated against **55 automated checks** before merging:
 
 ```bash
 bash scripts/validate.sh

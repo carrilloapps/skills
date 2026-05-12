@@ -1,22 +1,24 @@
 # Security Policy
 
-## Supported Versions
+## Supported Skills and Versions
 
-Devil's Advocate is a documentation-only skill (Markdown files). There is no compiled code, binary, or runtime. Security concerns relate primarily to:
+This repository publishes three AI agent skills — all are pure Markdown instruction files with no compiled code, binaries, or runtime. Security concerns relate primarily to:
 
-- Instruction integrity (the skill's guidance should not be misleading or harmful)
-- Content accuracy (risk analysis frameworks should reflect current best practices)
+- **Instruction integrity** — guidance should not be misleading, exploitable, or harmful
+- **Content accuracy** — risk analysis, security assessment, and behavioral frameworks should reflect current best practices
 
-| Version | Supported |
-|---------|-----------|
-| Latest (`main` branch) | ✅ Active |
-| Tagged releases | ✅ For their stated version scope |
+| Skill | Latest version | Supported |
+|-------|---------------|-----------|
+| devils-advocate | `main` branch | ✅ Active |
+| sar-cybersecurity | `main` branch | ✅ Active |
+| ai-rules | `main` branch | ✅ Active |
+| Tagged releases (any skill) | Stated version scope | ✅ For their stated version |
 
 ---
 
 ## Reporting a Vulnerability
 
-If you find a security issue in this skill — including harmful, misleading, or exploitable guidance — please **do not open a public issue**.
+If you find a security issue in any skill in this repository — including harmful, misleading, or exploitable guidance — please **do not open a public issue**.
 
 Report it privately by:
 
@@ -25,8 +27,9 @@ Report it privately by:
 
 ### What to include
 
-- A description of the issue and the affected file(s)
-- Why this is a security concern (e.g., guidance that could lead a user to introduce a vulnerability)
+- The affected skill and file(s)
+- A description of the issue
+- Why this is a security concern (e.g., guidance that could lead a user to introduce a vulnerability, or AI instruction that could be exploited via prompt injection)
 - A suggested correction if you have one
 
 ### Response timeline
@@ -40,9 +43,9 @@ Report it privately by:
 ### Out of scope
 
 - Opinions about whether a given risk rating is too high or too low → use a regular issue
-- Suggestions to add new analysis domains or frameworks → use a feature request
+- Suggestions to add new analysis domains, frameworks, or rules → use a feature request
 - Markdown rendering issues → use a regular issue
 
 ---
 
-Thank you for helping keep Devil's Advocate accurate and trustworthy.
+Thank you for helping keep these skills accurate and trustworthy.

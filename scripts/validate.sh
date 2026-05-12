@@ -1,8 +1,12 @@
 #!/usr/bin/env bash
-# validate.sh — Devil's Advocate quality sweep
-# Checks all quality standards before a PR is merged.
+# validate.sh — carrilloapps/skills quality sweep
+# Checks all quality standards for all published skills before a PR is merged.
 # Usage: bash scripts/validate.sh  (from repo root)
 # Compatible: macOS, Linux, Git Bash (Windows), WSL
+#
+# Checks 1–13: devils-advocate (version, examples, frameworks, gate blocks, budget)
+# Check 14:    sar-cybersecurity (version consistency, token budget)
+# Check 15:    ai-rules (version consistency, token budget)
 
 set -euo pipefail
 
@@ -203,6 +207,54 @@ if (( SKILL_BYTES < 32000 )); then
   ok "SKILL.md ${SKILL_BYTES} chars (~${SKILL_TOKEN_EST} tokens) — within 8K-token budget"
 else
   fail "SKILL.md ${SKILL_BYTES} chars (~${SKILL_TOKEN_EST} tokens) — exceeds 8K-token budget (32,000 char threshold)"
+fi
+
+# ─── Check 14: SAR Cybersecurity version consistency ─────────────────────────
+section "SAR Cybersecurity version consistency"
+SAR_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../skills/sar-cybersecurity" && pwd)"
+SAR_SKILL_VER=$(grep -m1 '^version:' "$SAR_ROOT/SKILL.md" | sed 's/version: *//')
+SAR_README_VER=$(grep -oE 'version-[0-9]+\.[0-9]+\.[0-9]+-blue' "$SAR_ROOT/README.md" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
+SAR_META_VER=$(grep -oE '"version"[[:space:]]*:[[:space:]]*"[0-9]+\.[0-9]+\.[0-9]+"' "$SAR_ROOT/metadata.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
+SAR_SKILL_BYTES=$(wc -c < "$SAR_ROOT/SKILL.md")
+SAR_SKILL_TOKENS=$(( SAR_SKILL_BYTES / 4 ))
+if [ "$SAR_README_VER" = "$SAR_SKILL_VER" ]; then
+  ok "SAR README.md badge ($SAR_README_VER) matches SKILL.md version"
+else
+  fail "SAR README.md badge ($SAR_README_VER) does not match SKILL.md ($SAR_SKILL_VER)"
+fi
+if [ "$SAR_META_VER" = "$SAR_SKILL_VER" ]; then
+  ok "SAR metadata.json version ($SAR_META_VER) matches SKILL.md version"
+else
+  fail "SAR metadata.json version ($SAR_META_VER) does not match SKILL.md ($SAR_SKILL_VER)"
+fi
+if (( SAR_SKILL_BYTES < 32000 )); then
+  ok "SAR SKILL.md ${SAR_SKILL_BYTES} chars (~${SAR_SKILL_TOKENS} tokens) — within 8K-token budget"
+else
+  fail "SAR SKILL.md ${SAR_SKILL_BYTES} chars (~${SAR_SKILL_TOKENS} tokens) — exceeds 8K-token budget (32,000 char threshold)"
+fi
+
+# ─── Check 15: ai-rules version consistency ───────────────────────────────────
+section "ai-rules version consistency"
+AIRULES_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../skills/ai-rules" && pwd)"
+AIRULES_SKILL_VER=$(grep -m1 '^version:' "$AIRULES_ROOT/SKILL.md" | sed 's/version: *//')
+AIRULES_README_VER=$(grep -oE 'version-[0-9]+\.[0-9]+\.[0-9]+-blue' "$AIRULES_ROOT/README.md" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
+AIRULES_META_VER=$(grep -oE '"version"[[:space:]]*:[[:space:]]*"[0-9]+\.[0-9]+\.[0-9]+"' "$AIRULES_ROOT/metadata.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
+AIRULES_SKILL_BYTES=$(wc -c < "$AIRULES_ROOT/SKILL.md")
+AIRULES_SKILL_TOKENS=$(( AIRULES_SKILL_BYTES / 4 ))
+if [ "$AIRULES_README_VER" = "$AIRULES_SKILL_VER" ]; then
+  ok "ai-rules README.md badge ($AIRULES_README_VER) matches SKILL.md version"
+else
+  fail "ai-rules README.md badge ($AIRULES_README_VER) does not match SKILL.md ($AIRULES_SKILL_VER)"
+fi
+if [ "$AIRULES_META_VER" = "$AIRULES_SKILL_VER" ]; then
+  ok "ai-rules metadata.json version ($AIRULES_META_VER) matches SKILL.md version"
+else
+  fail "ai-rules metadata.json version ($AIRULES_META_VER) does not match SKILL.md ($AIRULES_SKILL_VER)"
+fi
+if (( AIRULES_SKILL_BYTES < 32000 )); then
+  ok "ai-rules SKILL.md ${AIRULES_SKILL_BYTES} chars (~${AIRULES_SKILL_TOKENS} tokens) — within 8K-token budget"
+else
+  fail "ai-rules SKILL.md ${AIRULES_SKILL_BYTES} chars (~${AIRULES_SKILL_TOKENS} tokens) — exceeds 8K-token budget (32,000 char threshold)"
 fi
 
 # ─── Summary ──────────────────────────────────────────────────────────────────

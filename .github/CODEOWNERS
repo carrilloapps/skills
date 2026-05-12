@@ -4,8 +4,18 @@
 # Default owner for all files
 * @carrilloapps
 
-# Core protocol files — require maintainer review on every change
+# devils-advocate core files
 skills/devils-advocate/SKILL.md @carrilloapps
 skills/devils-advocate/frameworks/ @carrilloapps
 skills/devils-advocate/checklists/ @carrilloapps
+
+# sar-cybersecurity core files
+skills/sar-cybersecurity/SKILL.md @carrilloapps
+skills/sar-cybersecurity/frameworks/ @carrilloapps
+
+# ai-rules core files
+skills/ai-rules/SKILL.md @carrilloapps
+
+# CI and governance
 scripts/validate.sh @carrilloapps
+.github/ @carrilloapps
