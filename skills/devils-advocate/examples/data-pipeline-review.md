@@ -51,7 +51,7 @@ Reply: 📝 [answers] to raise confidence | `continue` to proceed at worst-case 
 # 🟠 Devil's Advocate Analysis: Customer Analytics Pipeline to BigQuery *(Fictional Example)*
 
 **Analyzed**: 2026-02-20
-**Skill version**: 2.9.0
+**Skill version**: 2.9.2
 **Scope**: Data — Globex Corp BigQuery migration for 2M events/day with customer PII; regulatory compliance in scope *(all details fictional)*
 
 ---

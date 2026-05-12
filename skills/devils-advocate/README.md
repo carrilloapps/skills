@@ -3,7 +3,7 @@
 > **The mandatory adversarial analysis gate for 40+ AI coding agents — runs first, before any action.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-red.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-2.9.0-blue.svg)](../../CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-2.9.2-blue.svg)](../../CHANGELOG.md)
 [![skill.sh](https://img.shields.io/badge/skill.sh-devils--advocate-black.svg)](https://skills.sh/carrilloapps/skills/devils-advocate)
 [![GitHub](https://img.shields.io/badge/GitHub-carrilloapps-181717.svg?logo=github)](https://github.com/carrilloapps/skills)
 [![X / Twitter](https://img.shields.io/badge/@carrilloapps-000000.svg?logo=x)](https://x.com/carrilloapps)
@@ -14,7 +14,7 @@ Devil's Advocate is an [agent skill](https://skills.sh) compatible with **40+ AI
 
 It is not a linter. It is not a checklist. It is an adversarial analyst that:
 
-- **Runs unconditionally first** — before any MCP tool, agent, skill, or file operation
+- **Runs consistently first** — before any MCP tool, agent, skill, or file operation
 - **Challenges every assumption** — finds what the plan missed, not what it got right
 - **Fires alerts mid-sweep** — doesn't wait until the end to surface a Critical finding
 - **Preserves your authority** — having permissions is not the same as having authorization
@@ -22,6 +22,8 @@ It is not a linter. It is not a checklist. It is an adversarial analyst that:
 ---
 
 ## Quick Install
+
+> **Before installing**: Review the source at [github.com/carrilloapps/skills](https://github.com/carrilloapps/skills) and verify the latest audit results at [skills.sh/audits](https://skills.sh/audits). The install command below fetches and executes code from a remote repository — review before running in production or sensitive environments.
 
 ```bash
 npx skills add carrilloapps/skills@devils-advocate
@@ -269,7 +271,7 @@ The skill uses a layered protocol that escalates based on finding severity:
 | **Pre-mortem** | `frameworks/premortem.md` | Auto on 🔴 Critical (Handbrake Step 6) |
 | **Handbrake Checklist** | `frameworks/handbrake-checklist.md` | Rapid Handbrake activation decision sweep |
 
-**Context budget**: Load a maximum of 2 domain frameworks per analysis to avoid context window saturation. Protocol files (`output-format.md`, `handbrake-protocol.md`, `immediate-report.md`, `premortem.md`, `handbrake-checklist.md`) are free and do not count toward the budget.
+**Context budget**: Load all frameworks relevant to the plan's scope in a single analysis pass — no artificial cap. Relevance-based selection only: load the frameworks that directly apply to what is being analyzed. Most plans need 2–4; loading all 12 is reserved for full-system reviews spanning every domain simultaneously. Protocol files (`output-format.md`, `handbrake-protocol.md`, `immediate-report.md`, `premortem.md`, `handbrake-checklist.md`) are free and always loadable.
 
 ---
 

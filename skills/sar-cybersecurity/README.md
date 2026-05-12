@@ -3,7 +3,7 @@
 > **Automated Security Assessment Report (SAR) generator — deep cybersecurity analysis mapped to 20+ compliance standards.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-red.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-1.8.0-blue.svg)](../../CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.9.0-blue.svg)](../../CHANGELOG.md)
 [![skill.sh](https://img.shields.io/badge/skill.sh-sar--cybersecurity-black.svg)](https://skills.sh/carrilloapps/skills/sar-cybersecurity)
 [![GitHub](https://img.shields.io/badge/GitHub-carrilloapps-181717.svg?logo=github)](https://github.com/carrilloapps/skills)
 [![X / Twitter](https://img.shields.io/badge/@carrilloapps-000000.svg?logo=x)](https://x.com/carrilloapps)
@@ -24,7 +24,7 @@ It is not a scanner. It is not a linter. It is a complete cybersecurity analysis
 - **Maps every finding to CWE IDs** — mandatory CWE/MITRE Top 25 cross-reference for all findings, not just dependency vulnerabilities
 - **Quantitative Security Posture Dashboard** — every report includes coverage metrics (secure surface %, auth coverage %, input validation rate, parameterized query rate, dependency vulnerability rate, CWE Top 25 coverage, OWASP Top 10 alignment, compliance alignment) with raw counts — ready to use as OKRs
 - **Produces bilingual reports** — EN (en_US) and ES (es_VE) cross-linked Markdown files
-- **Respects read-only constraints** — writes only to `docs/security/`, never modifies source code
+- **Respects read-only constraints** — writes only to the user-configured output directory (default: `docs/security/`), never modifies source code
 - **Progressive context loading** — modular architecture with on-demand framework loading to prevent context window saturation
 
 ---
@@ -131,50 +131,19 @@ Works with every agent supported by the [skills.sh](https://skills.sh) ecosystem
 
 When you ask for a security analysis, vulnerability assessment, or SAR, the skill:
 
-```
-1. ACTIVATES   — Agent assumes senior cybersecurity expert role.
-                  Loads all compliance standards and analysis protocol.
-       │
-       ▼
-2. MAPS        — Identifies all entry points: HTTP endpoints,
-                  WebSockets, message queues, scheduled jobs, APIs.
-       │
-       ▼
-3. AUDITS      — Inventories all packages, dependencies, integrated
-                  skills/plugins. Checks CVEs, CWE/MITRE Top 25,
-                  OWASP Top 10, SANS/CIS Top 20 compliance.
-       │
-       ▼
-4. TRACES      — For each potential vulnerability, traces the
-                  complete execution flow before assigning any score.
-       │
-       ▼
-5. EVALUATES   — Checks existing controls: auth, validation,
-                  parameterized queries, WAF, encryption.
-       │
-       ▼
-6. SCORES      — Classifies impact type, assigns 0–100 criticality
-                  based on NET effective risk (after controls).
-       │
-       ▼
-7. READS CSV   — Reads existing vulnerabilities.csv to find
-                  mitigated and recurring findings.
-       │
-       ▼
-8. DOCUMENTS   — Produces bilingual EN + ES reports in
-                  docs/security/ with full compliance mapping.
-                  Title reflects worst vulnerability found.
-                  Includes [MITIGATED] section if applicable.
-       │
-       ▼
-9. REGISTERS   — Creates/updates vulnerabilities.csv with all
-                  findings (Pending). Preserves team fields.
-                  Validates CSV integrity. Never deletes rows.
-       │
-       ▼
-10. RELEASES   — Discards all assessment context from the
-                  conversation window. Generated files in
-                  docs/security/ are the single source of truth.
+```mermaid
+flowchart TD
+    A["0. CONFIRM\nAsk user where to save output\n(default: docs/security/)"] --> B
+    B["1. ACTIVATES\nSenior cybersecurity expert role\nLoads compliance standards & protocol"] --> C
+    C["2. MAPS\nEntry points: HTTP, WebSockets,\nmessage queues, scheduled jobs"] --> D
+    D["3. AUDITS\nPackages & dependencies vs CVEs\nCWE/MITRE Top 25, OWASP Top 10"] --> E
+    E["4. TRACES\nComplete execution flow\nper potential vulnerability"] --> F
+    F["5. EVALUATES\nExisting controls: auth, validation,\nparameterized queries, WAF, encryption"] --> G
+    G["6. SCORES\nImpact classification + 0–100\nnet effective risk after controls"] --> H
+    H["7. READS CSV\nReads vulnerabilities.csv —\nmitigated & recurring findings"] --> I
+    I["8. DOCUMENTS\nBilingual EN + ES reports\nTitle = worst finding, [MITIGATED] if applicable"] --> J
+    J["9. REGISTERS\nCreate/update vulnerabilities.csv\nPreserve team fields, validate integrity"] --> K
+    K["10. RELEASES\nDiscard all assessment context\nGenerated files are single source of truth"]
 ```
 
 ### Progressive Context Loading
@@ -183,7 +152,7 @@ The skill uses a modular architecture to prevent AI context window saturation:
 
 - **SKILL.md** (~115 lines) — always loaded: core rules, constraints, analysis protocol, Index
 - **Protocol files** (free) — `output-format.md`, `scoring-system.md`, `dependency-supply-chain.md` — loaded automatically for every assessment
-- **Domain frameworks** (max 2 per assessment) — `compliance-standards.md`, `database-access-protocol.md`, `injection-patterns.md`, `storage-exfiltration.md` — loaded on demand based on assessment scope
+- **Domain frameworks** — `compliance-standards.md`, `database-access-protocol.md`, `injection-patterns.md`, `storage-exfiltration.md` — loaded on demand based on assessment scope; all 4 are available with no artificial cap
 - **Examples** (10 canonical edge cases) — loaded on demand as reference outputs for correct scoring, tracing, and formatting
 
 All files are cross-referenced with internal Markdown links from the Index section in SKILL.md.
@@ -200,19 +169,19 @@ The skill activates automatically on any of these patterns:
 
 ### Output
 
-Every assessment produces **exactly two linked Markdown files** plus an **updated CSV index**:
+Every assessment produces **exactly two linked Markdown files** plus an **updated CSV index**, saved to the output directory confirmed with the user before analysis begins (default: `docs/security/`):
 
 ```
-docs/security/[DD-MM-YYYY]_[SHORT-TITLE]_EN.md   ← English (en_US)
-docs/security/[DD-MM-YYYY]_[SHORT-TITLE]_ES.md   ← Spanish (es_VE)
-docs/security/vulnerabilities.csv                           ← Living registry of all findings
+<output-dir>/[DD-MM-YYYY]_[SHORT-TITLE]_EN.md   ← English (en_US)
+<output-dir>/[DD-MM-YYYY]_[SHORT-TITLE]_ES.md   ← Spanish (es_VE)
+<output-dir>/vulnerabilities.csv                 ← Living registry of all findings
 ```
 
 The `[SHORT-TITLE]` is derived from the **worst (highest-scoring) vulnerability** found. For example, a SAR where the top finding is a SQL Injection on `/api/users` (score 92) produces:
 
 ```
-docs/security/12-03-2026_SQLI-API-USERS_EN.md
-docs/security/12-03-2026_SQLI-API-USERS_ES.md
+<output-dir>/12-03-2026_SQLI-API-USERS_EN.md
+<output-dir>/12-03-2026_SQLI-API-USERS_ES.md
 ```
 
 Each file contains:
@@ -243,7 +212,7 @@ Each file contains:
 
 ## Vulnerabilities Registry
 
-Every SAR generation creates or updates `docs/security/vulnerabilities.csv` — a persistent CSV (11 columns) that tracks **every finding ever reported** across all assessments:
+Every SAR generation creates or updates `vulnerabilities.csv` in the output directory — a persistent CSV (11 columns) that tracks **every finding ever reported** across all assessments:
 
 ```csv
 ID,Type,Score,Label,Title,Detection Date,Mitigation Date,Status,Assignee,Priority,Existing Mitigation
@@ -347,7 +316,7 @@ These are the **minimum baseline** — the agent applies additional standards as
 
 | Constraint | Rule |
 |------------|------|
-| Write outside `docs/security/` | Never |
+| Write outside the output directory | Never |
 | Modify source code, configs, env files | Never |
 | Commit, push, or deploy | Never |
 | Score before tracing full flow | Never |
@@ -370,15 +339,16 @@ These are the **minimum baseline** — the agent applies additional standards as
 
 ## Analysis Protocol
 
+0. **Confirm Output Directory** — Ask the user where to save SAR files and the vulnerabilities registry. Default: `docs/security/`. Accept any path — including MCP-accessible locations or paths outside the project root. Use default if the user does not respond or the context is automated.
 1. **Map Entry Points** — HTTP endpoints, WebSockets, message queues, scheduled jobs, public API surface
 2. **Audit Dependencies & Supply Chain** — Inventory all packages (direct + transitive), audit against NVD/GitHub Advisories/OSV, evaluate integrated skills/plugins for permissions and provenance, map to CWE/MITRE Top 25, OWASP Top 10 (A06, A08), and SANS/CIS Controls (2, 7, 16)
 3. **Trace Execution Flows** — Complete call chain from entry point before scoring
 4. **Evaluate Existing Controls** — Auth middleware, input validation, parameterized queries, WAF, encryption — **plus** exploitation prerequisites: authentication, API keys, rate limits, network exposure, chaining requirements
 5. **Score and Document** — Classify impact type (data exfiltration, integrity, dual-vector, availability-only), apply multi-factor net effective risk (exploitation complexity + impact scope + data sensitivity), mandatory score justification with impact classification, CWE ID(s), standards mapping, MITRE ATT&CK technique, actionable mitigation
-6. **Read Vulnerabilities Registry** — Read existing `vulnerabilities.csv` to identify mitigated and recurring findings before writing the report
-7. **Write Output Files** — Bilingual EN + ES, cross-linked, zero redundancy. Title derived from worst finding. Include `[MITIGATED]` section if applicable
-8. **Update Vulnerabilities Registry** — Create or update `docs/security/vulnerabilities.csv` with all findings. Add new with `Pending`, update recurring scores, preserve team-managed fields. Validate CSV integrity after writing
-9. **Release Context** — Discard all assessment context from the conversation. Generated files are the single source of truth. If follow-up is needed, read from `docs/security/`
+6. **Read Vulnerabilities Registry** — Read existing `vulnerabilities.csv` in the output directory to identify mitigated and recurring findings before writing the report
+7. **Write Output Files** — Bilingual EN + ES, cross-linked, zero redundancy. Title derived from worst finding. Include `[MITIGATED]` section if applicable. Save to the output directory confirmed in Step 0.
+8. **Update Vulnerabilities Registry** — Create or update `vulnerabilities.csv` in the output directory with all findings. Add new with `Pending`, update recurring scores, preserve team-managed fields. Validate CSV integrity after writing.
+9. **Release Context** — Discard all assessment context from the conversation. Generated files in the output directory are the single source of truth. If follow-up is needed, read from the output directory.
 
 ---
 
@@ -525,8 +495,8 @@ skills/sar-cybersecurity/
     ├── secrets-in-source-control.md      # Case H — 12 secrets in git, score 93
     ├── sql-injection-comparison.md       # Case I — Same vuln type, different scores (92 vs 55)
     └── recurring-assessment.md          # Case J — Second SAR, mitigated finding, CSV update flow
-# Output directory (generated at runtime):
-# docs/security/
+# Output directory (user-configured in Step 0, default: docs/security/):
+# <output-dir>/
 # ├── vulnerabilities.csv                # Persistent registry (11 columns, sorted by status group then Score desc)
 # ├── [DD-MM-YYYY]_[WORST-VULN]_EN.md   # SAR report (English)
 # └── [DD-MM-YYYY]_[WORST-VULN]_ES.md   # SAR report (Spanish)

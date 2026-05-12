@@ -4,11 +4,7 @@
 
 ## Directory
 
-```
-docs/security/
-```
-
-Create this directory if it does not exist. All SAR files go here and nowhere else.
+Use the output directory confirmed with the user in Step 0 of the Analysis Protocol (default: `docs/security/`). Create it if it does not exist. All SAR files go here and nowhere else.
 
 ## File Naming
 
@@ -59,9 +55,9 @@ Each file must contain a cross-language link at the top:
 
 ---
 
-## Vulnerabilities Registry — `docs/security/vulnerabilities.csv`
+## Vulnerabilities Registry
 
-Every SAR generation must create or update a CSV file at `docs/security/vulnerabilities.csv`. This file is the **single source of truth** for all security findings across all assessments. It includes both primary findings (score > 50) and warnings (score <= 50).
+Every SAR generation must create or update `vulnerabilities.csv` in the output directory. This file is the **single source of truth** for all security findings across all assessments. It includes both primary findings (score > 50) and warnings (score <= 50).
 
 ### CSV structure — exactly 11 columns, in this order
 
@@ -211,7 +207,7 @@ Each mitigated finding appears as a compact subsection:
 
 1. **Source of truth is `vulnerabilities.csv`** — the agent reads the CSV to determine which findings are mitigated. It does not infer mitigation from code analysis.
 2. **Include ID, Title, original Score, and Label** — these come directly from the CSV row.
-3. **Link to the original SAR** — if the original SAR file is still present in `docs/security/`, link to it.
+3. **Link to the original SAR** — if the original SAR file is still present in the output directory, link to it.
 4. **Order by Mitigation Date descending** — most recently mitigated first.
 5. **Summary count** — start the section with a count: "N previously reported findings have been mitigated since their initial detection."
 6. **No re-analysis** — mitigated findings are not re-scored or re-evaluated. They are displayed as a historical summary only.

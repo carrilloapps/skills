@@ -6,7 +6,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-red.svg)](LICENSE)
 [![skills.sh](https://img.shields.io/badge/skills.sh-carrilloapps-black.svg)](https://skills.sh/carrilloapps/skills)
 [![Validation](https://img.shields.io/badge/checks-49%2F49_passed-brightgreen.svg)](scripts/validate.sh)
-[![Skills](https://img.shields.io/badge/skills-2-blue.svg)](#available-skills)
+[![Skills](https://img.shields.io/badge/skills-3-blue.svg)](#available-skills)
 [![GitHub](https://img.shields.io/badge/GitHub-carrilloapps-181717.svg?logo=github)](https://github.com/carrilloapps/skills)
 [![X / Twitter](https://img.shields.io/badge/@carrilloapps-000000.svg?logo=x)](https://x.com/carrilloapps)
 
@@ -16,8 +16,9 @@
 
 | Skill | Description | Version | Install |
 |-------|-------------|---------|---------|
-| [🔴 **devils-advocate**](skills/devils-advocate/) | Mandatory adversarial risk gate — intercepts every plan before execution, blocks all actions until you explicitly approve | [![v2.9.0](https://img.shields.io/badge/v2.9.0-blue.svg)](CHANGELOG.md) | `npx skills add carrilloapps/skills@devils-advocate` |
-| [🛡️ **sar-cybersecurity**](skills/sar-cybersecurity/) | Automated Security Assessment Report (SAR) generator — deep cybersecurity analysis mapped to 20+ compliance standards | [![v1.0.0](https://img.shields.io/badge/v1.0.0-blue.svg)](CHANGELOG.md) | `npx skills add carrilloapps/skills@sar-cybersecurity` |
+| [🔴 **devils-advocate**](skills/devils-advocate/) | Mandatory adversarial risk gate — intercepts every plan before execution, blocks all actions until you explicitly approve | [![v2.9.2](https://img.shields.io/badge/v2.9.2-blue.svg)](CHANGELOG.md) | `npx skills add carrilloapps/skills@devils-advocate` |
+| [🛡️ **sar-cybersecurity**](skills/sar-cybersecurity/) | Automated Security Assessment Report (SAR) generator — deep cybersecurity analysis mapped to 20+ compliance standards | [![v1.9.0](https://img.shields.io/badge/v1.9.0-blue.svg)](CHANGELOG.md) | `npx skills add carrilloapps/skills@sar-cybersecurity` |
+| [📋 **ai-rules**](skills/ai-rules/) | Personal behavioral rules for AI tools — documentation discipline, secure practices, code quality, version control, and structured estimation | [![v1.0.1](https://img.shields.io/badge/v1.0.1-blue.svg)](CHANGELOG.md) | `npx skills add carrilloapps/skills@ai-rules` |
 | 🔜 **postmortem-writing** | Post-incident analysis — structured postmortem reports with root cause analysis, timeline reconstruction, and lessons learned | *Planned* | — |
 
 ---
@@ -59,7 +60,7 @@ npx skills update    # Update all installed skills
 
 ## Skill Details
 
-### 🔴 [Devil's Advocate](skills/devils-advocate/) · [![v2.9.0](https://img.shields.io/badge/v2.9.0-blue.svg)](skills/devils-advocate/README.md)
+### 🔴 [Devil's Advocate](skills/devils-advocate/) · [![v2.9.2](https://img.shields.io/badge/v2.9.2-blue.svg)](skills/devils-advocate/README.md)
 
 > The mandatory adversarial analysis gate for 40+ AI coding agents — runs first, before any action.
 
@@ -67,13 +68,14 @@ AI tools are increasingly capable of executing complex, multi-step operations �
 
 **How it works:**
 
-```
-INTERCEPT → ANALYSE → REPORT → GATE
-    │           │          │       │
-    │     Load relevant    │    ✅ Proceed
-    │     frameworks       │    🔁 Revise
-  Detect    (max 2)     Full   ❌ Cancel
-  plan                  output
+```mermaid
+flowchart LR
+    A[INTERCEPT\nDetect plan] --> B[ANALYSE\nLoad all relevant\nframeworks]
+    B --> C[REPORT\nFull adversarial\noutput]
+    C --> D{GATE}
+    D --> E["✅ Proceed"]
+    D --> F["🔁 Revise"]
+    D --> G["❌ Cancel"]
 ```
 
 **Protocol stack:**
@@ -108,7 +110,7 @@ INTERCEPT → ANALYSE → REPORT → GATE
 
 ---
 
-### 🛡️ [SAR Cybersecurity](skills/sar-cybersecurity/) · [![v1.0.0](https://img.shields.io/badge/v1.0.0-blue.svg)](skills/sar-cybersecurity/README.md)
+### 🛡️ [SAR Cybersecurity](skills/sar-cybersecurity/) · [![v1.9.0](https://img.shields.io/badge/v1.9.0-blue.svg)](skills/sar-cybersecurity/README.md)
 
 > Automated Security Assessment Report (SAR) generator — deep cybersecurity analysis mapped to 20+ compliance standards.
 
@@ -116,13 +118,14 @@ Transforms any AI agent into a senior cybersecurity expert that produces profess
 
 **How it works:**
 
-```
-MAP → TRACE → EVALUATE → SCORE → DOCUMENT
- │      │        │         │        │
-Entry  Full    Existing   0–100   Bilingual
-points  call   controls   net     EN + ES
-       chain   (auth,     risk    cross-linked
-               WAF, etc.)         reports
+```mermaid
+flowchart LR
+    A["0. CONFIRM\nOutput directory"] --> B
+    B["1. MAP\nEntry points"] --> C["2. AUDIT\nDependencies & supply chain"]
+    C --> D["3. TRACE\nFull call chain"]
+    D --> E["4. EVALUATE\nExisting controls"]
+    E --> F["5. SCORE\n0–100 net risk"]
+    F --> G["6–9. OUTPUT\nBilingual EN+ES\nvulnerabilities.csv"]
 ```
 
 **Assessment coverage:**
@@ -137,43 +140,61 @@ points  call   controls   net     EN + ES
 **Key features:**
 - Scores based on **net effective risk** (after controls), not isolated code
 - Progressive context loading — modular architecture prevents context window saturation
-- Read-only operation — writes only to `docs/security/`, never modifies source code
+- Read-only operation — writes only to the user-configured output directory (default: `docs/security/`), never modifies source code
 - 8 canonical edge cases with reference outputs for consistent scoring behavior
 
-**Includes:** 6 protocol & domain frameworks · 8 canonical edge case examples · Progressive context loading with max 2 frameworks per assessment
+**Includes:** 6 protocol & domain frameworks · 8 canonical edge case examples · Progressive context loading with all relevant frameworks per assessment
 
 → Full documentation: [`skills/sar-cybersecurity/README.md`](skills/sar-cybersecurity/README.md)
 
 ---
 
+### 📋 [AI Rules](skills/ai-rules/) · [![v1.0.1](https://img.shields.io/badge/v1.0.1-blue.svg)](skills/ai-rules/README.md)
+
+> Personal behavioral rules for AI tools — documentation discipline, secure practices, code quality, and structured estimation across any project.
+
+Defines the baseline behavioral contract that all AI agents must follow. Works as a cross-cutting layer beneath Devil's Advocate.
+
+**Core rules:**
+
+| Area | What it enforces |
+|---|---|
+| Security | No reading secrets, no dangerous commands, no unanalyzed DB queries |
+| Documentation storage | All memory and docs go into `docs/` — shared across Claude Code, Copilot, Gemini, OpenCode, and others |
+| Documentation format | Native Markdown, no emoji, cross-references over duplication, professional diagramming tools |
+| Code quality | SOLID · KISS · DRY, mandatory `docs/elementals.md` to prevent duplicate components |
+| Version control | Conventional Commits, focused commits, living `AGENTS.md` |
+| Estimation | Confidence % · effort by capacity mode · pivot potential · risk factors |
+
+→ Full documentation: [`skills/ai-rules/README.md`](skills/ai-rules/README.md)
+
+---
+
 ## How Skills Work Together
 
-```
-┌─────────────────────────────────────────────────────┐
-│  🔴 Devil's Advocate                                │
-│  Runs FIRST — adversarial gate for ANY action       │
-│  12 risk domains · 18 frameworks · 12 examples      │
-└──────────────────────┬──────────────────────────────┘
-                       │
-                       │  ✅ Proceed (user approved)
-                       ▼
-┌─────────────────────────────────────────────────────┐
-│  🛡️ SAR Cybersecurity                               │
-│  Deep security-specific analysis when requested     │
-│  20+ standards · 6 injection families · 7 storage   │
-│  categories · bilingual EN/ES reports               │
-└──────────────────────┬──────────────────────────────┘
-                       │
-                       │  Incident occurs
-                       ▼
-┌─────────────────────────────────────────────────────┐
-│  🔜 Postmortem Writing (planned)                    │
-│  Post-incident analysis — root cause, timeline,     │
-│  lessons learned → feed back into Devil's Advocate  │
-└─────────────────────────────────────────────────────┘
+```mermaid
+flowchart TD
+    AR["📋 ai-rules\nBehavioral baseline — loads FIRST\nHOW to act: docs, code quality, language,\nversion control, estimation"]
+    DA["🔴 devils-advocate\nAdversarial gate — runs before every action\nWHETHER to act: 12 domains · 18 frameworks · 12 examples"]
+    SAR["🛡️ sar-cybersecurity\nDeep security analysis on request\n20+ standards · bilingual EN/ES · vulnerabilities.csv"]
+    PM["🔜 postmortem-writing (planned)\nPost-incident analysis\nRoot cause → lessons learned → feeds back into DA"]
+
+    AR --> DA
+    DA -- "✅ Proceed (user approved)" --> SAR
+    SAR -- "Incident occurs" --> PM
+    PM -. "Feeds back" .-> DA
 ```
 
-Use Devil's Advocate as the adversarial gate for every decision, invoke SAR Cybersecurity for deep security assessments, and (when available) use Postmortem Writing after incidents to close the feedback loop.
+**Layer roles:**
+
+| Skill | Role | When |
+|-------|------|------|
+| `ai-rules` | Behavioral baseline | Session start, always first |
+| `devils-advocate` | Execution gate | Before every action |
+| `sar-cybersecurity` | Deep security analysis | On security assessment request |
+| `postmortem-writing` | Incident learning loop | After incidents (planned) |
+
+Use ai-rules as the behavioral foundation for every session, Devil's Advocate as the adversarial gate for every decision, SAR Cybersecurity for deep security assessments, and (when available) Postmortem Writing after incidents to close the feedback loop.
 
 ---
 
@@ -216,12 +237,16 @@ carrilloapps/skills/
     │   ├── frameworks/               ← 18 domain & protocol frameworks
     │   ├── checklists/               ← 2 structured risk checklists
     │   └── examples/                 ← 12 real-world analysis examples
-    └── sar-cybersecurity/            ← npx skills add carrilloapps/skills@sar-cybersecurity
-        ├── SKILL.md                  ← always loaded (~115 lines, progressive loading)
-        ├── README.md                 ← full documentation
-        ├── metadata.json             ← skill metadata
-        ├── frameworks/               ← 6 protocol & domain frameworks (on-demand)
-        └── examples/                 ← 8 canonical edge case examples
+    ├── sar-cybersecurity/            ← npx skills add carrilloapps/skills@sar-cybersecurity
+    │   ├── SKILL.md                  ← always loaded (~115 lines, progressive loading)
+    │   ├── README.md                 ← full documentation
+    │   ├── metadata.json             ← skill metadata
+    │   ├── frameworks/               ← 6 protocol & domain frameworks (on-demand)
+    │   └── examples/                 ← 8 canonical edge case examples
+    └── ai-rules/                     ← npx skills add carrilloapps/skills@ai-rules
+        ├── SKILL.md                  ← always loaded by agents
+        ├── README.md                 ← documentation
+        └── metadata.json             ← skill metadata
 ```
 
 Each skill is self-contained and independently installable via `@<skill-name>`.

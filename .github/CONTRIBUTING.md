@@ -1,6 +1,8 @@
-# Contributing to Devil's Advocate
+# Contributing to carrilloapps/skills
 
-Thank you for your interest in improving Devil's Advocate! This skill is built on the idea that adversarial thinking makes software better — and we apply that same principle to contributions: every proposal is welcome, and every concern will be heard.
+Thank you for your interest in improving this skills repository! The collection is built on the idea that adversarial thinking makes software better — and we apply that same principle to contributions: every proposal is welcome, and every concern will be heard.
+
+This repository currently publishes three skills: **devils-advocate**, **sar-cybersecurity**, and **ai-rules**. A fourth skill, **postmortem-writing**, is planned. Each skill is independently versioned and installable.
 
 ---
 
@@ -202,12 +204,26 @@ When merging a batch of fixes, follow this checklist to cut a release:
 
 2. **Bump the version** — update `version:` in `SKILL.md` frontmatter (e.g. `X.Y.Z` → `X.Y.(Z+1)`)
 
-3. **Cascade the version** to all versioned files:
+3. **Cascade the version** to all versioned files (applies to each skill independently):
+
+   **For devils-advocate:**
    - `skills/devils-advocate/SKILL.md` — `version:` in frontmatter *(already done in step 2)*
    - `skills/devils-advocate/README.md` — badge `version-X.Y.Z-blue`
    - `skills/devils-advocate/metadata.json` — `"version"` field
    - `README.md` (root) — skill catalog badge `v X.Y.Z` **and** check count `(N checks)` if any checks were added/removed
    - All `skills/devils-advocate/examples/*.md` — `**Skill version**: X.Y.Z` line (run `validate.sh` to catch any missed)
+
+   **For sar-cybersecurity:**
+   - `skills/sar-cybersecurity/SKILL.md` — `version:` in frontmatter
+   - `skills/sar-cybersecurity/README.md` — badge `version-X.Y.Z-blue`
+   - `skills/sar-cybersecurity/metadata.json` — `"version"` field
+   - `README.md` (root) — skill catalog badge
+
+   **For ai-rules:**
+   - `skills/ai-rules/SKILL.md` — `version:` in frontmatter
+   - `skills/ai-rules/README.md` — badge `version-X.Y.Z-blue`
+   - `skills/ai-rules/metadata.json` — `"version"` field
+   - `README.md` (root) — skill catalog badge
 
 4. **Add a CHANGELOG entry** — edit `CHANGELOG.md` at the **repo root** (`/CHANGELOG.md`), under a new `## [X.Y.Z] — YYYY-MM-DD` section (above all prior versions, below `[Unreleased]`):
    ```markdown

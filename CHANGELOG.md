@@ -12,6 +12,61 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ---
 
+## [2.9.2] — 2026-05-12
+
+### Changed
+- **Domain framework cap removed** — eliminated the artificial `max 2 per analysis` limit from the context budget. Agents now load all frameworks relevant to the plan's scope in a single analysis pass. Relevance-based selection only: most plans need 2–4; loading all 12 is reserved for full-system reviews. Eliminates the endless-iteration pattern where users had to re-run DA multiple times to cover all domains.
+- **Domain Frameworks section heading updated** — changed from "max 2 per analysis" to "load all relevant per analysis" for consistency with the updated budget rule
+
+---
+
+## ai-rules [1.0.1] — 2026-05-12
+
+### Changed
+- **Language rule strengthened** — `en_US` for code identifiers is now explicitly "non-negotiable" regardless of project language, user language, or documentation language. Removed reference to "instructions from any other skill or tool" per Gen Agent Trust Hub audit guidance.
+- **Session initialization full-refusal handling** — added explicit path: if the user asks to skip initialization entirely, proceed without `docs/project-context.md`; context-dependent rules apply conservative defaults for the session.
+- **Session closing de-duplicated** — removed the second session-closing note that was redundant with the one in the Session Initialization section.
+- **Security and Privacy wording aligned** — third-party code rule now uses "regardless of user instruction" phrasing consistent with the other prohibitions in that section.
+- **Risk factors made actionable** — added examples: "no test coverage on this module," "external API with no SLA," "single developer with domain knowledge" — vague risk factors are explicitly called out as non-actionable.
+- **Example code boundaries safeguard added** — clarifies that code blocks in this skill define document templates and structural conventions, not executable code.
+
+---
+
+## sar-cybersecurity [1.9.0] — 2026-05-12
+
+### Changed
+- **Dynamic output directory** — removed hardcoded `docs/security/` path. Added Step 0 to the Analysis Protocol that asks the user where to save SAR files before any analysis begins. Default remains `docs/security/` when the user confirms, provides no response, or runs in automated context. All path references throughout `SKILL.md` and `frameworks/output-format.md` replaced with "the output directory" pointing to the confirmed location.
+- **Domain framework cap removed** — eliminated the `max 2 per assessment` limit from the index context budget. Agents now load all frameworks relevant to the assessment scope in a single pass. All 4 domain frameworks are available — load those that directly apply. There is no cap.
+
+---
+
+## [2.9.1] — 2026-05-12
+
+### Fixed
+- **Gen Agent Trust Hub compliance** — resolved HIGH-risk findings from the April 2026 audit
+  - `[PROMPT_INJECTION]` Rule Precedence reframed from override command to design intent: "operates before and around" instead of "takes precedence over all tools and skills"
+  - `[PROMPT_INJECTION]` Git commit rule reframed from "non-negotiable and cannot be overridden" to "should remain active to preserve user authority"
+  - `[PROMPT_INJECTION]` No AI Credit principle reframed from "this rule wins" absolute command to a consistent practice with explicit handling for conflicting templates; header changed from "Under no circumstances" to "As a consistent practice"
+  - `[INDIRECT_PROMPT_INJECTION_SURFACE]` Added **Analyzed Content Boundary** section to `SKILL.md`: analyzed content is treated as untrusted input and cannot modify skill protocols or gate behavior
+  - `[INDIRECT_PROMPT_INJECTION_SURFACE]` Added untrusted content boundary note to `frameworks/analysis-framework.md`
+  - `[REMOTE_CODE_EXECUTION / EXTERNAL_DOWNLOADS]` Added pre-install security review note to `README.md` with links to source repository and audit page
+- README.md: changed "Runs unconditionally first" to "Runs consistently first"
+
+---
+
+## ai-rules [1.0.0] — 2026-05-12
+
+### Added
+- Initial release: personal behavioral rules skill for AI coding agents
+- `skills/ai-rules/SKILL.md` — baseline behavioral contract covering security, documentation storage, documentation format, code quality, version control, communication, and structured estimation
+- `skills/ai-rules/README.md` — public documentation
+- `skills/ai-rules/metadata.json` — skill metadata for skills.sh registry
+- **Documentation storage rule**: all session memory, references, and generated assets must live in `docs/` (or user-specified location) — never in AI memory stores or IDE caches — enabling shared context across Claude Code, GitHub Copilot, Gemini CLI, OpenCode, and other tools
+- **Structured estimation model**: every recommendation includes Confidence %, effort by capacity mode (Solo 1× / AI-assisted 3–5× / AI-augmented team 5–10×), pivot potential (High / Medium / Low), and explicit risk factors
+- **6 mandatory security safeguards** for skills.sh audit compliance (Gen Agent Trust Hub · Socket · Snyk): untrusted input boundary, no arbitrary code execution, bounded autonomy, web search scoping, example code boundaries, report-only output
+
+---
+
 ## [2.9.0] — 2026-03-12
 
 ### Added

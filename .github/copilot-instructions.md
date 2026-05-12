@@ -16,11 +16,12 @@ The skill runs **first** — before any file edit, refactor, or git operation. A
 
 This repository contains the following skills:
 
-| Skill | Path |
-|-------|------|
-| Devil's Advocate | `skills/devils-advocate/SKILL.md` |
-| SAR Cybersecurity | `skills/sar-cybersecurity/SKILL.md` |
-| Postmortem Writing | *Planned* |
+| Skill | Path | Role |
+|-------|------|------|
+| ai-rules | `skills/ai-rules/SKILL.md` | Behavioral baseline — loads first |
+| Devil's Advocate | `skills/devils-advocate/SKILL.md` | Adversarial gate — runs before every action |
+| SAR Cybersecurity | `skills/sar-cybersecurity/SKILL.md` | Deep security analysis on request |
+| Postmortem Writing | *Planned* | Post-incident learning |
 
 ## Quality gate
 
