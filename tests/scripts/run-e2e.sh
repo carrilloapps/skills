@@ -13,6 +13,7 @@ KEEP=0; [ "${1:-}" = "--keep" ] && KEEP=1
 rm -rf "$WORK"; mkdir -p "$WORK"
 # Extract: path from the heading, content between the first fence after it and its matching close.
 awk -v out="$WORK" '
+  { sub(/\r$/, "") }   # tolerate CRLF checkouts (Windows core.autocrlf)
   /^### `[^`]+`/ { p = $0; sub(/^### `/, "", p); sub(/`.*$/, "", p); path = p; next }
   path != "" && fence == "" && /^(```|````)/ { match($0, /^`+/); fence = substr($0, 1, RLENGTH); file = out "/" path
     d = file; sub(/\/[^\/]*$/, "", d); system("mkdir -p \"" d "\""); printf "" > file; next }

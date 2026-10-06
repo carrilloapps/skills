@@ -11,7 +11,7 @@ scripts/*.sh text eol=lf
 # PowerShell 5.1+ reads LF scripts fine.
 *.sh text eol=lf
 *.ps1 text eol=lf
-tests/scripts/expected/** text eol=lf
+tests/scripts/** text eol=lf
 
 # Extensionless hook scripts executed by bash (Cline PreToolUse)
 integrations/cline/hooks/PreToolUse text eol=lf

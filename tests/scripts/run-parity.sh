@@ -50,6 +50,7 @@ tree_dump() { (cd "$1" && find . -type f | sort | while IFS= read -r f; do print
 pass=0 fail=0 n=0
 for runner in "${RUNNERS[@]}"; do
   while IFS= read -r row; do
+    row=${row%$'\r'}   # tolerate CRLF checkouts (Windows core.autocrlf)
     case "$row" in ''|'#'*) continue ;; esac
     IFS=$'\x1f' read -r name mode impl seed args want <<<"${row//$'\t'/$'\x1f'}"
     w=$WORK/$runner/$name
