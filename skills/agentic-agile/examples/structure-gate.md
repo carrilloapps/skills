@@ -2,7 +2,7 @@
 
 > ⚠️ **Example only** — fictional team and project. Commands are illustrative; each runs only after the user approves it.
 
-**Skill version**: 1.0.0
+**Skill version**: 1.0.1
 
 ## 1. The request
 

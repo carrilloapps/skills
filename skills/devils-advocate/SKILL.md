@@ -11,7 +11,7 @@ description: >
   asks "is this a good idea", "review this", "what could go wrong", or asks to execute a change.
 license: MIT
 metadata:
-  version: "3.0.0"
+  version: "3.0.1"
 ---
 
 # Devil's Advocate

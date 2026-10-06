@@ -2,7 +2,7 @@
 
 > ⚠️ **Example only** — fictional team and numbers.
 
-**Skill version**: 1.0.0
+**Skill version**: 1.0.1
 
 ## Capacity — Sprint 2026-S20 (middle of quarter)
 

@@ -6,7 +6,7 @@ description: >
   any project context.
 license: MIT
 metadata:
-  version: "1.1.0"
+  version: "1.1.1"
 ---
 
 # AI Rules

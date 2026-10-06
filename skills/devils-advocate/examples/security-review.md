@@ -2,7 +2,7 @@
 
 > ⚠️ **EDUCATIONAL EXAMPLE — NOT FOR IMPLEMENTATION.** Fictional, deliberately insecure design used only to demonstrate detection of credential exposure. All secrets, endpoints, and systems are fictional.
 
-**Skill version**: 3.0.0
+**Skill version**: 3.0.1
 
 **Plan [fictional]:** Add JWT auth to the internal REST API: HS256 with a shared secret stored in the codebase, 30-day expiry, no refresh token. The API serves web and mobile clients.
 

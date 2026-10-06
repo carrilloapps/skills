@@ -2,7 +2,7 @@
 
 > ⚠️ **Example only** — fictional requests and code, shown to illustrate output length and format. Not instructions to execute.
 
-**Skill version**: 3.0.0
+**Skill version**: 3.0.1
 
 Most actions in a working session are Tier 0 or Tier 1. These examples show how little output they need.
 

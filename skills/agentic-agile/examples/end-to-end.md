@@ -2,7 +2,7 @@
 
 > ⚠️ **Example only** — a fictional mini project (an "overdue invoice reminders" feature). Each `### path` section below is one file of the project; none of it is real code to run.
 
-**Skill version**: 1.0.0
+**Skill version**: 1.0.1
 
 Recreate the files under any folder (empty folders: `plans/drafts/`) and point the scripts at it with `--root <folder>`. Verified 2026-10-06 by `tests/scripts/run-e2e.sh` of the skills repository (bash, pwsh 7, Windows PowerShell 5.1): the extracted tree passes `check-structure --strict`, `check-spec --strict --tickets`, `check-spec --all`, `trace`, `analyze`, and `audit-agile`.
 

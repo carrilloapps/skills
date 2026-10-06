@@ -2,7 +2,7 @@
 
 > ⚠️ **Example only** — fictional initiative, files, and PR.
 
-**Skill version**: 1.0.0
+**Skill version**: 1.0.1
 
 **Context**: initiative `order-history-export`. `specs/order-history-export/spec.md` has three scenarios: `export-orders-only`, `empty-history-message`, `export-limited-to-12-months`. The Phase 0 gate is open.
 

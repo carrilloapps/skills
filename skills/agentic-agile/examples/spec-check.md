@@ -2,7 +2,7 @@
 
 > ⚠️ **Example only** — fictional initiative. Script output is reproduced in the real format of `check-spec` 1.0.0 (rule ids and messages as printed; line numbers depend on the file).
 
-**Skill version**: 1.0.0
+**Skill version**: 1.0.1
 
 ## Passing spec (`specs/order-history-csv/spec.md`, abridged)
 

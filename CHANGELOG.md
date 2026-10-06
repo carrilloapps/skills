@@ -13,6 +13,128 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ---
 
+## [3.0.1] — 2026-10-06
+
+### Fixed
+
+A deep review of the four skills, their scripts, and the repository documentation
+found 77 issues (errors, inconsistencies, duplication, dead references); all are
+fixed and verified. Shared outcomes of that review:
+
+- **Single owner per rule** — the events schema, autonomy defaults, ceremony table,
+  project layout, estimation scale, closing line, `.memory/` convention, and the
+  capability-suggestion protocol are each defined in exactly one file; every other
+  file points to it. No circular references.
+- **No dead references** — every documented file, section, script, and flag was
+  verified against disk and against each script's `--help`.
+- **Installed-path correctness** — examples, hooks, and templates reference
+  `<skill-dir>` (the folder the skill is installed into) instead of this
+  repository's layout.
+
+Skill-specific:
+
+- Docker lab reads the SonarQube token from the per-service env file written by
+  SAR's bootstrap (`env/sonar-scanner.env`); `tokens.env` is bootstrap-internal.
+- Capability tool rows point at ai-rules for the shared suggestion protocol.
+
+---
+
+## sar-cybersecurity [2.0.1] — 2026-10-06
+
+### Fixed
+
+A deep review of the four skills, their scripts, and the repository documentation
+found 77 issues (errors, inconsistencies, duplication, dead references); all are
+fixed and verified. Shared outcomes of that review:
+
+- **Single owner per rule** — the events schema, autonomy defaults, ceremony table,
+  project layout, estimation scale, closing line, `.memory/` convention, and the
+  capability-suggestion protocol are each defined in exactly one file; every other
+  file points to it. No circular references.
+- **No dead references** — every documented file, section, script, and flag was
+  verified against disk and against each script's `--help`.
+- **Installed-path correctness** — examples, hooks, and templates reference
+  `<skill-dir>` (the folder the skill is installed into) instead of this
+  repository's layout.
+
+Skill-specific:
+
+- 11 CWE identifiers cited by the skill's own examples (CWE-120, 121, 122, 125,
+  416, 476, 540, 561, 625, 787) and MITRE ATT&CK T1548 added to the offline
+  lookup tables, with names verified against cwe.mitre.org and attack.mitre.org.
+- `compose.sar-dast.yaml` is documented as written only when the user asks for
+  dynamic testing, not as part of the default lab.
+- The compliance baseline is stated consistently as **21 baseline standards**
+  (plus the expanded reference); the recurring-assessment example uses ISO dates.
+
+---
+
+## ai-rules [1.1.1] — 2026-10-06
+
+### Fixed
+
+A deep review of the four skills, their scripts, and the repository documentation
+found 77 issues (errors, inconsistencies, duplication, dead references); all are
+fixed and verified. Shared outcomes of that review:
+
+- **Single owner per rule** — the events schema, autonomy defaults, ceremony table,
+  project layout, estimation scale, closing line, `.memory/` convention, and the
+  capability-suggestion protocol are each defined in exactly one file; every other
+  file points to it. No circular references.
+- **No dead references** — every documented file, section, script, and flag was
+  verified against disk and against each script's `--help`.
+- **Installed-path correctness** — examples, hooks, and templates reference
+  `<skill-dir>` (the folder the skill is installed into) instead of this
+  repository's layout.
+
+Skill-specific:
+
+- The `.memory/` convention moves to `frameworks/memory-convention.md` as its
+  single owner; `SKILL.md` keeps a summary and a pointer.
+- `metadata.json` gains an abstract; user-project paths are code spans, not links.
+
+---
+
+## agentic-agile [1.0.1] — 2026-10-06
+
+### Fixed
+
+A deep review of the four skills, their scripts, and the repository documentation
+found 77 issues (errors, inconsistencies, duplication, dead references); all are
+fixed and verified. Shared outcomes of that review:
+
+- **Single owner per rule** — the events schema, autonomy defaults, ceremony table,
+  project layout, estimation scale, closing line, `.memory/` convention, and the
+  capability-suggestion protocol are each defined in exactly one file; every other
+  file points to it. No circular references.
+- **No dead references** — every documented file, section, script, and flag was
+  verified against disk and against each script's `--help`.
+- **Installed-path correctness** — examples, hooks, and templates reference
+  `<skill-dir>` (the folder the skill is installed into) instead of this
+  repository's layout.
+
+Skill-specific:
+
+- **`trace`** no longer counts other projects' test fixtures as evidence: file
+  matching is case-insensitive (`LoginTest.java` now counts) and `fixtures`,
+  `testdata`, `__fixtures__`, `.work`, `templates`, `expected`, `golden(s)` and
+  `(__)snapshots` are skipped. On this repository it reported 331 foreign matches.
+- **`baseline`** rejects `--file` paths outside the project and never records a
+  blocking question or a CRITICAL finding as accepted — a pending decision cannot
+  be baselined away.
+- **`check-structure`** requires `plans/agile/hooks.md`; **`audit-agile`** no
+  longer reports template drift on `constitution.md`, whose articles are team
+  content that amendments rename by design.
+- **`check-spec`** anchors its section regexes (`Non-functional requirements` no
+  longer matches `Functional requirements`) and runs each initiative once in
+  `--all` mode; **`doctor`** reads the Docker object instead of the first JSON
+  match; `--help` is byte-identical between `.sh` and `.ps1`; JSON escapers
+  handle tabs and control characters; `lab-probe` computes available RAM on macOS.
+- Examples show real script output, and the spec template documents the ninth
+  edge-case category (encoding).
+
+---
+
 ## Repository — 2026-10-05
 
 Repository-wide changes shipped with devils-advocate 3.0.0, sar-cybersecurity 2.0.0, ai-rules 1.1.0, and agentic-agile 1.0.0.

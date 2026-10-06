@@ -2,7 +2,7 @@
 
 > ⚠️ **EDUCATIONAL EXAMPLE — NOT FOR IMPLEMENTATION.** Fictional company, systems, and figures, used only to demonstrate how Devil's Advocate critiques a migration plan.
 
-**Skill version**: 3.0.0
+**Skill version**: 3.0.1
 
 **Plan [fictional]:** Acme Corp migrates its production PostgreSQL 13 database (2 TB, 40M daily active records) to PostgreSQL 16 on a new cloud provider with `pg_dump`/`pg_restore` during a 4-hour Sunday maintenance window.
 

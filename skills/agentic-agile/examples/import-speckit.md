@@ -2,7 +2,7 @@
 
 > ⚠️ **Example only** — fictional project and paths; shows the mapping. The import listing uses the real format of `import-speckit`; the `check-spec` block is illustrative (real rule ids, abridged messages).
 
-**Skill version**: 1.0.0
+**Skill version**: 1.0.1
 
 **Request [fictional]:** "We used Spec Kit for two features. Move them to agentic-agile."
 

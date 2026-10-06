@@ -2,7 +2,7 @@
 
 > ⚠️ **Example only** — fictional incident, systems, and times.
 
-**Skill version**: 1.0.0
+**Skill version**: 1.0.1
 
 User: "Draft the postmortem for yesterday's export outage. Here is the alert history and the incident channel export."
 

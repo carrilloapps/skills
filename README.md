@@ -16,10 +16,10 @@
 
 | Skill | Description | Version | Install |
 |-------|-------------|---------|---------|
-| [🔴 **devils-advocate**](skills/devils-advocate/) | Adversarial pre-execution gate — risk-scaled, evidence-based critique that returns a corrected plan and waits for your approval | [![v3.0.0](https://img.shields.io/badge/v3.0.0-blue.svg)](CHANGELOG.md) | `npx skills add carrilloapps/skills@devils-advocate` |
-| [🛡️ **sar-cybersecurity**](skills/sar-cybersecurity/) | Automated Security Assessment Report (SAR) generator — deep cybersecurity analysis mapped to 21 baseline compliance standards | [![v2.0.0](https://img.shields.io/badge/v2.0.0-blue.svg)](CHANGELOG.md) | `npx skills add carrilloapps/skills@sar-cybersecurity` |
-| [📋 **ai-rules**](skills/ai-rules/) | Personal behavioral rules for AI tools — documentation discipline, secure practices, code quality, version control, and structured estimation | [![v1.1.0](https://img.shields.io/badge/v1.1.0-blue.svg)](CHANGELOG.md) | `npx skills add carrilloapps/skills@ai-rules` |
-| [🔁 **agentic-agile**](skills/agentic-agile/) | Spec-driven development on Scrum with agentic agility — gated specs and plans, ceremonies, autonomy levels, attribution, transcripts and MCP integrations by capability | [![v1.0.0](https://img.shields.io/badge/v1.0.0-blue.svg)](CHANGELOG.md) | `npx skills add carrilloapps/skills@agentic-agile` |
+| [🔴 **devils-advocate**](skills/devils-advocate/) | Adversarial pre-execution gate — risk-scaled, evidence-based critique that returns a corrected plan and waits for your approval | [![v3.0.1](https://img.shields.io/badge/v3.0.1-blue.svg)](CHANGELOG.md) | `npx skills add carrilloapps/skills@devils-advocate` |
+| [🛡️ **sar-cybersecurity**](skills/sar-cybersecurity/) | Automated Security Assessment Report (SAR) generator — deep cybersecurity analysis mapped to 21 baseline compliance standards | [![v2.0.1](https://img.shields.io/badge/v2.0.1-blue.svg)](CHANGELOG.md) | `npx skills add carrilloapps/skills@sar-cybersecurity` |
+| [📋 **ai-rules**](skills/ai-rules/) | Personal behavioral rules for AI tools — documentation discipline, secure practices, code quality, version control, and structured estimation | [![v1.1.1](https://img.shields.io/badge/v1.1.1-blue.svg)](CHANGELOG.md) | `npx skills add carrilloapps/skills@ai-rules` |
+| [🔁 **agentic-agile**](skills/agentic-agile/) | Spec-driven development on Scrum with agentic agility — gated specs and plans, ceremonies, autonomy levels, attribution, transcripts and MCP integrations by capability | [![v1.0.1](https://img.shields.io/badge/v1.0.1-blue.svg)](CHANGELOG.md) | `npx skills add carrilloapps/skills@agentic-agile` |
 | 🔜 **postmortem-writing** | Incident postmortem authoring beyond the team flow in agentic-agile (scope pending decision) | *Planned* | — |
 
 ---
@@ -75,9 +75,10 @@ Keep up to date with `npx skills check` / `npx skills update`. Per-agent project
 
 ## Skill Details
 
-### 🔴 [Devil's Advocate](skills/devils-advocate/) · [![v3.0.0](https://img.shields.io/badge/v3.0.0-blue.svg)](skills/devils-advocate/README.md)
+<details>
+<summary><b>🔴 Devil's Advocate</b> — An adversarial pre-execution gate for 70+ AI coding agents — short, evidence-based critiques that change the plan</summary>
 
-> An adversarial pre-execution gate for 70+ AI coding agents — short, evidence-based critiques that change the plan.
+**Install** `npx skills add carrilloapps/skills@devils-advocate` · [Skill folder](skills/devils-advocate/) · [Full documentation](skills/devils-advocate/README.md) · [![v3.0.1](https://img.shields.io/badge/v3.0.1-blue.svg)](skills/devils-advocate/README.md)
 
 AI tools are increasingly capable of executing complex, multi-step operations — creating files, calling APIs, running migrations, deploying services. Devil's Advocate adds the adversarial voice that asks: **"Should we?"**
 
@@ -123,11 +124,14 @@ flowchart LR
 
 → Full documentation: [`skills/devils-advocate/README.md`](skills/devils-advocate/README.md)
 
+</details>
+
 ---
 
-### 🛡️ [SAR Cybersecurity](skills/sar-cybersecurity/) · [![v2.0.0](https://img.shields.io/badge/v2.0.0-blue.svg)](skills/sar-cybersecurity/README.md)
+<details>
+<summary><b>🛡️ SAR Cybersecurity</b> — Automated Security Assessment Report (SAR) generator — deep cybersecurity analysis mapped to 21 baseline compliance standards</summary>
 
-> Automated Security Assessment Report (SAR) generator — deep cybersecurity analysis mapped to 21 baseline compliance standards.
+**Install** `npx skills add carrilloapps/skills@sar-cybersecurity` · [Skill folder](skills/sar-cybersecurity/) · [Full documentation](skills/sar-cybersecurity/README.md) · [![v2.0.1](https://img.shields.io/badge/v2.0.1-blue.svg)](skills/sar-cybersecurity/README.md)
 
 Transforms any AI agent into a senior cybersecurity expert that produces professional, bilingual (EN/ES) Security Assessment Reports with full compliance standard mapping.
 
@@ -164,11 +168,14 @@ flowchart LR
 
 → Full documentation: [`skills/sar-cybersecurity/README.md`](skills/sar-cybersecurity/README.md)
 
+</details>
+
 ---
 
-### 📋 [AI Rules](skills/ai-rules/) · [![v1.1.0](https://img.shields.io/badge/v1.1.0-blue.svg)](skills/ai-rules/README.md)
+<details>
+<summary><b>📋 AI Rules</b> — Personal behavioral rules for AI tools — documentation discipline, secure practices, code quality, and structured estimation across any project</summary>
 
-> Personal behavioral rules for AI tools — documentation discipline, secure practices, code quality, and structured estimation across any project.
+**Install** `npx skills add carrilloapps/skills@ai-rules` · [Skill folder](skills/ai-rules/) · [Full documentation](skills/ai-rules/README.md) · [![v1.1.1](https://img.shields.io/badge/v1.1.1-blue.svg)](skills/ai-rules/README.md)
 
 Defines the baseline behavioral contract that all AI agents must follow. Works as a cross-cutting layer beneath Devil's Advocate.
 
@@ -185,11 +192,14 @@ Defines the baseline behavioral contract that all AI agents must follow. Works a
 
 → Full documentation: [`skills/ai-rules/README.md`](skills/ai-rules/README.md)
 
+</details>
+
 ---
 
-### 🔁 [Agentic Agile](skills/agentic-agile/) · [![v1.0.0](https://img.shields.io/badge/v1.0.0-blue.svg)](skills/agentic-agile/README.md)
+<details>
+<summary><b>🔁 Agentic Agile</b> — Spec-driven development (SDD) on Scrum, run by agents with explicit autonomy limits. Covers everything GitHub Spec Kit and AI Unified Process lead in (constitution, requirement IDs and traceability, clarify, analyze, converge, brownfield baseline) and adds a verified team operating system, Scrum, autonomy levels, attribution, transcripts, and deterministic validators in CI</summary>
 
-> Spec-driven development (SDD) on Scrum, run by agents with explicit autonomy limits. Covers everything GitHub Spec Kit and AI Unified Process lead in (constitution, requirement IDs and traceability, clarify, analyze, converge, brownfield baseline) and adds a verified team operating system, Scrum, autonomy levels, attribution, transcripts, and deterministic validators in CI.
+**Install** `npx skills add carrilloapps/skills@agentic-agile` · [Skill folder](skills/agentic-agile/) · [Full documentation](skills/agentic-agile/README.md) · [![v1.0.1](https://img.shields.io/badge/v1.0.1-blue.svg)](skills/agentic-agile/README.md)
 
 | Area | What it provides |
 |---|---|
@@ -205,6 +215,8 @@ Defines the baseline behavioral contract that all AI agents must follow. Works a
 | Scripts | `aa <intent>` single entry point (specify · clarify · plan · tasks · verify · trace · analyze · converge · …), `init --preset scrum\|kanban\|regulated`, `check-structure` (`--scorecard`), `check-spec` (`--all`, `--tickets`), `trace`, `analyze`, `baseline`, `audit-agile`, `doctor`, `import-speckit`, `transcript-normalize`, `lab-probe` — twin `.sh` + `.ps1` with parity tests (Linux, macOS, Windows) and an end-to-end example validated in CI |
 
 → Full documentation: [`skills/agentic-agile/README.md`](skills/agentic-agile/README.md)
+
+</details>
 
 ---
 
@@ -243,6 +255,9 @@ Use ai-rules as the behavioral foundation for every session, Devil's Advocate as
 
 ## Compatible Agents
 
+<details>
+<summary>Agent list and install ids</summary>
+
 Works with the **70+ agents** supported by the [`skills` CLI](https://github.com/vercel-labs/skills), including:
 
 | Agent | `-a` id | Agent | `-a` id |
@@ -257,9 +272,14 @@ Works with the **70+ agents** supported by the [`skills` CLI](https://github.com
 
 Full matrix (project and global paths, always-on instruction files, guards, manual install): [`docs/INSTALL.md`](docs/INSTALL.md). `npx skills add --list` lists the skills in a repository, not the agents.
 
+</details>
+
 ---
 
 ## Project Layout (what the skills create in your project)
+
+<details>
+<summary>Directory layout the skills create</summary>
 
 Everything is written inside the project — never into global agent directories (`~/.claude`, `~/.gemini`, `~/.codex`, …) without your explicit approval of that exact path.
 
@@ -276,9 +296,14 @@ docs/                      team docs, project-context.md, elementals.md,
                            capability decisions, SAR output of public repos (never versioned)
 ```
 
+</details>
+
 ---
 
 ## Optional Capabilities and Docker Lab
+
+<details>
+<summary>Optional tools, Docker lab, and credentials</summary>
 
 Each skill may suggest optional tools from its `frameworks/capabilities.md` — **at most once**, pinned to an exact version from an official registry, installed project-locally (`npm i -D --save-exact`, `.memory/local/bin`, `.memory/local/venv`), and only after you approve the exact command. Without them every skill still works.
 
@@ -292,15 +317,25 @@ When Docker is available, `scripts/lab-probe` (`.sh` / `.ps1`, vendored in every
 
 Dashboards bind to `127.0.0.1` only and share **one** generated credential (`admin` + a 20-character password created once per machine in `.memory/local/devsecops/credentials.env`, never printed, never versioned). Scanners never see `.memory/local/`. Details: each skill's `frameworks/docker-lab.md`.
 
+</details>
+
 ---
 
 ## Multi-OS Scripts
 
+<details>
+<summary>Script parity and shells</summary>
+
 Every script ships as a POSIX `.sh` **and** a PowerShell `.ps1` (Windows PowerShell 5.1 and pwsh 7) with identical flags, output, exit codes, and side effects — no runtime dependencies, no network, no installs. Shared scripts live in `shared/` and are vendored into each skill (`bash shared/sync.sh`, `--check` in CI). Parity is tested in `tests/scripts/` on Ubuntu and Windows.
+
+</details>
 
 ---
 
 ## Repository Structure
+
+<details>
+<summary>Full repository tree</summary>
 
 Ordered as on disk: hidden folders, folders, then files — each group alphabetical.
 
@@ -364,9 +399,14 @@ carrilloapps/skills/
 
 Each skill is self-contained and independently installable via `@<skill-name>`.
 
+</details>
+
 ---
 
 ## Quality Gates
+
+<details>
+<summary>Local commands, CI jobs, and the pre-publish checklist</summary>
 
 The commands to run before every commit — `validate.sh`, the `.sh`/`.ps1` parity tests and the agentic-agile end-to-end example, the guard tests, and the shared-script sync check — are listed once in [`AGENTS.md` → *Commands*](AGENTS.md#commands). CI runs all of them (`validate`, `scripts-parity`, `skills-audit` jobs).
 
@@ -390,6 +430,8 @@ Skill instructions cannot guarantee that an agent follows them. [`integrations/`
 Adapters exist for Claude Code, GitHub Copilot, Cursor, Gemini CLI, OpenAI Codex CLI, Windsurf / Devin Desktop, Cline, OpenCode, Kiro, Antigravity CLI (`agy`) and Roo Code; the per-agent matrix (status, hook event, decision mapping, failure behavior) is maintained only in [`integrations/README.md`](integrations/README.md).
 
 Guards are installed separately (Node.js ≥ 18) and are never pulled in by `npx skills add`. Claude Code users can install from the marketplace: `/plugin marketplace add carrilloapps/skills`, then `/plugin install devils-advocate-guard@carrilloapps-skills`. Details: [`integrations/README.md`](integrations/README.md).
+
+</details>
 
 ---
 

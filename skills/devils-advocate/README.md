@@ -3,7 +3,7 @@
 > **An adversarial pre-execution gate for 70+ AI coding agents — short, evidence-based critiques that change the plan.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-red.svg)](../../LICENSE)
-[![Version](https://img.shields.io/badge/version-3.0.0-blue.svg)](../../CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-3.0.1-blue.svg)](../../CHANGELOG.md)
 [![skill.sh](https://img.shields.io/badge/skill.sh-devils--advocate-black.svg)](https://skills.sh/carrilloapps/skills/devils-advocate)
 [![GitHub](https://img.shields.io/badge/GitHub-carrilloapps-181717.svg?logo=github)](https://github.com/carrilloapps/skills)
 [![X / Twitter](https://img.shields.io/badge/@carrilloapps-000000.svg?logo=x)](https://x.com/carrilloapps)

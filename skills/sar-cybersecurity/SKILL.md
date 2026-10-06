@@ -12,7 +12,7 @@ description: >
   security, or performance optimization unless a security angle is explicitly present.
 license: MIT
 metadata:
-  version: "2.0.0"
+  version: "2.0.1"
 ---
 
 # SAR Cybersecurity Skill

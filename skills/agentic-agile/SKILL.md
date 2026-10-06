@@ -9,7 +9,7 @@ description: >
   attribution, and versioned plans/specs in the project. Not for one-off coding questions.
 license: MIT
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # Agentic Agile — SDD on Scrum, with an honest agent

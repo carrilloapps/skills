@@ -1,5 +1,5 @@
 {
-  "version": "3.0.0",
+  "version": "3.0.1",
   "author": "José Carrillo",
   "organization": "carrilloapps",
   "abstract": "Adversarial pre-execution gate for 70+ AI coding agents. Scales critique depth to the real risk of each action, requires evidence and a concrete fix for every risk, returns a corrected plan, and waits for explicit user approval before acting.",

@@ -2,7 +2,7 @@
 
 > ⚠️ **EDUCATIONAL EXAMPLE — NOT FOR IMPLEMENTATION.** Fictional company, vendor terms, and figures, used only to demonstrate critique of an irreversible strategic decision. No code is involved.
 
-**Skill version**: 3.0.0
+**Skill version**: 3.0.1
 
 **Proposal [fictional], from the CTO:** Move all infrastructure from AWS to GCP in 12 weeks. Motivation: BigQuery pricing for analytics, plus a 40% credit for 12 months offered by the GCP sales team. All 23 AWS services migrate in parallel; no rollback plan; engineers learn GCP on the job.
 
