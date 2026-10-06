@@ -544,7 +544,17 @@ fi
 
 # ─── Check 28: numbered options, no checkboxes ───────────────────────────────
 section "Numbered options (no checkboxes)"
-CB=$(grep -rnE '^[[:space:]>]*[-*] \[[ xX]\] ' "$REPO_ROOT/skills" --include='*.md' || true)
+# Fenced blocks inside examples/ are sample INPUT (they demonstrate what the
+# validators reject), so they are skipped there; everywhere else fences count too.
+CB=$(while IFS= read -r -d '' f; do
+  case "$f" in
+    */examples/*) awk -v F="${f#$REPO_ROOT/}" '
+        /^[[:space:]]*(```|~~~)/ { inb = !inb; next }
+        !inb && /^[[:space:]>]*([-*+]|[0-9]+[.)]) \[[ xX]\] / { print F ":" NR ":" $0 }' "$f" ;;
+    *) grep -nE '^[[:space:]>]*([-*+]|[0-9]+[.)]) \[[ xX]\] ' "$f" 2>/dev/null \
+         | sed "s|^|${f#$REPO_ROOT/}:|" ;;
+  esac
+done < <(find "$REPO_ROOT/skills" -name '*.md' -print0) || true)
 if [ -z "$CB" ]; then
   ok "No '- [ ]' checkboxes under skills/ — options are numbered or lettered"
 else
@@ -583,7 +593,7 @@ fi
 # ─── Check 31: no global agent dirs as write targets ─────────────────────────
 section "Project-local storage"
 GLOBAL_HITS=$(grep -rnE '(~|\$HOME|%USERPROFILE%)/\.(claude|gemini|codex|cursor|copilot)\b' "$REPO_ROOT/skills" --include='*.md' \
-  | grep -viE "never|not |n't|avoid|forbid|without|ask|approv|unless|global|instead|outside" || true)
+  | grep -viE "never|not |n't|avoid|forbid|without|ask|approv|unless" || true)
 if [ -z "$GLOBAL_HITS" ]; then
   ok "skills/ never advertise global agent directories as write targets"
 else

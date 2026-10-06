@@ -16,6 +16,20 @@ skills/sar-cybersecurity/frameworks/ @carrilloapps
 # ai-rules core files
 skills/ai-rules/SKILL.md @carrilloapps
 
+# agentic-agile core files
+skills/agentic-agile/SKILL.md @carrilloapps
+skills/agentic-agile/frameworks/ @carrilloapps
+skills/agentic-agile/templates/ @carrilloapps
+skills/agentic-agile/scripts/ @carrilloapps
+
+# Guards, shared scripts, tests, audit tooling
+integrations/ @carrilloapps
+shared/ @carrilloapps
+tests/ @carrilloapps
+scripts/audit-skills.sh @carrilloapps
+scripts/audit-skills.ps1 @carrilloapps
+scripts/audit-skills.container.sh @carrilloapps
+
 # CI and governance
 scripts/validate.sh @carrilloapps
 .github/ @carrilloapps

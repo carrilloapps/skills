@@ -17,5 +17,6 @@ check-structure — project-empty
 16. error plans/agile/language.md [missing-file] missing file (run scripts/init, then complete it with the team)
 17. error plans/agile/autonomy.md [missing-file] missing file (run scripts/init, then complete it with the team)
 18. error plans/agile/constitution.md [missing-file] missing file (run scripts/init, then complete it with the team)
-Result: 18 error(s), 0 warning(s) — FAIL
+19. error plans/agile/hooks.md [missing-file] missing file (run scripts/init, then complete it with the team)
+Result: 19 error(s), 0 warning(s) — FAIL
 Phase 0 gate: closed. Do not create specs, plans, drafts, sprint artifacts, tickets or decision records; complete the items above with the team first.

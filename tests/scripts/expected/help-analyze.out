@@ -1,0 +1,1 @@
+Usage: analyze [specs/<initiative> | --spec specs/<initiative> | --all] [--root DIR] [--strict] [--json]

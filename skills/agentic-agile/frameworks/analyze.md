@@ -26,7 +26,7 @@ Severity rubric:
 | MEDIUM | Ambiguous wording; terminology drift | Fix or justify |
 | LOW | Style or duplication with no behavioral effect | Optional |
 
-Accepted pre-existing findings can be baselined (`scripts/baseline`, see [`brownfield.md`](brownfield.md)) so only new ones fail.
+Accepted pre-existing findings can be baselined (`scripts/baseline`, see [`brownfield.md`](brownfield.md)) so only new ones fail — except `blocking-question` and CRITICAL findings, which are never baselined.
 
 ## 2. Semantic pass — the agent, on top
 

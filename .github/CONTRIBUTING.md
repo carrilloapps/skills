@@ -13,7 +13,7 @@ This repository currently publishes four skills: **devils-advocate**, **sar-cybe
 - [Development Setup](#development-setup)
 - [Contribution Types](#contribution-types)
   - [New Skill](#new-skill)
-  - [New Framework](#new-framework-devils-advocate-only)
+  - [New Framework](#new-framework)
   - [New Example](#new-example)
   - [New or Changed Script](#new-or-changed-script)
   - [agentic-agile Templates and Examples](#agentic-agile-templates-and-examples)
@@ -73,16 +73,16 @@ bash scripts/validate.sh
 ### New Skill
 
 1. Create `skills/<name>/` with `SKILL.md` (frontmatter: `name` = directory name, `description`, `license`, `metadata.version` — no other top-level fields), `README.md` (badge `version-X.Y.Z-blue`), and `metadata.json` (`"version"`).
-2. Include the six safeguards (see `.ai-context.md`) and keep `SKILL.md` under ~32,000 chars.
+2. Include the six safeguards (see `.ai-context.md`) and keep `SKILL.md` small (target ≤ 20,000 chars; `validate.sh` hard limit 32,000).
 3. Index every `frameworks/`, `templates/`, `examples/`, and `scripts/` file in `SKILL.md`.
 4. Run `bash shared/sync.sh` — it vendors the shared scripts (`lab-probe`) into every `skills/*/scripts/`. If the skill uses the Docker lab, add `frameworks/lab-catalog.tsv` (header: `id skill criticality ram_mb disk_mb kind profile compose signals requires notes`).
 5. Add the skill to `scripts/validate.sh` (version and CHANGELOG checks), the root `README.md` catalog, `AGENTS.md`, `docs/INSTALL.md`, `.ai-context.md`, and the PR template.
 6. Add a `## <name> [X.Y.Z]` entry to `CHANGELOG.md`.
 7. Run every quality gate and `bash scripts/audit-skills.sh` (0 findings).
 
-### New Framework (devils-advocate only)
+### New Framework
 
-A new framework file in `skills/devils-advocate/frameworks/` must:
+A new framework file in `skills/<skill>/frameworks/` must:
 
 1. **Follow the header convention**:
 
@@ -94,14 +94,14 @@ A new framework file in `skills/devils-advocate/frameworks/` must:
    > **See also**: [Related files — load only if they change the analysis]
    ```
 
-2. **Not duplicate** existing framework coverage — check the *Domain frameworks* table in `skills/devils-advocate/SKILL.md` §5.
+2. **Not duplicate** existing framework coverage — check the skill's `SKILL.md` index (Devil's Advocate: the *Domain frameworks* table in §5).
 
    > Protocol files (`output-format.md`, `handbrake-protocol.md`, `premortem.md`) are always free. `building-protocol.md` is conditionally free: loaded at no cost when the analysis involves code; skipped for pure text or strategy reviews.
 3. **Include an adversarial lens** — not just "here are best practices" but "here are the risks and how they fail"
 4. **Be a thinking aid, not a report template** — its conclusions reach the report; its tables and templates never do (`SKILL.md` §2, *Banned output*)
 5. **Include an example code boundary note** under the H1 if it contains commands, SQL, or code
-6. **Be added to the *Domain frameworks* table** in `skills/devils-advocate/SKILL.md` §5
-7. **Keep SKILL.md under 8,000 tokens** (~32,000 chars, estimate `wc -c ÷ 4`) — it is always loaded in full. `validate.sh` enforces the budget.
+6. **Be added to the skill's `SKILL.md` index** (Devil's Advocate: the *Domain frameworks* table in §5)
+7. **Keep SKILL.md small** — it is always loaded in full: target ≤ 20,000 chars; `validate.sh` hard limit 32,000 chars.
 
 ### New Example
 
@@ -177,7 +177,7 @@ A change to `skills/ai-rules/SKILL.md` must:
 
 1. Not conflict with Devil's Advocate protocols — ai-rules defines HOW to act; DA defines WHETHER to act
 2. Preserve all 6 mandatory security safeguards (untrusted input boundary, no arbitrary code execution, bounded autonomy, web search scoping, example code boundaries, report-only output)
-3. Remain within the 8K-token / 32,000-char budget — ai-rules is always loaded in full
+3. Stay within the `SKILL.md` budget (target ≤ 20,000 chars; `validate.sh` hard limit 32,000) — ai-rules is always loaded in full
 4. Never add a stop-and-wait round of its own (ask for one missing field only when a rule needs it)
 5. Include a version bump (patch for clarifications, minor for new behavioral rules) with full cascade
 
@@ -209,28 +209,12 @@ All contributions must pass these checks before merge:
 | Domain coverage | New frameworks must not duplicate an existing domain |
 | en_US identifiers | All code in examples follows the Building Protocol |
 | No stale text | No references to removed protocols (`immediate-report`, `handbrake-checklist`, "full adversarial analysis") or other legacy phrasing |
-| SKILL.md token budget | Every `SKILL.md` must stay under ~8,000 tokens (~32,000 chars) |
+| SKILL.md budget | Every `SKILL.md` targets ≤ 20,000 chars; `validate.sh` fails above 32,000 |
 | Numbered options | Options and checklists inside `skills/` are numbered or lettered (with `✅/❌/⚠️` state where needed) — never `- [ ]` checkboxes. GitHub templates under `.github/` keep checkboxes because GitHub renders them clickable |
 | Multi-OS scripts | Every `skills/*/scripts/*.sh` has a `.ps1` twin (Windows PowerShell 5.1 + pwsh 7) with identical flags, output, exit codes, and side effects; no runtime dependencies, no network, no installs; parity tests in `tests/scripts/` pass on Ubuntu and Windows. Shared scripts live in `shared/` and are vendored with `bash shared/sync.sh` |
 | Project-local storage | Skills never advertise global agent directories (`~/.claude`, `~/.gemini`, `~/.codex`, …) or the system temp directory as write targets without explicit user approval; generated files go to `specs/`, `plans/`, `docs/`, `.memory/` |
 
-CI runs all of the above on every PR. Run them locally before submitting:
-
-```bash
-bash scripts/validate.sh
-bash tests/scripts/run-parity.sh            # and: pwsh tests/scripts/run-parity.ps1
-bash tests/scripts/run-e2e.sh               # agentic-agile end-to-end example, every available shell
-node --test integrations/core/core.test.mjs integrations/*/test/*.test.mjs
-bash shared/sync.sh --check
-```
-
-**Before publishing**, also run the local skills.sh-equivalent audit (needs Docker; nothing leaves your machine):
-
-```bash
-bash scripts/audit-skills.sh        # or: pwsh scripts/audit-skills.ps1
-```
-
-It runs `agentskills validate` (Agent Skills spec: only `name`, `description`, `license`, `compatibility`, `metadata`, `allowed-tools` in frontmatter; the version goes in `metadata.version`) and Cisco `skill-scanner` with offline analyzers. Any finding fails the run. Fix the cause — for example, write prohibitions without the literal pattern they forbid ("never pipe a downloaded script into a shell interpreter"), and never pass secrets to a network command through argv or a pipe. The Snyk engine that skills.sh uses can be run manually from the **Snyk agent-scan** workflow (uploads skill content; requires `SNYK_TOKEN`).
+CI runs all of the above on every PR. Run the commands listed in [`AGENTS.md` → *Commands*](../AGENTS.md#commands) locally before submitting (quality gate, parity + end-to-end example, guard tests, shared-script sync). **Before publishing**, also run `bash scripts/audit-skills.sh` (or `pwsh scripts/audit-skills.ps1`) — what it checks, what the scanners flag, and how to write around them: [`.ai-context.md` → *Local Pre-Publish Audit*](../.ai-context.md#local-pre-publish-audit).
 
 ---
 
@@ -316,14 +300,24 @@ When merging a batch of fixes, follow this checklist to cut a release:
 
 5. **Run every quality gate again** — `validate.sh`, parity, guard tests, `shared/sync.sh --check`, and `bash scripts/audit-skills.sh` (0 findings)
 
-6. **Commit, tag, and push**:
+6. **Commit, tag, push, and publish the release** — one tag prefix per skill:
+
+   | Skill | Tag | Release title |
+   |-------|-----|---------------|
+   | devils-advocate | `vX.Y.Z` | `Devil's Advocate vX.Y.Z` |
+   | sar-cybersecurity | `sar-vX.Y.Z` | `SAR Cybersecurity vX.Y.Z` |
+   | ai-rules | `ai-rules-vX.Y.Z` | `ai-rules vX.Y.Z` |
+   | agentic-agile | `agentic-agile-vX.Y.Z` | `agentic-agile vX.Y.Z` |
 
    ```bash
    git add -A
-   git commit -m "fix: vX.Y.Z — <summary>"
-   git tag vX.Y.Z
-   git push origin main --tags
+   git commit -m "feat: release <skill> vX.Y.Z"      # or fix:/docs: per Conventional Commits
+   git tag -a <tag> -m "<tag>"
+   git push origin main <tag>
+   gh release create <tag> --title "<Release title>" --notes-file <notes.md>   # notes = that skill's CHANGELOG section
    ```
+
+   Several skills released together share one commit and get one tag and one release each. Tags are never moved after publishing.
 
 The skills.sh install counter updates automatically as users run `npx skills update` or install fresh.
 

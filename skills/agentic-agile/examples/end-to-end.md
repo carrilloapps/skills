@@ -4,7 +4,7 @@
 
 **Skill version**: 1.0.0
 
-Recreate the files under any folder (empty folders: `plans/drafts/`) and point the scripts at it with `--root <folder>`. With skill 1.0.0 the tree passes `check-structure --strict`, `check-spec specs/invoice-reminders --strict --tickets`, and `audit-agile` (Verified 2026-10-05); `trace` and `analyze` read the same files.
+Recreate the files under any folder (empty folders: `plans/drafts/`) and point the scripts at it with `--root <folder>`. Verified 2026-10-06 by `tests/scripts/run-e2e.sh` of the skills repository (bash, pwsh 7, Windows PowerShell 5.1): the extracted tree passes `check-structure --strict`, `check-spec --strict --tickets`, `check-spec --all`, `trace`, `analyze`, and `audit-agile`.
 
 ## The flow
 
@@ -30,14 +30,14 @@ What to notice:
 3. Every requirement can be followed to a scenario, a task, a test name, and a verification row — no IDE plugin involved.
 4. The estimate appears only after the team's vote.
 
-Commands (from the skill directory, each only after approval; PowerShell: same flags with `.ps1`):
+Commands (from the project root; `<skill-dir>` is where the skill is installed, e.g. `.agents/skills/agentic-agile`; each only after approval; PowerShell: same flags with `.ps1`):
 
 ```bash
-bash scripts/check-structure.sh --root <folder> --strict
-bash scripts/check-spec.sh <folder>/specs/invoice-reminders --root <folder> --strict --tickets
-bash scripts/trace.sh <folder>/specs/invoice-reminders --root <folder>
-bash scripts/analyze.sh <folder>/specs/invoice-reminders --root <folder>
-bash scripts/audit-agile.sh --root <folder>
+bash <skill-dir>/scripts/check-structure.sh --root <folder> --strict
+bash <skill-dir>/scripts/check-spec.sh specs/invoice-reminders --root <folder> --strict --tickets
+bash <skill-dir>/scripts/trace.sh specs/invoice-reminders --root <folder>
+bash <skill-dir>/scripts/analyze.sh specs/invoice-reminders --root <folder>
+bash <skill-dir>/scripts/audit-agile.sh --root <folder>
 ```
 
 ## Files
@@ -396,12 +396,12 @@ Confirmed by: Tech lead — 2026-10-01
 
 | # | Transition | Proposed command | Why | Blocking? |
 |---|------------|------------------|-----|-----------|
-| 1 | Before any artifact | `scripts/check-structure --root .` | Phase 0 gate | yes |
-| 2 | Spec → Design | `scripts/check-spec specs/<initiative> --strict` | Spec complete, clarifications attributed | yes |
-| 3 | Design → Tasks | `scripts/analyze specs/<initiative>` | Cross-artifact consistency and constitution | yes on CRITICAL |
-| 4 | Tasks → Implementation | `scripts/check-spec specs/<initiative> --strict` | Tasks map to requirements, no dependency cycles | yes |
-| 5 | Implementation → Verification | `scripts/trace specs/<initiative>` | Every requirement has a scenario and a test | yes |
-| 6 | Before closing the item | `scripts/audit-agile --root .` | Hygiene of the team's system | no |
+| 1 | Before any artifact | `bash <skill-dir>/scripts/check-structure.sh --root .` | Phase 0 gate | yes |
+| 2 | Spec → Design | `bash <skill-dir>/scripts/check-spec.sh specs/<initiative> --strict` | Spec complete, clarifications attributed | yes |
+| 3 | Design → Tasks | `bash <skill-dir>/scripts/analyze.sh specs/<initiative>` | Cross-artifact consistency and constitution | yes on CRITICAL |
+| 4 | Tasks → Implementation | `bash <skill-dir>/scripts/check-spec.sh specs/<initiative> --strict` | Tasks map to requirements, no dependency cycles | yes |
+| 5 | Implementation → Verification | `bash <skill-dir>/scripts/trace.sh specs/<initiative>` | Every requirement has a scenario and a test | yes |
+| 6 | Before closing the item | `bash <skill-dir>/scripts/audit-agile.sh --root .` | Hygiene of the team's system | no |
 
 Rules:
 
@@ -413,10 +413,11 @@ Rules:
 ### `plans/agile/metrics/events.jsonl`
 
 ```json
-{"ts":"2026-10-01T10:00:00Z","event":"structure_confirmed","by":"Tech lead"}
-{"ts":"2026-10-02T15:20:00Z","event":"draft_created","initiative":"invoice-reminders","source":"refinement transcript"}
-{"ts":"2026-10-03T11:05:00Z","event":"item_ready","initiative":"invoice-reminders","item":"01"}
-{"ts":"2026-10-03T11:30:00Z","event":"open_question_resolved","initiative":"invoice-reminders","by":"Product owner"}
+{"ts":"2026-10-01T10:00:00Z","event":"structure_updated","item":"plans/agile","sprint":"2026-S20","actor":"Tech lead","meta":{"file":"all","confirmed_by":"Tech lead"}}
+{"ts":"2026-10-02T15:00:00Z","event":"session_captured","item":"invoice-reminders/01","sprint":"2026-S20","actor":"agent","meta":{"source":"vtt"}}
+{"ts":"2026-10-02T15:20:00Z","event":"draft_created","item":"invoice-reminders/01","sprint":"2026-S20","actor":"agent","meta":{}}
+{"ts":"2026-10-03T11:05:00Z","event":"item_ready","item":"invoice-reminders/01","sprint":"2026-S20","actor":"Product owner","meta":{}}
+{"ts":"2026-10-03T11:30:00Z","event":"question_resolved","item":"invoice-reminders/01","sprint":"2026-S20","actor":"Product owner","meta":{"id":1,"before_planning":true}}
 ```
 
 ### `specs/invoice-reminders/spec.md`
@@ -836,7 +837,7 @@ Estimates were added after the team's vote in sprint planning 2026-S20.
 
 ```typescript
 // Example only — fictional test file for the end-to-end example; not run by this repository.
-// Each test name starts with the requirement ID it verifies, so `scripts/trace` can link it.
+// Each test name starts with the requirement ID it verifies, so `trace` can link it.
 import { describe, it, expect } from "vitest";
 import { runReminderJob, seed } from "./helpers.js";
 
@@ -898,7 +899,7 @@ EVIDENCE: 2026-10-09T14:02Z · CI run 4182, job integration-tests · commit 3f9c
 
 ## 4.4 Coverage
 
-Changed code 94% line coverage; the uncovered branch is the provider-outage path, tracked as open question 1 of the spec. Requirement coverage from `scripts/trace`: 3 of 3 FR and 2 of 2 SC covered by a scenario, a task, and a passing test.
+Changed code 94% line coverage; the uncovered branch is the provider-outage path, tracked as open question 1 of the spec. Requirement coverage from `trace`: 3 of 3 FR and 2 of 2 SC covered by a scenario, a task, and a passing test.
 
 ## 4.5 Verdict
 

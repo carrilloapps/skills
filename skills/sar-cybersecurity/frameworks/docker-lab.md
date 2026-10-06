@@ -27,7 +27,7 @@ This file is the container route for the tools in [capabilities.md](capabilities
 ```text
 .memory/devsecops/                        ← versioned (team-shared, no secrets)
 ├── compose.sar.yaml                      scanners + dashboards (this file, §5)
-├── compose.sar-dast.yaml                 DAST against a local app only (§7)
+├── compose.sar-dast.yaml                 DAST (on request) — written only when the user asks for dynamic testing (§7)
 ├── images.lock                           image → tag → digest (§4)
 ├── config/                               tool configs + bootstrap scripts (§6)
 │   ├── bootstrap.sh  dd-import.sh
@@ -38,7 +38,7 @@ This file is the container route for the tools in [capabilities.md](capabilities
 .memory/local/devsecops/                  ← ignored by the shared `.memory/.gitignore` (`local/`)
 ├── credentials.env                       ONE generated dashboard credential + DB/app secrets
 ├── curl/*.rc                             0600 curl configs holding secrets for apply / dd-import (never argv)
-├── tokens.env                            SonarQube scanner token, DefectDojo API token
+├── tokens.env                            internal to bootstrap.sh (token source for env/ and curl/); never mounted by any container
 ├── env/<service>.env                     per-container subsets derived by `bootstrap.sh init` (only the keys each needs)
 └── results/<YYYY-MM-DD>/<tool>.(json|sarif|jsonl|xml)
 ```
@@ -81,7 +81,7 @@ Checked against the registries on 2026-10-05 (multi-arch index digests). The age
 # image:tag@digest — the compose files reference exactly these. One shared lock: each lab skill
 # appends its own section on its first approved pull (docker buildx imagetools inspect <image>:<tag>).
 
-# sar-cybersecurity (compose.sar.yaml, compose.sar-dast.yaml)
+# sar-cybersecurity (compose.sar.yaml · compose.sar-dast.yaml = DAST, on request)
 semgrep/semgrep:1.179.0@sha256:93963d9295a366f59e4850127b1550400ee7b388f04fe144e4a1f6325d96e01b
 opensecurity/njsscan:1.0.1@sha256:f071932db202631d7834930f9f9ec9ce40c4a73e94dcd8b1dcbfb1520adfe597
 ghcr.io/securego/gosec:2.29.0@sha256:a6cd2f302b5f692e0b77b25751b299ddfbc0763a9711fa36e5a6bccd5292b0e8
@@ -606,7 +606,7 @@ Before the first `run`, the agent creates `.memory/local/devsecops/` (and the da
 
 ---
 
-## 7. DAST against a local app — `compose.sar-dast.yaml` (versioned)
+## 7. DAST against a local app — `compose.sar-dast.yaml` (on request; versioned once written)
 
 Only when the user's app already runs in a container on their machine and the user explicitly asks for dynamic testing. Kept in a separate file so the main lab never references a network that may not exist.
 

@@ -18,7 +18,7 @@ while ($i -lt $args.Count) {
   if ($a.StartsWith('-')) {
     switch (($a -replace '^-+', '').ToLowerInvariant()) {
       'out' { if ($i + 1 -ge $args.Count) { Fail '--out needs a value' }; $Out = [string]$args[$i + 1]; $i += 2 }
-      { $_ -eq 'h' -or $_ -eq 'help' } { Write-Output 'Usage: transcript-normalize.ps1 <file> [--out DIR]'; exit 0 }
+      { $_ -eq 'h' -or $_ -eq 'help' } { Write-Output 'Usage: transcript-normalize <file> [--out DIR]'; exit 0 }
       default { Fail "unknown option: $a" }
     }
   } else { if ($In -ne '') { Fail 'only one input file is allowed' }; $In = $a; $i += 1 }

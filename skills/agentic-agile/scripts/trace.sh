@@ -9,7 +9,8 @@
 # task (when tasks.md exists), FR without verification row (when verification.md exists).
 # Warnings: SC not mapped to a scenario, FR without any test reference.
 # Test files: tests/, test/, spec/, __tests__/ (all files) and src/ (names containing "test"
-# or ".spec."), plus every --tests-dir; node_modules, .git and .memory/local are skipped.
+# or ".spec."), plus every --tests-dir; node_modules, .git, .memory/local, fixtures, testdata, __fixtures__, .work, templates, expected, golden(s) and (__)snapshots are skipped
+# (other projects' test data must not count as evidence for this one).
 # Phase 0 first (check-structure). Read-only. PowerShell twin: trace.ps1 (same output).
 #
 # Usage: trace.sh [specs/<initiative> | --spec specs/<initiative> | --all] [--root DIR] [--tests-dir DIR]...
@@ -19,28 +20,33 @@ set -u
 LC_ALL=C
 export LC_ALL
 
-ROOT=. SPEC= STRICT=0 JSON=0 SKIP=0 TDIRS=()
+ROOT=. SPEC= ALL=0 STRICT=0 JSON=0 SKIP=0 TDIRS=()
 die() { echo "trace: $1" >&2; exit 3; }
 while [ $# -gt 0 ]; do
   case "$1" in
     --root) [ $# -ge 2 ] || die "--root needs a value"; ROOT=$2; shift 2 ;;
     --spec) [ $# -ge 2 ] || die "--spec needs a value"; SPEC=$2; shift 2 ;;
-    --all) shift ;;
+    --all) ALL=1; shift ;;
     --tests-dir) [ $# -ge 2 ] || die "--tests-dir needs a value"; TDIRS+=("$2"); shift 2 ;;
     --strict) STRICT=1; shift ;;
     --json) JSON=1; shift ;;
     --skip-structure) SKIP=1; shift ;;
-    -h|--help) echo "Usage: trace.sh [specs/<initiative> | --spec specs/<initiative> | --all] [--root DIR] [--tests-dir DIR]... [--strict] [--json]"; exit 0 ;;
+    -h|--help)
+      echo "Usage: trace [specs/<initiative> | --spec specs/<initiative> | --all] [--root DIR] [--tests-dir DIR]... [--strict] [--json]"
+      echo "Test files: tests/, test/, spec/, __tests__/, src/ (names with 'test' or '.spec.', case-insensitive) and every --tests-dir."
+      echo "Skipped: node_modules, .git, .memory/local, fixtures, testdata, __fixtures__, .work, templates, expected, golden, goldens, snapshots, __snapshots__."
+      exit 0 ;;
     -*) die "unknown option: $1" ;;
     *) [ -z "$SPEC" ] || die "only one initiative folder is allowed"; SPEC=$1; shift ;;
   esac
 done
+[ $ALL -eq 1 ] && [ -n "$SPEC" ] && die "--all takes no initiative folder"
 [ -d "$ROOT" ] || die "project root not found: $ROOT"
 RL=${ROOT//\\//}; while [ "${RL%/}" != "$RL" ] && [ "$RL" != / ]; do RL=${RL%/}; done
 
 F_SEV=() F_FILE=() F_LINE=() F_RULE=() F_MSG=()
 add() { F_SEV+=("$1"); F_FILE+=("$2"); F_LINE+=("$3"); F_RULE+=("$4"); F_MSG+=("$5"); }
-jesc() { local s=$1; s=${s//\\/\\\\}; s=${s//\"/\\\"}; printf '%s' "$s"; }
+jesc() { local s=$1; s=${s//\\/\\\\}; s=${s//\"/\\\"}; s=${s//$'\t'/\\t}; s=$(printf '%s' "$s" | tr -d '\000-\010\013-\037'); printf '%s' "$s"; }
 
 RE_FENCE='^[[:space:]]*(```|~~~)'
 RE_GFENCE='^[[:space:]]*(```|~~~)[[:space:]]*(gherkin|feature|cucumber)([[:space:]]|$)'
@@ -51,7 +57,6 @@ RE_FRROW='^[[:space:]]*[|][[:space:]]*(FR-[0-9]+)[[:space:]]*[|]'
 RE_SCROW='^[[:space:]]*[|][[:space:]]*(SC-[0-9]+)[[:space:]]*[|]'
 RE_TROW='^[[:space:]]*[|][[:space:]]*(T[0-9]+)[[:space:]]*[|]'
 RE_SEP='^[[:space:]]*[|]?[[:space:]]*:?-{3,}'
-RE_ID='(FR|SC)-[0-9]+'
 RE_MARK='(✅|⚠️|⚠|❌)'
 
 # load FILE → L_TEXT/L_NO (fenced code skipped, Gherkin fences kept)
@@ -75,7 +80,7 @@ cells() { # $1 = table row → CELLS (trimmed)
   local r=$1 c
   r=${r#"${r%%[![:space:]]*}"}; r=${r#|}; r=${r%"${r##*[![:space:]]}"}; r=${r%|}
   CELLS=()
-  IFS='|' read -ra parts <<<"$r"
+  IFS='|' read -ra parts <<<"$r|"
   for c in ${parts[@]+"${parts[@]}"}; do c=${c#"${c%%[![:space:]]*}"}; c=${c%"${c##*[![:space:]]}"}; CELLS+=("$c"); done
 }
 ids_in() { # $1 = text, $2 = prefix (FR|SC) → IDS (unique, in order)
@@ -101,7 +106,7 @@ if [ $SKIP -eq 0 ]; then
   CS="$(cd "$(dirname "$0")" && pwd)/check-structure.sh"
   [ -f "$CS" ] || die "check-structure.sh not found next to trace.sh"
   bash "$CS" --root "$ROOT" --json >/dev/null 2>&1; SX=$?
-  [ $SX -eq 3 ] && die "check-structure failed on root: $ROOT"
+  [ $SX -eq 3 ] && die "check-structure failed on root: $RL"
   if [ $SX -ne 0 ]; then
     GATE=1
     add error structure 0 structure-gate "Phase 0 structure incomplete; run scripts/check-structure --root $RL and complete plans/agile/ with the team first"
@@ -113,7 +118,7 @@ NAMES=()
 if [ $GATE -eq 0 ]; then
   if [ -n "$SPEC" ]; then
     s=${SPEC//\\//}; while [ "${s%/}" != "$s" ]; do s=${s%/}; done
-    { [ -d "$ROOT/$s" ] || { [ -d "$s" ] && [ -d "$ROOT/specs/${s##*/}" ]; }; } || die "initiative folder not found: $ROOT/$s"
+    { [ -d "$ROOT/$s" ] || { [ -d "$s" ] && [ -d "$ROOT/specs/${s##*/}" ]; }; } || die "initiative folder not found: $RL/$s"
     NAMES+=("${s##*/}")
   elif [ -d "$ROOT/specs" ]; then
     while IFS= read -r d; do [ -n "$d" ] && NAMES+=("$d"); done < <(cd "$ROOT/specs" && for d in */; do [ -d "$d" ] && printf '%s\n' "${d%/}"; done | sort)
@@ -127,11 +132,11 @@ if [ $GATE -eq 0 ] && [ ${#NAMES[@]} -gt 0 ]; then
     [ -d "$ROOT/$1" ] || return 0
     while IFS= read -r f; do
       [ -n "$f" ] || continue
-      if [ "$2" = 1 ]; then case "${f##*/}" in *test*|*.spec.*) ;; *) continue ;; esac; fi
+      if [ "$2" = 1 ]; then lc=$(printf '%s' "${f##*/}" | tr 'A-Z' 'a-z'); case "$lc" in *test*|*.spec.*) ;; *) continue ;; esac; fi
       local ids
       ids=$(grep -Eo 'FR-[0-9]+' "$ROOT/$f" 2>/dev/null | sort -u | tr '\n' ' ')
       [ -n "$ids" ] && TEST_IDS+=("$ids")
-    done < <(cd "$ROOT" && find "$1" -type d \( -name node_modules -o -name .git -o -path '*/.memory/local' \) -prune -o -type f -print 2>/dev/null | sort)
+    done < <(cd "$ROOT" && find "$1" -type d \( -name node_modules -o -name .git -o -path '*/.memory/local' -o -name fixtures -o -name testdata -o -name __fixtures__ -o -name .work -o -name templates -o -name expected -o -name golden -o -name goldens -o -name snapshots -o -name __snapshots__ \) -prune -o -type f -print 2>/dev/null | sort)
   }
   for d in tests test spec __tests__; do scan_dir "$d" 0; done
   scan_dir src 1

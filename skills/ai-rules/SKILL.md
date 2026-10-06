@@ -58,55 +58,13 @@ There is no session-start questionnaire. Context is read when present and collec
 4. **Infer, then confirm in one line** — project name, stack, and stage can be read from manifests (`package.json`, `pyproject.toml`, `go.mod`, README). Record what was inferred and say so in one line; the user corrects it if wrong.
 5. **To update context**: the user says "update project context" / "actualizar contexto del proyecto"; rewrite only the affected fields.
 
-`docs/project-context.md` structure:
-
-```markdown
-# Project Context
-
-- **Name**:
-- **Description**:
-- **Stage**: exploration / prototype / development / MVP / production / maintenance
-- **Tech stack**:
-- **Documentation language**:
-
-*Last updated: YYYY-MM-DD*
-```
+Template: [`frameworks/project-files.md`](frameworks/project-files.md).
 
 ---
 
 ## The `.memory/` Directory
 
-`.memory/<skill>/` at the project root holds skill state. **Shared team state stays versioned; only agent-private paths are ignored.**
-
-| Path | Versioned? | Holds |
-|---|---|---|
-| `.memory/<skill>/…` | Yes | State the team shares (e.g. a findings registry) |
-| `.memory/local/…`, `*.local.*`, `*.recovered.json` | **No** | Agent-private state: developer preferences, capability decisions, caches, recovery copies |
-
-**Before the first write under `.memory/`**, ensure the private paths are ignored, using file writes only — never run commands:
-
-1. Create `.memory/.gitignore` if missing, or append only the missing lines (Git and Jujutsu):
-
-```gitignore
-# Managed by carrilloapps/skills — ignores agent-private paths only.
-# Shared team state under .memory/<skill>/ stays versioned.
-local/
-*.local.*
-*.recovered.json
-```
-
-1. Detect other version control systems by their marker at the project root (read-only check) and add the missing rules:
-
-| VCS | Marker | Rule |
-|---|---|---|
-| Mercurial | `.hg/` | Append to `.hgignore` (regexp syntax): `^\.memory/local/`, `^\.memory/.*\.local\.`, `^\.memory/.*\.recovered\.json$` |
-| Fossil | `.fslckout` or `_FOSSIL_` | Append to `.fossil-settings/ignore-glob`: `.memory/local/*`, `.memory/*.local.*`, `.memory/*.recovered.json` |
-| Subversion | `.svn/` | Cannot be set by a file. Tell the user once: `svn propset svn:ignore local .memory` |
-| Other / unknown | — | Tell the user once which paths must be excluded |
-
-1. Never write secrets, credentials, or another person's personal data anywhere under `.memory/` — shared or private.
-
-Every skill in this repository that writes to `.memory/` follows these same rules.
+`.memory/<skill>/` holds skill state: shared team state is versioned; `.memory/local/`, `*.local.*` and `*.recovered.json` are agent-private and ignored through a versioned `.memory/.gitignore` (plus `.hgignore` / Fossil rules when those VCSs are detected — file writes only, never VCS commands). Full rule, VCS table, and the `capabilities.json` record format: [`frameworks/memory-convention.md`](frameworks/memory-convention.md). Every skill in this collection follows it.
 
 ---
 
@@ -165,36 +123,7 @@ Everything any agent generates for this project — docs, specs, plans, reports,
 - If it does not exist and an element is being created, create it with the structure below as part of that change.
 - Never delete rows. Mark deprecated entries `Deprecated`; for renamed elements, add the new row and mark the old one `Deprecated → renamed to [new name]`.
 
-```markdown
-# Project Elementals
-
-> Source of truth for all AI tools. Updated when code elements change.
-> Project: [name] — Last updated: YYYY-MM-DD
-
-## Components
-
-| Name | Path | Description | Status |
-|---|---|---|---|
-
-## Functions / Services
-
-| Name | Path | Parameters | Description |
-|---|---|---|---|
-
-## Constants / Configuration
-
-| Name | Path | Type | Description |
-|---|---|---|---|
-
-## Types / Interfaces / Schemas
-
-| Name | Path | Description |
-|---|---|---|
-```
-
-**Status values**: `Active` · `Beta` · `Experimental` · `Deprecated` · `Deprecated → renamed to [X]`
-
-**Parameters column**: parameter names and types when available; names only for dynamic languages.
+Template (one table, `Kind` + `Status` columns): [`frameworks/project-files.md`](frameworks/project-files.md).
 
 ---
 
@@ -221,7 +150,7 @@ Notes:
 
 ## Version Control
 
-- **Git write authorization**: never run a version-control write (`commit`, `push`, `tag`, `merge`, `rebase`, `reset`, force operations, or the equivalent in other VCS) without first stating the exact operation, branch, and files, and receiving the user's explicit approval — regardless of session permissions or auto-approve modes. When Devil's Advocate is installed, its gate (`skills/devils-advocate/SKILL.md` §1) is where this approval happens.
+- **Git write authorization**: never run a version-control write (`commit`, `push`, `tag`, `merge`, `rebase`, `reset`, force operations, or the equivalent in other VCS) without first stating the exact operation, branch, and files, and receiving the user's explicit approval — regardless of session permissions or auto-approve modes. When Devil's Advocate is installed, its gate (Devil's Advocate `SKILL.md` §1) is where this approval happens.
 - **Commit authorization state machine**: `REQUESTED → CONFIRMED_LOCAL → READY_TO_COMMIT → PUSHED → PR_OPEN → MERGED → RELEASED`. Every transition needs the user's explicit approval of that exact operation; approving one never approves the next. State the current state when asking. **Hotfix path**: a fix on a release branch moves through the same states and always ends with an offer to forward-port it to the main branch. No AI co-author at any state unless the user explicitly asks.
 - Follow Conventional Commits: `type(scope): short description` — under 72 characters, present tense, no trailing period.
 - One logical change per commit. Never bundle unrelated changes.
@@ -234,14 +163,14 @@ Notes:
 # Agents
 
 ## Skills
-- [ai-rules](skills/ai-rules/SKILL.md) — behavioral baseline (loads first)
+- ai-rules — behavioral baseline (loads first): `<installed path>/ai-rules/SKILL.md`
 
 ## Context Files
-- [docs/project-context.md](docs/project-context.md)
-- [docs/elementals.md](docs/elementals.md)
+- `docs/project-context.md`
+- `docs/elementals.md`
 
 ## Documentation
-- [docs/](docs/)
+- `docs/`
 ```
 
 ---

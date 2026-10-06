@@ -10,7 +10,7 @@
 2. Acceptance criteria in Gherkin: happy path, negative path per failure mode, applicable edge cases
 3. Out of scope explicit
 4. Dependencies identified with an owner role
-5. Estimated by the team, ≤ 13 points
+5. Estimated by the team, below the split threshold in `methodology.md`
 6. Open questions that block the sprint: none
 
 ## Architectural (when the item changes code)

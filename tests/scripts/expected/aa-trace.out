@@ -1,0 +1,11 @@
+trace — aa-trace/pass
+
+specs/login
+| Req | Scenarios | Tasks | Tickets | Tests | Verify |
+|-----|-----------|-------|---------|-------|--------|
+| FR-001 | 1 | 1 | 1 | 1 | ✅ |
+| FR-002 | 1 | 1 | 1 | 1 | ⚠ |
+| SC-001 | yes | - | - | - | - |
+
+No findings.
+Result: 0 error(s), 0 warning(s) — PASS

@@ -1,0 +1,6 @@
+trace — aa-trace/nospec
+
+specs/empty
+
+1. error specs/empty/spec.md [spec-missing] spec.md not found
+Result: 1 error(s), 0 warning(s) — FAIL

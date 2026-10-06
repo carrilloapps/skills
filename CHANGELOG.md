@@ -9,7 +9,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ### Planned
 
-- `postmortem-writing` companion skill for post-incident analysis
+- `postmortem-writing` — incident postmortem authoring beyond the team flow already in agentic-agile (`templates/postmortem.md`); scope pending decision
 
 ---
 
@@ -25,9 +25,8 @@ Repository-wide changes shipped with devils-advocate 3.0.0, sar-cybersecurity 2.
 
 ### Guards (`integrations/`)
 
-- Optional **`devils-advocate-guard` Claude Code plugin** (`integrations/claude-code/`): deterministic PreToolUse risk-tier classifier (Node ≥ 18, no dependencies, no network, no writes) that forces a confirmation on side-effecting tool calls; strict mode denies in unattended modes (superseded by the multi-agent guard bullet below). Marketplace manifest at `.claude-plugin/marketplace.json`. Advisory Cursor rule in `integrations/cursor/`.
-- **Guards for every agent with blocking hooks** — shared classifier core (`integrations/core/`, vendored and drift-checked) with adapters for Claude Code, Copilot, Cursor, Gemini CLI, Codex, Windsurf/Devin, Cline, OpenCode (stable), Kiro and Antigravity `agy` (experimental), plus an advisory Roo rule; edits to agent hook/permission config are Tier 2; 170 tests in CI.
-- **Guard classifier hardened after a SAR run on this repository (F01)** — a single `&`, `awk`/`sed`, interpreters, `tee`/`xargs`, `sort -o`/`tree -o`/`uniq in out`, `--output`, file redirects including `2>`/`&>`, process substitution, `FOO=bar` prefixes, git `-c`/`--config-env`/`--exec-path`/`--output`/`--upload-pack`, and MCP `query`/`search`/`execute` tools now ask; MCP read-only limited to `get`/`list`/`read`/`describe`; the Antigravity adapter never emits `allow`. 229 tests.
+- **Guards for every agent with blocking hooks** — one deterministic classifier (`integrations/core/`, no AI, no network, no writes, no dependencies; vendored into each adapter and drift-checked by `sync-core.mjs --check`) with adapters for Claude Code (plugin + `.claude-plugin/marketplace.json`), GitHub Copilot, Cursor (+ advisory `.mdc` rule), Gemini CLI, Codex, Windsurf/Devin, Cline, OpenCode (stable), Kiro and Antigravity `agy` (experimental), plus an advisory Roo rule; edits to agent hook/permission config are Tier 2; Claude Code strict mode denies in unattended modes. 229 tests in CI.
+- **Classifier hardened after a SAR run on this repository (F01)** — a single `&`, `awk`/`sed`, interpreters, `tee`/`xargs`, `sort -o`/`tree -o`/`uniq in out`, `--output`, file redirects including `2>`/`&>`, process substitution, `FOO=bar` prefixes, git `-c`/`--config-env`/`--exec-path`/`--output`/`--upload-pack`, and MCP `query`/`search`/`execute` tools now ask; MCP read-only limited to `get`/`list`/`read`/`describe`; the Antigravity adapter never emits `allow`.
 
 ### Multi-OS scripts and `.memory/`
 
@@ -38,17 +37,10 @@ Repository-wide changes shipped with devils-advocate 3.0.0, sar-cybersecurity 2.
 
 ### Quality gates and audit
 
-- `validate.sh`: per-skill CHANGELOG and root-badge checks, SAR index + boundary + scoring-arithmetic checks, six-safeguard check for every `SKILL.md`, `.memory/` ignore-rule check, indented-fence detection, expanded stale-text patterns.
-- Hardcoded check counts removed from docs; the README validation badge reflects the CI workflow.
-- **`validate.sh`** — selective `.memory/` check; pinned, pipe-free install commands in `capabilities.md`; no install commands in any `SKILL.md`; guard core sync check; stale "40+ agents" check.
-- **`validate.sh` check 26** — Docker lab templates must pin every image (no `:latest`), bind published ports to `127.0.0.1`, and contain no literal credentials.
-- **New `validate.sh` checks** — 28 rejects `[ ]` checkboxes under `skills/`; 29 shared-script vendoring (`shared/sync.sh --check`); 30 `.sh`/`.ps1` twins plus parity tests; 31 rejects global agent directories without approval wording.
-- **`validate.sh` check 26** now requires a `@sha256:` digest on every `image:` and `FROM` line of the Docker lab templates.
+- **`validate.sh`** — per-skill version/CHANGELOG/root-badge checks (all four skills), SAR index + boundary + scoring-arithmetic checks, six-safeguard check for every `SKILL.md`, selective `.memory/` convention, pinned and pipe-free install commands in `capabilities.md`, no install commands in any `SKILL.md`, guard core sync, no stale "40+ agents" wording, Docker lab hygiene (every `image:`/`FROM` line carries a `@sha256:` digest, ports bound to `127.0.0.1`, no literal credentials), no `[ ]` checkboxes under `skills/`, shared-script vendoring, `.sh`/`.ps1` twins plus parity tests, no global agent directories without approval wording, `audit-agile`/`doctor`/`check-structure` indexed in agentic-agile, every `.ps1` ASCII outside comments. Hardcoded check counts removed from docs; the README validation badge reflects the CI workflow.
 - **Markdown hygiene** — markdownlint structural issues reduced from 5,123 to 152 (remaining: intentional inline HTML badges/details and emphasis style); every fenced block declares a language.
 - **Local skills.sh-equivalent audit** — `scripts/audit-skills.sh`/`.ps1` (Docker, digest-pinned Python) runs `agentskills validate` (skills-ref 0.1.1) and Cisco `skill-scanner` 2.2.1 with offline analyzers only; nothing leaves the machine; any finding fails. CI `skills-audit` job runs the same checks and uploads SARIF (actions pinned by SHA). Manual `snyk-agent-scan` workflow (`workflow_dispatch`, `SNYK_TOKEN`; uploads skill content to Snyk). Result: 21 findings → 0; all four skills pass the spec validator. Prohibitions are worded without the literal patterns they forbid.
 - **Agent Skills spec compliance** — `version` moved to `metadata.version` in every `SKILL.md` (a top-level `version:` is rejected by the reference validator); `validate.sh` reads `metadata.version`.
-- **`validate.sh`** — check 27 also requires `audit-agile` and `doctor` in the agentic-agile index; new check 32 keeps every `.ps1` ASCII outside comments (Windows PowerShell 5.1 reads BOM-less files as ANSI).
-
 - **Comparison-driven roadmap delivered** — agentic-agile now covers every capability where GitHub Spec Kit or AI Unified Process led (constitution, IDs + traceability, clarify, analyze, tasks with parallelism, converge, brownfield baseline, domain model/contracts, presets, single entry point, Spec Kit importer), validated deterministically in CI.
 
 ---
@@ -64,7 +56,7 @@ Repository-wide changes shipped with devils-advocate 3.0.0, sar-cybersecurity 2.
 - **Transcripts** — consent and retention preconditions, normalized schema (speaker, start, end, text, redactions), PII redaction before persistence, proper-noun verification, refusal of summaries of summaries.
 - **Capability-slot integrations over MCP** — tracker, docs, chat, observability, transcript source, warehouse/semantic layer, code graph, doc graph; vendor adapters as examples only; project-level pinned MCP config; tracker writes at most N3 with the exact payload approved; four authorization questions for third-party capabilities.
 - **Adoption and measurement** — seven preconditions, three adoption phases, six agentic indicators computed from an append-only event log, no targets before two baseline cycles.
-- **20 templates** with numbered ✅/❌/⚠️ gate items (no checkboxes), 4 examples, and multi-OS scripts (`init`, `check-spec`, `transcript-normalize`, `lab-probe`) as `.sh` + `.ps1`.
+- **35 templates** with numbered ✅/❌/⚠️ gate items (no checkboxes), 9 examples, and 12 multi-OS scripts (`aa`, `analyze`, `audit-agile`, `baseline`, `check-spec`, `check-structure`, `doctor`, `import-speckit`, `init`, `lab-probe`, `trace`, `transcript-normalize`) as `.sh` + `.ps1` twins — final counts for 1.0.0; the bullets below describe how each piece was added.
 - **`check-spec` hardening** — reads Gherkin inside `gherkin`, `feature`, and `cucumber` fenced blocks; rejects unfilled `<placeholders>` in prose (code spans, Gherkin fences, HTML tags, and autolinks excluded); the spec template gains Open questions and the verification template a `Verdict` line.
 - **`lab-probe` noise control** — skips `fixtures/`, `testdata/`, `__fixtures__/`, `.work/`, and `templates/` by default; extra paths in a root `.labprobeignore`; exit code 4 when Docker is unavailable.
 - **Phase 0 structural gate** — no spec, plan, draft, sprint artifact, ticket, or decision record until `scripts/check-structure` (`.sh` + `.ps1`, parity-tested) confirms the team's operating system in `plans/agile/`: files exist with no placeholders/TBD/checkboxes, sprint length and scale, ≥ 3 DoR/DoD items, a role with capacity, every capability slot decided, Gherkin language, N0–N4 per task, and a status per adoption precondition; Proposed values need a `Confirmed by:` line (warning, failure with `--strict`). `check-spec` runs the gate first (`--root`), `init` points at it, and the agent completes the structure one finding at a time without inventing team facts.

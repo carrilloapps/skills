@@ -22,7 +22,7 @@ while [ $# -gt 0 ]; do
     --templates) [ $# -ge 2 ] || die "--templates needs a value"; TPL=$2; shift 2 ;;
     --fake-resources-file) [ $# -ge 2 ] || die "--fake-resources-file needs a value"; FAKE=$2; shift 2 ;;
     --json) JSON=1; shift ;;
-    -h|--help) echo "Usage: doctor.sh [--root DIR] [--json] [--today YYYY-MM-DD] [--templates DIR]"; exit 0 ;;
+    -h|--help) echo "Usage: doctor [--root DIR] [--json] [--today YYYY-MM-DD] [--templates DIR]"; exit 0 ;;
     *) die "unknown option: $1" ;;
   esac
 done
@@ -76,7 +76,7 @@ gl=; for g in ${GAPS[@]+"${GAPS[@]}"}; do gl+="${gl:+, }$g"; done
 EXIT=0; { [ "$GATE" = open ] && [ "${AN:-0}" -eq 0 ]; } || EXIT=1
 
 # ── Report ───────────────────────────────────────────────────────────────────
-jesc() { local s=$1; s=${s//\\/\\\\}; s=${s//\"/\\\"}; printf '%s' "$s"; }
+jesc() { local s=$1; s=${s//\\/\\\\}; s=${s//\"/\\\"}; s=${s//$'\t'/\\t}; s=$(printf '%s' "$s" | tr -d '\000-\010\013-\037'); printf '%s' "$s"; }
 if [ $JSON -eq 1 ]; then
   sc=$(printf '%s' "$SJ" | sed -n 's/.*"scorecard":\({[^}]*}\).*/\1/p')
   if [ "$DOCK" = yes ]; then dv=true; else dv=false; fi

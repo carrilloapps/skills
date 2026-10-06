@@ -24,7 +24,7 @@ while [ $# -gt 0 ]; do
     --root) [ $# -ge 2 ] || die "--root needs a value"; ROOT=$2; shift 2 ;;
     --from) [ $# -ge 2 ] || die "--from needs a value"; FROM=$2; shift 2 ;;
     --write) WRITE=1; shift ;;
-    -h|--help) echo "Usage: import-speckit.sh [--root DIR] [--from DIR] [--write]"; exit 0 ;;
+    -h|--help) echo "Usage: import-speckit [--root DIR] [--from DIR] [--write]"; exit 0 ;;
     *) die "unknown option: $1" ;;
   esac
 done

@@ -10,7 +10,7 @@ The user shares `refinement-2026-10-05.vtt` and asks: "Turn this into a story."
 
 The agent proposes the normalization command and waits:
 
-> 1. Run `bash skills/agentic-agile/scripts/transcript-normalize.sh refinement-2026-10-05.vtt` (writes to `.memory/local/agentic-agile/transcripts/`, redacts PII)
+> 1. Run `bash <skill-dir>/scripts/transcript-normalize.sh refinement-2026-10-05.vtt` (writes to `.memory/local/agentic-agile/transcripts/`, redacts PII)
 > 2. Skip — I'll paste the relevant part instead
 >
 > Recording consent for this session — confirmed? Reply in your own words.

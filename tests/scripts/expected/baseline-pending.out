@@ -1,0 +1,53 @@
+baseline — aa-analyze/issues (write)
+1. analyze|ambiguous-term|specs/search/spec.md|FR-001 uses ambiguous term(s) without a measurable criterion: fast
+2. analyze|ambiguous-term|specs/search/spec.md|FR-002 uses ambiguous term(s) without a measurable criterion: fast
+3. analyze|ambiguous-term|specs/search/spec.md|FR-004 uses ambiguous term(s) without a measurable criterion: instant
+4. analyze|ambiguous-term|specs/search/spec.md|FR-006 uses ambiguous term(s) without a measurable criterion: rápida, robusta
+5. analyze|ambiguous-term|specs/search/spec.md|SC-001 uses ambiguous term(s) without a measurable criterion: easily
+6. analyze|checklist-coverage|specs/search/requirements-checklist.md|requirements checklist traces 3 of 5 items (60%) to a spec reference; minimum 80%
+7. analyze|constitution-unknown-article|specs/search/design.md|constitution check references Article 4, which is not in plans/agile/constitution.md
+8. analyze|constitution-unknown-article|specs/search/design.md|constitution check row marked ❌ without an article number
+9. analyze|constitution-violation|specs/search/design.md|design.md violates Article 3 (SHOULD): Library-first
+10. analyze|duplicate-requirement|specs/search/spec.md|FR-002 duplicates the text of FR-001
+11. analyze|duplicate-scenario|specs/search/spec.md|scenario title repeats an earlier scenario: keyword returns   results
+12. analyze|needs-clarification|specs/search/spec.md|unresolved [NEEDS CLARIFICATION: relevance or recency?] marker
+13. analyze|task-cycle|specs/search/tasks.md|tasks in or blocked by a dependency cycle: T002, T003
+14. analyze|task-duplicate-id|specs/search/tasks.md|task ID T001 is used more than once
+15. analyze|task-unknown-dep|specs/search/tasks.md|T004 depends on T009, which does not exist
+16. analyze|term-drift|plans/initiatives/search/tickets/01-search.md|FR-002 text differs from spec.md: The search is instant
+17. check-spec|checklist-ref|specs/search/requirements-checklist.md|only 60% of checklist items reference the spec (80% required)
+18. check-spec|design-element|specs/search/design.md|design element not found: Anti-violations
+19. check-spec|design-element|specs/search/design.md|design element not found: Architectural style
+20. check-spec|design-element|specs/search/design.md|design element not found: Bounded context
+21. check-spec|design-element|specs/search/design.md|design element not found: Composition points
+22. check-spec|design-element|specs/search/design.md|design element not found: Layers
+23. check-spec|design-element|specs/search/design.md|design element not found: Patterns
+24. check-spec|design-element|specs/search/design.md|design element not found: Public surface
+25. check-spec|design-element|specs/search/design.md|design element not found: State model
+26. check-spec|missing-section|specs/search/spec.md|missing section: Behavioral contract
+27. check-spec|missing-section|specs/search/spec.md|missing section: Constraints
+28. check-spec|missing-section|specs/search/spec.md|missing section: Out of scope
+29. check-spec|missing-section|specs/search/spec.md|missing section: Problem
+30. check-spec|scenario-origin|specs/search/spec.md|scenario without Origin:/Origen: line
+31. check-spec|scenario-priority|specs/search/spec.md|scenario without a priority tag (@P1, @P2 or @P3)
+32. check-spec|task-cycle|specs/search/tasks.md|dependency cycle among: T002, T003
+33. check-spec|task-depends|specs/search/tasks.md|task T004 depends on unknown task T009
+34. check-spec|task-duplicate|specs/search/tasks.md|duplicate task ID T001
+35. check-spec|ticket-qa|plans/initiatives/search/tickets/01-search.md|work item without a QA test cases section
+36. trace|fr-no-scenario|specs/search/spec.md|FR-002 has no scenario tagged @FR-002
+37. trace|fr-no-scenario|specs/search/spec.md|FR-004 has no scenario tagged @FR-004
+38. trace|fr-no-scenario|specs/search/spec.md|FR-005 has no scenario tagged @FR-005
+39. trace|fr-no-scenario|specs/search/spec.md|FR-006 has no scenario tagged @FR-006
+40. trace|fr-no-task|specs/search/tasks.md|FR-002 has no task in tasks.md
+41. trace|fr-no-task|specs/search/tasks.md|FR-006 has no task in tasks.md
+42. trace|fr-no-test|specs/search/spec.md|FR-001 is not referenced by any test file
+43. trace|fr-no-test|specs/search/spec.md|FR-002 is not referenced by any test file
+44. trace|fr-no-test|specs/search/spec.md|FR-003 is not referenced by any test file
+45. trace|fr-no-test|specs/search/spec.md|FR-004 is not referenced by any test file
+46. trace|fr-no-test|specs/search/spec.md|FR-005 is not referenced by any test file
+47. trace|fr-no-test|specs/search/spec.md|FR-006 is not referenced by any test file
+Not recorded (pending decisions are never baselined):
+1. analyze|blocking-question|specs/search/spec.md|blocking open question: Which index engine?
+2. analyze|constitution-violation|specs/search/design.md|constitution check violates Article 2 (MUST): Test-first
+3. check-spec|blocking-question|specs/search/spec.md|blocking open question still open: Which index engine?; cannot enter Phase 2
+Result: would write 47 fingerprint(s) to plans/agile/baseline.txt (dry run)

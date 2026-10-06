@@ -4,7 +4,7 @@
 # Nothing (spec, plan, draft, sprint artifact, ticket, decision record) may be created while
 # this gate fails. Checks: plans/agile/ team operating system files exist and are filled (no
 # unfilled <placeholders> in prose, no TBD, no checkboxes, per-file required content);
-# plans/agile/constitution.md (Version line, a MUST article, Amendments table);
+# plans/agile/constitution.md (Version line, a MUST article, Amendments table); plans/agile/hooks.md (a table row);
 # plans/{sprints,initiatives,decisions,drafts}/, specs/, plans/agile/metrics/events.jsonl and
 # the selective .memory/.gitignore block exist. Files that still mention Proposed values
 # without a "Confirmed by:" line produce warnings (errors with --strict). Fenced code, code
@@ -26,7 +26,7 @@ while [ $# -gt 0 ]; do
     --strict) STRICT=1; shift ;;
     --json) JSON=1; shift ;;
     --scorecard) SCORE=1; shift ;;
-    -h|--help) echo "Usage: check-structure.sh [--root DIR] [--strict] [--json] [--scorecard]"; exit 0 ;;
+    -h|--help) echo "Usage: check-structure [--root DIR] [--strict] [--json] [--scorecard]"; exit 0 ;;
     *) die "unknown option: $1" ;;
   esac
 done
@@ -101,7 +101,7 @@ else
 fi
 
 # ── Team operating system (plans/agile/) ─────────────────────────────────────
-for t in methodology definition-of-ready definition-of-done ceremonies team capabilities kpi-directives language autonomy constitution; do
+for t in methodology definition-of-ready definition-of-done ceremonies team capabilities kpi-directives language autonomy constitution hooks; do
   f=plans/agile/$t.md
   if [ ! -f "$ROOT/$f" ]; then add error "$f" 0 missing-file "missing file (run scripts/init, then complete it with the team)"; continue; fi
   load "$ROOT/$f"
@@ -128,7 +128,7 @@ for t in methodology definition-of-ready definition-of-done ceremonies team capa
       [ $ok -eq 1 ] || add error "$f" 0 content "no estimation scale (e.g. 'Scale: Fibonacci 1, 2, 3, 5, 8, 13')" ;;
     definition-of-ready|definition-of-done)
       [ $nums -ge 3 ] || add error "$f" 0 content "fewer than 3 numbered items" ;;
-    ceremonies|kpi-directives)
+    ceremonies|kpi-directives|hooks)
       [ ${#R_TEXT[@]} -gt 0 ] || add error "$f" 0 content "no table rows" ;;
     team)
       ok=0
@@ -179,13 +179,13 @@ for s in ${F_SEV[@]+"${F_SEV[@]}"}; do if [ "$s" = error ]; then E=$((E + 1)); e
 EXIT=0
 if [ $E -gt 0 ]; then EXIT=1; elif [ $STRICT -eq 1 ] && [ $W -gt 0 ]; then EXIT=2; fi
 GATE=closed; [ $EXIT -eq 0 ] && GATE=open
-jesc() { local s=$1; s=${s//\\/\\\\}; s=${s//\"/\\\"}; printf '%s' "$s"; }
+jesc() { local s=$1; s=${s//\\/\\\\}; s=${s//\"/\\\"}; s=${s//$'\t'/\\t}; s=$(printf '%s' "$s" | tr -d '\000-\010\013-\037'); printf '%s' "$s"; }
 
 # ── Scorecard ────────────────────────────────────────────────────────────────
 AREAS=(process capabilities autonomy metrics transcripts)
 area_files() {
   case "$1" in
-    process) echo "methodology definition-of-ready definition-of-done ceremonies constitution" ;;
+    process) echo "methodology definition-of-ready definition-of-done ceremonies constitution hooks" ;;
     capabilities) echo "capabilities" ;;
     autonomy) echo "autonomy team" ;;
     metrics) echo "kpi-directives" ;;

@@ -105,7 +105,7 @@ Other editions to cite: **OWASP Top 10:2025**, **CWE Top 25 (2025)**, **NIST CSF
 
 ## CWE Lookup Table (verified)
 
-Official names from the MITRE CWE Research View (CWE-1000) CSV, downloaded from cwe.mitre.org on 2026-10-05. Use these names verbatim. A CWE not listed here is verified on cwe.mitre.org during the assessment, or cited by number only (`CWE-1234`) — never named from memory.
+Official names from the MITRE CWE Research View (CWE-1000) CSV, downloaded from cwe.mitre.org on 2026-10-05 (rows added 2026-10-06 verified on the individual cwe.mitre.org pages). Use these names verbatim. A CWE not listed here is verified on cwe.mitre.org during the assessment, or cited by number only (`CWE-1234`) — never named from memory.
 
 | CWE | Official name |
 |-----|---------------|
@@ -121,6 +121,10 @@ Official names from the MITRE CWE Research View (CWE-1000) CSV, downloaded from 
 | CWE-113 | Improper Neutralization of CRLF Sequences in HTTP Headers ('HTTP Request/Response Splitting') |
 | CWE-116 | Improper Encoding or Escaping of Output |
 | CWE-117 | Improper Output Neutralization for Logs |
+| CWE-120 | Buffer Copy without Checking Size of Input ('Classic Buffer Overflow') |
+| CWE-121 | Stack-based Buffer Overflow |
+| CWE-122 | Heap-based Buffer Overflow |
+| CWE-125 | Out-of-bounds Read |
 | CWE-183 | Permissive List of Allowed Inputs |
 | CWE-200 | Exposure of Sensitive Information to an Unauthorized Actor |
 | CWE-209 | Generation of Error Message Containing Sensitive Information |
@@ -153,9 +157,11 @@ Official names from the MITRE CWE Research View (CWE-1000) CSV, downloaded from 
 | CWE-362 | Concurrent Execution using Shared Resource with Improper Synchronization ('Race Condition') |
 | CWE-377 | Insecure Temporary File |
 | CWE-400 | Uncontrolled Resource Consumption |
+| CWE-416 | Use After Free |
 | CWE-427 | Uncontrolled Search Path Element |
 | CWE-434 | Unrestricted Upload of File with Dangerous Type |
 | CWE-441 | Unintended Proxy or Intermediary ('Confused Deputy') |
+| CWE-476 | NULL Pointer Dereference |
 | CWE-494 | Download of Code Without Integrity Check |
 | CWE-502 | Deserialization of Untrusted Data |
 | CWE-522 | Insufficiently Protected Credentials |
@@ -163,11 +169,14 @@ Official names from the MITRE CWE Research View (CWE-1000) CSV, downloaded from 
 | CWE-532 | Insertion of Sensitive Information into Log File |
 | CWE-538 | Insertion of Sensitive Information into Externally-Accessible File or Directory |
 | CWE-539 | Use of Persistent Cookies Containing Sensitive Information |
+| CWE-540 | Inclusion of Sensitive Information in Source Code |
 | CWE-552 | Files or Directories Accessible to External Parties |
+| CWE-561 | Dead Code |
 | CWE-565 | Reliance on Cookies without Validation and Integrity Checking |
 | CWE-601 | URL Redirection to Untrusted Site ('Open Redirect') |
 | CWE-611 | Improper Restriction of XML External Entity Reference |
 | CWE-614 | Sensitive Cookie in HTTPS Session Without 'Secure' Attribute |
+| CWE-625 | Permissive Regular Expression |
 | CWE-639 | Authorization Bypass Through User-Controlled Key |
 | CWE-640 | Weak Password Recovery Mechanism for Forgotten Password |
 | CWE-668 | Exposure of Resource to Wrong Sphere |
@@ -178,6 +187,7 @@ Official names from the MITRE CWE Research View (CWE-1000) CSV, downloaded from 
 | CWE-770 | Allocation of Resources Without Limits or Throttling |
 | CWE-776 | Improper Restriction of Recursive Entity References in DTDs ('XML Entity Expansion') |
 | CWE-778 | Insufficient Logging |
+| CWE-787 | Out-of-bounds Write |
 | CWE-798 | Use of Hard-coded Credentials |
 | CWE-829 | Inclusion of Functionality from Untrusted Control Sphere |
 | CWE-862 | Missing Authorization |
@@ -202,7 +212,7 @@ Official names from the MITRE CWE Research View (CWE-1000) CSV, downloaded from 
 
 ## MITRE ATT&CK Lookup Table (verified)
 
-Enterprise technique names verified on attack.mitre.org on 2026-10-05. Cite a technique only when the attack scenario actually uses it; a technique not listed here is verified on attack.mitre.org during the assessment or omitted.
+Enterprise technique names verified on attack.mitre.org on 2026-10-05 (T1548 added 2026-10-06). Cite a technique only when the attack scenario actually uses it; a technique not listed here is verified on attack.mitre.org during the assessment or omitted.
 
 | Technique | Name | Typical SAR use |
 |-----------|------|-----------------|
@@ -220,6 +230,7 @@ Enterprise technique names verified on attack.mitre.org on 2026-10-05. Cite a te
 | T1059 | Command and Scripting Interpreter | Command / code injection |
 | T1059.004 | Command and Scripting Interpreter: Unix Shell | Shell injection in scripts and hooks |
 | T1068 | Exploitation for Privilege Escalation | Local privilege escalation via a flaw |
+| T1548 | Abuse Elevation Control Mechanism | Privilege escalation through a bypassed authorization check (e.g. mass assignment of a role field) |
 | T1195.001 | Supply Chain Compromise: Compromise Software Dependencies and Development Tools | Malicious dependency, action, image, or plugin |
 | T1195.002 | Supply Chain Compromise: Compromise Software Supply Chain | Tampered release / build pipeline |
 | T1525 | Implant Internal Image | Poisoned container image in a registry |

@@ -1,0 +1,16 @@
+Usage: aa <intent> [args]
+Intents:
+1. init [--preset NAME] [--dry-run]  scaffold plans/agile/, plans/, specs/ (scripts/init)
+2. structure [--scorecard]           Phase 0 gate (scripts/check-structure)
+3. doctor                            one-screen health (scripts/doctor)
+4. specify <slug>                    create specs/<slug>/spec.md (gate open)
+5. clarify <slug>                    open questions and unconfirmed answers (frameworks/clarify.md)
+6. plan <slug>                       create design.md, domain-model.md, requirements-checklist.md (spec passes)
+7. tasks <slug>                      create tasks.md (design passes)
+8. verify <slug> [--strict]          validate the initiative (scripts/check-spec)
+9. trace / analyze / baseline        traceability, cross-artifact analysis, accepted findings
+10. audit                            hygiene of the team's system (scripts/audit-agile)
+11. converge <slug>                  trace + analyze gaps as numbered next tasks
+12. import-speckit [--from DIR] [--write]  convert a Spec Kit project (dry run by default)
+13. help                             this list
+Common option: --root DIR (project root, default: current directory).

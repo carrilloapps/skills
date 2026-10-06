@@ -1,7 +1,7 @@
 # Initiative: <title>
 
 **Slug**: `<initiative-kebab>` · **State**: Discovery | Spec | Design | Building | Verifying | Done · **Since**: <YYYY-MM-DD>
-**Spec**: [`specs/<initiative-kebab>/`](../../../specs/<initiative-kebab>/)
+**Spec**: `specs/<initiative-kebab>/`
 
 ## Why
 
@@ -11,11 +11,11 @@
 
 | # | Draft | Points | State |
 |---|-------|--------|-------|
-| 01 | [`tickets/01-<slug>.md`](tickets/01-<slug>.md) | <after vote> | Draft / Ready / Done |
+| 01 | `tickets/01-<slug>.md` | <after vote> | Draft / Ready / Done |
 
 ## Decisions
 
-1. [`plans/decisions/<date>-<slug>.md`](../../decisions/<date>-<slug>.md)
+1. `plans/decisions/<date>-<slug>.md`
 
 ## Follow-ups
 

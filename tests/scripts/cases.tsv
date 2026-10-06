@@ -125,3 +125,39 @@ baseline-dry-json	repo	baseline	-	--write --dry-run --root aa-baseline/proj --sk
 baseline-missing	repo	baseline	-	--check --root aa-baseline/proj --file nope.txt --skip-structure	3
 baseline-nomode	repo	baseline	-	--root aa-baseline/proj	3
 baseline-gate	repo	baseline	-	--check --root project-empty	1
+trace-skipdirs	repo	trace	-	--root aa-trace/skipdirs --skip-structure	0
+help-aa	repo	aa	-	--help	0
+help-analyze	repo	analyze	-	--help	0
+help-audit-agile	repo	audit-agile	-	--help	0
+help-baseline	repo	baseline	-	--help	0
+help-check-spec	repo	check-spec	-	--help	0
+help-check-structure	repo	check-structure	-	--help	0
+help-doctor	repo	doctor	-	--help	0
+help-import-speckit	repo	import-speckit	-	--help	0
+help-init	repo	init	-	--help	0
+help-lab-probe	repo	lab-probe	-	--help	0
+help-trace	repo	trace	-	--help	0
+help-transcript-normalize	repo	transcript-normalize	-	--help	0
+trace-src-casing	repo	trace	-	--root aa-trace/casing --skip-structure	0
+trace-spec-cwd	repo	trace	-	aa-trace/pass/specs/login --root aa-trace/pass --skip-structure	0
+trace-all-dir	repo	trace	-	specs/login --all --root aa-trace/pass --skip-structure	3
+trace-spec-missing	repo	trace	-	--root aa-trace/nospec --skip-structure	1
+trace-noreq	repo	trace	-	--root aa-trace/noreq --skip-structure --json	1
+analyze-spec-cwd	repo	analyze	-	aa-analyze/issues/specs/search --root aa-analyze/issues --skip-structure	1
+analyze-all-dir	repo	analyze	-	specs/search --all --root aa-analyze/issues --skip-structure	3
+baseline-spec-cwd	repo	baseline	-	--check aa-baseline/proj/specs/export --root aa-baseline/proj --skip-structure --today 2026-10-05	0
+baseline-all-dir	repo	baseline	-	--check specs/export --all --root aa-baseline/proj --skip-structure	3
+baseline-file-escape	repo	baseline	-	--write --dry-run --root aa-baseline/proj --file ../../escape.txt --skip-structure	3
+baseline-file-absolute	repo	baseline	-	--write --dry-run --root aa-baseline/proj --file /tmp/b.txt --skip-structure	3
+baseline-pending	repo	baseline	-	--write --dry-run --root aa-analyze/issues --skip-structure --today 2026-10-05	0
+baseline-pending-json	repo	baseline	-	--write --dry-run --root aa-analyze/issues --skip-structure --today 2026-10-05 --json	0
+baseline-write-real	skill	baseline	aa-entry/proj	--write --today 2026-10-05	0
+st-broken	repo	check-structure	-	--root structure/broken	1
+spec2-nospec	repo	check-spec	-	aa-spec2/nospec --root structure/complete	1
+spec2-empty-checklist	repo	check-spec	-	aa-spec2/empty-checklist --strict --root structure/complete	2
+lab-budget-bad	repo	lab-probe	-	--root project-node --budget-ram abc --fake-resources-file res-full.json	3
+lab-unknown-option	repo	lab-probe	-	--root project-node --nope	3
+preset-regulated	init	init	-	--preset regulated	0
+aa-trace	repo	aa	-	trace --root aa-trace/pass --skip-structure	0
+aa-audit	repo	aa	-	audit --root agile-project --today 2026-10-05 --templates agile-templates	1
+aa-converge-real	repo	aa	-	converge good --root agile-project	1

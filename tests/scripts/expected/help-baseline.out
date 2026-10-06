@@ -1,0 +1,1 @@
+Usage: baseline --write [--dry-run] | --check [specs/<initiative> | --spec specs/<initiative> | --all] [--root DIR] [--file PATH] [--today YYYY-MM-DD] [--strict] [--json]

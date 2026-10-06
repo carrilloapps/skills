@@ -18,11 +18,11 @@ Exit codes: `0` all cases match · `1` at least one mismatch · `3` usage error.
 | Path | Contents |
 |------|----------|
 | `cases.tsv` | One case per row: `name`, `mode`, `impl`, `seed`, `args`, expected `exit` |
-| `fixtures/` | Fake projects, specs, transcripts, catalogs, and `res-*.json` resource snapshots (committed, including their `node_modules/` and `.memory/local/` folders) |
+| `fixtures/` | Fixture families: `project-*` (lab-probe), `specs/` (check-spec), `structure/` (check-structure), `agile-project/` + `agile-templates/` (audit-agile, doctor), `aa-*` (`aa`, `import-speckit`, presets, trace, analyze, baseline), `transcripts/`, `catalog-*.tsv`, and `res-*.json` resource snapshots — committed, including their `node_modules/` and `.memory/local/` folders |
 | `expected/` | Golden outputs: `<name>.out` (stdout) and, for file-writing modes, `<name>.tree` (files produced) |
 | `.work/` | Scratch directory for each run (git-ignored) |
 
-Modes: `repo` runs the script from `fixtures/` (read-only scripts); `transcript` copies the sample transcripts into a fresh project; `init` / `init2` run `init` in a fresh project (`init2` runs it twice to prove idempotency). `seed` names a fixture folder copied into the project first (`-` for none). `lab-probe` and `doctor` cases use the test-only `--fake-resources-file` flag so results do not depend on the machine.
+Modes: `repo` runs the script from `fixtures/` (read-only scripts); `transcript` copies the sample transcripts into a fresh project; `init` / `init2` run `init` in a fresh project (`init2` runs it twice to prove idempotency); `skill` copies the whole skill (scripts, fixture templates, presets, stubs) into the work dir for `aa` and `import-speckit` cases. `seed` names a fixture folder copied into the project first (`-` for none). `lab-probe` and `doctor` cases use the test-only `--fake-resources-file` flag so results do not depend on the machine.
 
 ## Add a case
 

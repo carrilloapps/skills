@@ -20,21 +20,22 @@ set -u
 LC_ALL=C
 export LC_ALL
 
-ROOT=. SPEC= STRICT=0 JSON=0 SKIP=0
+ROOT=. SPEC= ALL=0 STRICT=0 JSON=0 SKIP=0
 die() { echo "analyze: $1" >&2; exit 3; }
 while [ $# -gt 0 ]; do
   case "$1" in
     --root) [ $# -ge 2 ] || die "--root needs a value"; ROOT=$2; shift 2 ;;
     --spec) [ $# -ge 2 ] || die "--spec needs a value"; SPEC=$2; shift 2 ;;
-    --all) shift ;;
+    --all) ALL=1; shift ;;
     --strict) STRICT=1; shift ;;
     --json) JSON=1; shift ;;
     --skip-structure) SKIP=1; shift ;;
-    -h|--help) echo "Usage: analyze.sh [specs/<initiative> | --spec specs/<initiative> | --all] [--root DIR] [--strict] [--json]"; exit 0 ;;
+    -h|--help) echo "Usage: analyze [specs/<initiative> | --spec specs/<initiative> | --all] [--root DIR] [--strict] [--json]"; exit 0 ;;
     -*) die "unknown option: $1" ;;
     *) [ -z "$SPEC" ] || die "only one initiative folder is allowed"; SPEC=$1; shift ;;
   esac
 done
+[ $ALL -eq 1 ] && [ -n "$SPEC" ] && die "--all takes no initiative folder"
 [ -d "$ROOT" ] || die "project root not found: $ROOT"
 RL=${ROOT//\\//}; while [ "${RL%/}" != "$RL" ] && [ "$RL" != / ]; do RL=${RL%/}; done
 
@@ -44,7 +45,7 @@ add() { # severity file line rule message
   case "$1" in CRITICAL) r=1 ;; HIGH) r=2 ;; MEDIUM) r=3 ;; esac
   F+=("$r"$'\t'"$2"$'\t'"$(printf '%06d' "$3")"$'\t'"$4"$'\t'"$1"$'\t'"$3"$'\t'"$5")
 }
-jesc() { local s=$1; s=${s//\\/\\\\}; s=${s//\"/\\\"}; printf '%s' "$s"; }
+jesc() { local s=$1; s=${s//\\/\\\\}; s=${s//\"/\\\"}; s=${s//$'\t'/\\t}; s=$(printf '%s' "$s" | tr -d '\000-\010\013-\037'); printf '%s' "$s"; }
 
 RE_FENCE='^[[:space:]]*(```|~~~)'
 RE_GFENCE='^[[:space:]]*(```|~~~)[[:space:]]*(gherkin|feature|cucumber)([[:space:]]|$)'
@@ -77,7 +78,7 @@ cells() { # row → CELLS (trimmed)
   local r=$1 c
   r=${r#"${r%%[![:space:]]*}"}; r=${r#|}; r=${r%"${r##*[![:space:]]}"}; r=${r%|}
   CELLS=()
-  IFS='|' read -ra parts <<<"$r"
+  IFS='|' read -ra parts <<<"$r|"
   for c in ${parts[@]+"${parts[@]}"}; do c=${c#"${c%%[![:space:]]*}"}; c=${c%"${c##*[![:space:]]}"}; CELLS+=("$c"); done
 }
 is_header() { [[ ${L_TEXT[$1]} =~ $RE_ROW ]] && [ $(($1 + 1)) -lt ${#L_TEXT[@]} ] && [[ ${L_TEXT[$1+1]} =~ $RE_SEP ]]; }
@@ -127,7 +128,7 @@ if [ $SKIP -eq 0 ]; then
   CS="$(cd "$(dirname "$0")" && pwd)/check-structure.sh"
   [ -f "$CS" ] || die "check-structure.sh not found next to analyze.sh"
   bash "$CS" --root "$ROOT" --json >/dev/null 2>&1; SX=$?
-  [ $SX -eq 3 ] && die "check-structure failed on root: $ROOT"
+  [ $SX -eq 3 ] && die "check-structure failed on root: $RL"
   if [ $SX -ne 0 ]; then
     GATE=1
     add CRITICAL structure 0 structure-gate "Phase 0 structure incomplete; run scripts/check-structure --root $RL and complete plans/agile/ with the team first"
@@ -138,7 +139,7 @@ NAMES=()
 if [ $GATE -eq 0 ]; then
   if [ -n "$SPEC" ]; then
     s=${SPEC//\\//}; while [ "${s%/}" != "$s" ]; do s=${s%/}; done
-    { [ -d "$ROOT/$s" ] || { [ -d "$s" ] && [ -d "$ROOT/specs/${s##*/}" ]; }; } || die "initiative folder not found: $ROOT/$s"
+    { [ -d "$ROOT/$s" ] || { [ -d "$s" ] && [ -d "$ROOT/specs/${s##*/}" ]; }; } || die "initiative folder not found: $RL/$s"
     NAMES+=("${s##*/}")
   elif [ -d "$ROOT/specs" ]; then
     while IFS= read -r d; do [ -n "$d" ] && NAMES+=("$d"); done < <(cd "$ROOT/specs" && for d in */; do [ -d "$d" ] && printf '%s\n' "${d%/}"; done | sort)
@@ -174,7 +175,7 @@ article() { # number file line context
 
 for name in ${NAMES[@]+"${NAMES[@]}"}; do
   base="specs/$name" dir="$ROOT/specs/$name"
-  FR_ID=() FR_KEY=() FR_RAW=()
+  FR_ID=() FR_KEY=()
   if [ -f "$dir/spec.md" ]; then
     load "$dir/spec.md"
     seen_titles=() inq=0 qlvl=0 bcol=-1 qcol=1
@@ -206,7 +207,7 @@ for name in ${NAMES[@]+"${NAMES[@]}"}; do
           key=$(norm_text "$c1") j=-1
           for ((k = 0; k < ${#FR_ID[@]}; k++)); do [ "${FR_KEY[k]}" = "$key" ] && { j=$k; break; }; done
           [ $j -ge 0 ] && [ -n "$key" ] && add MEDIUM "$base/spec.md" "$no" duplicate-requirement "$c0 duplicates the text of ${FR_ID[j]}"
-          FR_ID+=("$c0"); FR_KEY+=("$key"); FR_RAW+=("$c1")
+          FR_ID+=("$c0"); FR_KEY+=("$key")
           ambiguous "$c1"; [ -n "$AMB" ] && add HIGH "$base/spec.md" "$no" ambiguous-term "$c0 uses ambiguous term(s) without a measurable criterion: $AMB"
         elif [[ $c0 =~ ^SC-[0-9]+$ ]]; then
           ambiguous "$c1"; [ -n "$AMB" ] && add MEDIUM "$base/spec.md" "$no" ambiguous-term "$c0 uses ambiguous term(s) without a measurable criterion: $AMB"

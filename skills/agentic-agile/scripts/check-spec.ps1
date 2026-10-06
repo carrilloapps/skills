@@ -33,7 +33,7 @@ for ($k = 0; $k -lt $args.Count; $k++) {
       'all' { $All = $true }
       'root' { if ($k + 1 -ge $args.Count) { Fail '--root needs a value' }; $k++; $Root = [string]$args[$k] }
       'skip-structure' { $Skip = $true }
-      { $_ -eq 'h' -or $_ -eq 'help' } { Write-Output 'Usage: check-spec.ps1 <specs/initiative> [--root DIR] [--strict] [--json] [--tickets] | --all [--root DIR] [--strict] [--json]'; exit 0 }
+      { $_ -eq 'h' -or $_ -eq 'help' } { Write-Output 'Usage: check-spec <specs/initiative> [--root DIR] [--strict] [--json] [--tickets] | --all [--root DIR] [--strict] [--json]'; exit 0 }
       default { Fail "unknown option: $a" }
     }
   } else { if ($Dir -ne '') { Fail 'only one initiative folder is allowed' }; $Dir = $a }
@@ -89,8 +89,11 @@ function Read-Lines([string]$path) { # non-fenced lines (plus Gherkin fences: G 
   }
   return , $out
 }
+# Heading match: the pattern must start the heading text (after optional "1.2 " numbering) and end
+# at a word boundary -- "Non-functional requirements" or "Known problems" do not count.
+function Get-HeadPattern([string]$pattern) { return ('^([0-9]+([.][0-9]+)*[.)]?\s+)?(' + $pattern + ')([^A-Za-z]|$)') }
 function Test-Heading($lines, [string]$pattern) {
-  $re = New-Object regex($pattern, $I)
+  $re = New-Object regex((Get-HeadPattern $pattern), $I)
   foreach ($l in $lines) { if ($l.G -eq 1) { continue }; $m = $ReHead.Match($l.Text); if ($m.Success -and $re.IsMatch($m.Groups[1].Value)) { return $true } }
   return $false
 }
@@ -193,7 +196,7 @@ function Invoke-GherkinChecks($lines, [string]$f, [bool]$warnOrigin, [bool]$tagC
   }
   return $st.N
 }
-function Get-JsonEsc([string]$s) { return $s.Replace('\', '\\').Replace('"', '\"') }
+function Get-JsonEsc([string]$s) { $s = $s.Replace('\', '\\').Replace('"', '\"').Replace("`t", '\t'); return [regex]::Replace($s, '[\x00-\x08\x0b-\x1f]', '') }
 function Get-Verdict([int]$x) { switch ($x) { 0 { 'PASS' } 1 { 'FAIL' } 2 { 'WARN' } default { 'ERROR' } } }
 
 
@@ -208,7 +211,7 @@ function Test-Sep([string]$l) { return ($l -match '^\s*\|' -and $l -notmatch '[^
 function Get-Section($lines, [string]$pattern) {
   $outL = New-Object System.Collections.Generic.List[object]; $outR = New-Object System.Collections.Generic.List[object]
   $in = ($pattern -eq ''); $lvl = 0; $hdr = ''
-  $re = $null; if ($pattern -ne '') { $re = New-Object regex($pattern, $I) }
+  $re = $null; if ($pattern -ne '') { $re = New-Object regex((Get-HeadPattern $pattern), $I) }
   foreach ($l in $lines) {
     if ($l.G -eq 1) { continue }
     $x = $l.Text
@@ -259,10 +262,17 @@ if ($All -and -not $Gate) {
     [Array]::Sort($list, [StringComparer]::Ordinal); $names = $list
   }
   $runs = @()
-  foreach ($d in $names) {
-    $j = (@(& $PSCommandPath "$Root/specs/$d" @child --json) -join "`n"); $x = $LASTEXITCODE
-    $e = 0; if ($j -match '"errors":(\d+)') { $e = [int]$Matches[1] }
-    $w = 0; if ($j -match '"warnings":(\d+)') { $w = [int]$Matches[1] }
+  foreach ($d in $names) { # one child run per initiative; its output is reused for the report
+    $e = 0; $w = 0
+    if ($Json) {
+      $j = (@(& $PSCommandPath "$Root/specs/$d" @child --json) -join "`n"); $x = $LASTEXITCODE
+      if ($j -match '"errors":(\d+)') { $e = [int]$Matches[1] }
+      if ($j -match '"warnings":(\d+)') { $w = [int]$Matches[1] }
+    } else {
+      $j = (@(& $PSCommandPath "$Root/specs/$d" @child) -join "`n"); $x = $LASTEXITCODE
+      $rm = [regex]::Matches($j, '(?m)^Result: ([0-9]+) error\(s\), ([0-9]+) warning\(s\)')
+      if ($rm.Count -gt 0) { $e = [int]$rm[$rm.Count - 1].Groups[1].Value; $w = [int]$rm[$rm.Count - 1].Groups[2].Value }
+    }
     $runs += [pscustomobject]@{ Name = $d; Exit = $x; E = $e; W = $w; Json = $j }
   }
   $E = 0; $W = 0; $Exit = 0
@@ -273,7 +283,7 @@ if ($All -and -not $Gate) {
   } else {
     Write-Output "check-spec $EM $Label"
     if ($runs.Count -eq 0) { Write-Output 'No initiatives under specs/.' }
-    foreach ($r in $runs) { Write-Output ''; & $PSCommandPath "$Root/specs/$($r.Name)" @child }
+    foreach ($r in $runs) { Write-Output ''; Write-Output $r.Json }
     Write-Output ''
     Write-Output 'Summary:'
     for ($k = 0; $k -lt $runs.Count; $k++) {

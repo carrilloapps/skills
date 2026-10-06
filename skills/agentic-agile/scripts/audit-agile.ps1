@@ -21,7 +21,7 @@ for ($k = 0; $k -lt $args.Count; $k++) {
     'templates' { if ($k + 1 -ge $args.Count) { Fail '--templates needs a value' }; $k++; $Tpl = [string]$args[$k] }
     'today' { if ($k + 1 -ge $args.Count) { Fail '--today needs a value' }; $k++; $Today = [string]$args[$k] }
     'json' { $Json = $true }
-    { $_ -eq 'h' -or $_ -eq 'help' } { Write-Output 'Usage: audit-agile.ps1 [--root DIR] [--json] [--templates DIR] [--today YYYY-MM-DD]'; exit 0 }
+    { $_ -eq 'h' -or $_ -eq 'help' } { Write-Output 'Usage: audit-agile [--root DIR] [--json] [--templates DIR] [--today YYYY-MM-DD]'; exit 0 }
     default { Fail "unknown option: $a" }
   }
 }
@@ -91,7 +91,9 @@ foreach ($f in (Get-Sorted 'plans/decisions' 'file' '*.md' $false)) {
 
 # ── 2. Drift between skill templates and plans/agile/ copies ─────────────────
 if (Test-Path -LiteralPath $Tpl -PathType Container) {
-  foreach ($t in @('methodology', 'definition-of-ready', 'definition-of-done', 'ceremonies', 'team', 'capabilities', 'kpi-directives', 'language', 'autonomy')) {
+  # constitution.md is excluded on purpose: its articles are team content that amendments
+  # rename or replace, so template section names must not be enforced there.
+  foreach ($t in @('methodology', 'definition-of-ready', 'definition-of-done', 'ceremonies', 'team', 'capabilities', 'kpi-directives', 'language', 'autonomy', 'hooks')) {
     $tf = Join-Path $Tpl "$t.md"; $cf = P "plans/agile/$t.md"
     if (-not ((Test-Path -LiteralPath $tf -PathType Leaf) -and (Test-Path -LiteralPath $cf -PathType Leaf))) { continue }
     $have = New-Object System.Collections.Generic.HashSet[string]
@@ -158,7 +160,7 @@ foreach ($d in (Get-Sorted 'plans/initiatives' 'dir' '' $false)) {
 # ── Report ───────────────────────────────────────────────────────────────────
 $N = $Findings.Count
 $Exit = 0; if ($N -gt 0) { $Exit = 1 }
-function Get-JsonEsc([string]$s) { return $s.Replace('\', '\\').Replace('"', '\"') }
+function Get-JsonEsc([string]$s) { $s = $s.Replace('\', '\\').Replace('"', '\"').Replace("`t", '\t'); return [regex]::Replace($s, '[\x00-\x08\x0b-\x1f]', '') }
 if ($Json) {
   $sb = New-Object System.Text.StringBuilder
   [void]$sb.Append('{"root":"' + (Get-JsonEsc $Label) + '","today":"' + $Today + '","findings":[')

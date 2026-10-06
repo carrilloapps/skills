@@ -57,52 +57,11 @@ By default the server exposes only `codegraph_explore` (source + call paths + a 
 
 ---
 
-## Where the MCP entry goes (project-level, the agent in use)
+## Protocol, record, and MCP config location
 
-| Agent | File | Shape |
-|---|---|---|
-| Claude Code | `.mcp.json` | `mcpServers.<name>` |
-| Cursor | `.cursor/mcp.json` | `mcpServers.<name>` |
-| Antigravity | `.agents/mcp_config.json` ⚠️ unverified | `mcpServers.<name>` |
-| Gemini CLI | `.gemini/settings.json` | `mcpServers.<name>` |
-| VS Code / GitHub Copilot | `.vscode/mcp.json` | `servers.<name>` |
-| Codex CLI | `.codex/config.toml` (project) or `~/.codex/config.toml` (global — ask first) | `[mcp_servers.<name>]` + `[mcp_servers.<name>.env]` |
-| Roo Code | `.roo/mcp.json` | `mcpServers.<name>` |
-| Kiro | `.kiro/settings/mcp.json` | `mcpServers.<name>` |
-| Other | Show the snippet; the user places it | — |
+Suggestion protocol, `capabilities.json` record (`suggested` · `declined` · `installed` · `failed`), and the per-agent MCP config table: ai-rules `frameworks/capabilities.md` — when ai-rules is not installed, apply the same protocol standalone: detect read-only first, suggest each tool at most once, record the decision in `.memory/local/devils-advocate/capabilities.json`, never re-suggest a declined tool, one tool at a time after explicit approval of the exact pinned command from an official registry (never a downloaded script handed to a shell interpreter, never an unpinned `npx -y`), then verify with one real call. `.memory/` ignore rules (five-line `.memory/.gitignore` block with `local/`, `*.local.*`, `*.recovered.json`; Mercurial/Fossil/SVN): ai-rules `frameworks/memory-convention.md`.
 
-Edit non-destructively: keep every existing server and key.
-
----
-
-## Suggestion protocol
-
-1. **Detect read-only first** — session tools, config files, index directories. No probe commands when these answer the question.
-2. **Suggest at most once**, inside the report only when it would have changed a risk from *Unverified* to evidenced: one line under *Unverified assumptions* — what it is, why it helps here, the pinned command, telemetry note, link.
-3. **Record the answer** in `.memory/local/devils-advocate/capabilities.json` (VCS-ignored — see the `.memory/` rules below):
-
-   ```json
-   [{ "tool": "@colbymchenry/codegraph", "status": "declined", "version": "1.6.2", "date": "2026-10-05" }]
-   ```
-
-   `status`: `suggested` · `declined` · `installed` · `failed`. Never suggest a `declined` tool again unless the user asks.
-4. **One tool at a time, through the Gate.** The user may also run the commands themselves (`! <command>` in Claude Code).
-5. **Official registry only, pinned version.** Never never pipe a downloaded script into a shell interpreter (POSIX or PowerShell), no unpinned `npx -y`.
-6. **Make it work, then prove it**: install → version check → telemetry off → MCP config → VCS ignore → one real call. On failure, record `failed`, say so in one line, and continue without it.
-
-### `.memory/` rules (when writing `capabilities.json`)
-
-Before the first write under `.memory/`, create `.memory/.gitignore` if missing (or append only the missing lines) — shared state under `.memory/<skill>/` stays versioned, private paths are ignored:
-
-```gitignore
-# Managed by carrilloapps/skills — ignores agent-private paths only.
-# Shared team state under .memory/<skill>/ stays versioned.
-local/
-*.local.*
-*.recovered.json
-```
-
-Mercurial: append `^\.memory/local/`, `^\.memory/.*\.local\.`, `^\.memory/.*\.recovered\.json$` to `.hgignore`. Fossil: append `.memory/local/*`, `.memory/*.local.*`, `.memory/*.recovered.json` to `.fossil-settings/ignore-glob`. Subversion/unknown: tell the user once (`svn propset svn:ignore local .memory`). File writes only; never run VCS commands.
+Devil's Advocate specifics: suggest codegraph only inside a report, one line under *Unverified assumptions*, when it would have turned an *Unverified* risk into evidenced one; installing it is a Tier 2 action through the Gate; after install: version check → telemetry off → MCP config → VCS ignore → one real `codegraph_explore` call.
 
 ---
 

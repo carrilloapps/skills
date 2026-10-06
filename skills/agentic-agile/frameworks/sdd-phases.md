@@ -29,11 +29,13 @@ No initiative starts — no `spec.md`, `design.md`, plan, draft, sprint artifact
 |--------|------|----------|
 | Directories | `plans/agile/`, `plans/sprints/`, `plans/initiatives/`, `plans/decisions/`, `plans/drafts/`, `specs/` exist | fail |
 | Shared files | `plans/agile/metrics/events.jsonl` exists; `.memory/.gitignore` has `local/`, `*.local.*`, `*.recovered.json` | fail |
-| Each `plans/agile/*.md` (methodology, definition-of-ready, definition-of-done, ceremonies, team, capabilities, kpi-directives, language, autonomy) | Exists; no unfilled `<placeholders>` in prose; no `TBD`; no checkbox items | fail |
+| Each `plans/agile/*.md` (methodology, definition-of-ready, definition-of-done, ceremonies, team, capabilities, kpi-directives, language, autonomy, constitution, hooks) | Exists; no unfilled `<placeholders>` in prose; no `TBD`; no checkbox items | fail |
+| `constitution.md` | `Version: X.Y.Z` line; at least one `### Article N — <title> (MUST)`; an *Amendments* table | fail |
+| `hooks.md` | At least one table row with a *Transition*, a *Proposed command*, and a *Blocking?* value | fail |
 | `methodology.md` | `Sprint length:` and `Scale:` lines with a value | fail |
 | `definition-of-ready.md`, `definition-of-done.md` | At least 3 numbered items | fail |
 | `ceremonies.md`, `kpi-directives.md` | At least one table row | fail |
-| `team.md` | At least one role row with a usual capacity | fail |
+| `team.md` | At least one role row with a non-empty capacity cell (a number, or an explicit statement such as `variable`) | fail |
 | `capabilities.md` | Every row of the Slots table names a tool, `none`, or `not applicable` | fail |
 | `language.md` | Gherkin keyword language set | fail |
 | `autonomy.md` | Every task in *Levels per task* has N0–N4; every adoption precondition has a status | fail |
@@ -66,7 +68,7 @@ How the agent closes the gap: one numbered finding at a time, asking the person 
 
 Scenarios carry `@FR-###` and `@P1`/`@P2`/`@P3` tags. `requirements-checklist.md` (`CHK###`, ≥ 80% traced to a spec section or ID) checks the quality of the writing itself before design.
 
-**Gate to Phase 2:** no `TBD` / `TODO` / `???` anywhere; every FR has a scenario tagged with its ID; every success criterion maps to an existing scenario; out-of-scope is non-empty; no open question blocks the sprint; every clarification is attributed. Acceptance criteria as bullet checkboxes are not accepted.
+**Gate to Phase 2:** no `TBD` anywhere; every FR has a scenario tagged with its ID; every success criterion maps to an existing scenario; out-of-scope is non-empty; no open question blocks the sprint; every clarification is attributed. Acceptance criteria as bullet checkboxes are not accepted.
 
 ---
 
@@ -145,7 +147,7 @@ Also required: module/file map, interface signatures, data-model changes, rollou
 | 0 | `check-structure` passes for `--root` (default: current directory); while it fails, only `structure-gate` is reported | fail |
 | 1 | `spec.md` exists | fail |
 | 1 | Has Problem, Behavioral contract, Out of scope, Success criteria, Constraints, and Open questions sections | fail |
-| 1 | At least one `Scenario:` / `Escenario:` / `Scenario Outline:` / `Esquema del escenario:` — inside a ```gherkin /```feature / ```cucumber fence or in plain text | fail |
+| 1 | At least one `Scenario:` / `Escenario:` / `Scenario Outline:` / `Esquema del escenario:` — inside a ```gherkin / ```feature / ```cucumber fence | fail |
 | 1 | No `TBD` (Gherkin fences included; other fenced code ignored) | fail |
 | 1 | Scenario without an `Origin:` / `Origen:` line (a `# Origin:` Gherkin comment counts) | warning |
 | 1 | Every scenario has a `Given`, a `When`, and a `Then` step (en/es keywords; `And`/`But`/`*` continue the previous step; Background `Given` steps count) | fail |
@@ -156,9 +158,10 @@ Also required: module/file map, interface signatures, data-model changes, rollou
 | 4 | If `verification.md` exists: a table with a Result/Resultado column, and a `Verdict`/`Veredicto` line carrying ✅/⚠️/❌ | fail |
 | any | Unfilled template placeholders `<…>` in prose (code spans, Gherkin fences, HTML tags, and autolinks excluded) — the message lists them | fail |
 | 1 | `## Functional requirements` table with `FR-###` IDs and a P1/P2/P3 priority; every FR is referenced by at least one scenario tag `@FR-###`; every scenario carries a `@FR-###` and a `@P1`/`@P2`/`@P3` tag | fail |
-| 1 | Success criteria use `SC-###` IDs and each maps to a scenario | fail |
-| 1 | Each clarification line has `Confirmed by: <name> (<role>)` | warning (fail with `--strict`) |
-| 1 | `requirements-checklist.md`, if present: `CHK###` rows, ≥ 80% with a `Ref`, no ❌ (`--strict`) | warning (fail with `--strict`) |
+| 1 | Success criteria use `SC-###` IDs; every `FR-###` is unique; each SC maps to an existing scenario title | fail (SC → scenario: warning) |
+| 1 | Each clarification line has `Confirmed by: <name> (<role>)` | fail |
+| 2 | No open question with *Blocks sprint? = Yes* once `design.md` exists | fail |
+| 2 | `requirements-checklist.md`: present once `design.md` exists; `CHK###` rows, ≥ 80% with a `Ref` | warning (fail with `--strict`) |
 | 2 | If `tasks.md` exists: `## Phase N: <name>` sections with the `ID \| P \| Req \| Task \| Depends \| Est \| Status` table; `T###` unique; every `Req` is a defined `FR-###` or `-`; `Depends` points to existing tasks (or `-`) with no cycle; `Est` is Fibonacci or `-` | fail |
 | 4 | If `verification.md` exists: the test matrix has a `Req` column | fail |
 | any | Checkbox items (`- [ ]`) anywhere | fail |

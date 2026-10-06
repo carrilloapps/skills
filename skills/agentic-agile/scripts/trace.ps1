@@ -14,7 +14,7 @@ try { [Console]::OutputEncoding = New-Object System.Text.UTF8Encoding($false) } 
 $EM = [string][char]0x2014
 $Utf8 = New-Object System.Text.UTF8Encoding($false)
 
-$Root = '.'; $Spec = ''; $Strict = $false; $Json = $false; $Skip = $false; $TDirs = @()
+$Root = '.'; $Spec = ''; $All = $false; $Strict = $false; $Json = $false; $Skip = $false; $TDirs = @()
 function Fail([string]$msg) { [Console]::Error.WriteLine("trace: $msg"); exit 3 }
 for ($k = 0; $k -lt $args.Count; $k++) {
   $a = [string]$args[$k]
@@ -22,22 +22,28 @@ for ($k = 0; $k -lt $args.Count; $k++) {
   switch (($a -replace '^-+', '').ToLowerInvariant()) {
     'root' { if ($k + 1 -ge $args.Count) { Fail '--root needs a value' }; $k++; $Root = [string]$args[$k] }
     'spec' { if ($k + 1 -ge $args.Count) { Fail '--spec needs a value' }; $k++; $Spec = [string]$args[$k] }
-    'all' { }
+    'all' { $All = $true }
     'tests-dir' { if ($k + 1 -ge $args.Count) { Fail '--tests-dir needs a value' }; $k++; $TDirs += [string]$args[$k] }
     'strict' { $Strict = $true }
     'json' { $Json = $true }
     'skip-structure' { $Skip = $true }
-    { $_ -eq 'h' -or $_ -eq 'help' } { Write-Output 'Usage: trace.ps1 [specs/<initiative> | --spec specs/<initiative> | --all] [--root DIR] [--tests-dir DIR]... [--strict] [--json]'; exit 0 }
+    { $_ -eq 'h' -or $_ -eq 'help' } {
+      Write-Output 'Usage: trace [specs/<initiative> | --spec specs/<initiative> | --all] [--root DIR] [--tests-dir DIR]... [--strict] [--json]'
+      Write-Output "Test files: tests/, test/, spec/, __tests__/, src/ (names with 'test' or '.spec.', case-insensitive) and every --tests-dir."
+      Write-Output 'Skipped: node_modules, .git, .memory/local, fixtures, testdata, __fixtures__, .work, templates, expected, golden, goldens, snapshots, __snapshots__.'
+      exit 0
+    }
     default { Fail "unknown option: $a" }
   }
 }
+if ($All -and $Spec -ne '') { Fail '--all takes no initiative folder' }
 if (-not (Test-Path -LiteralPath $Root -PathType Container)) { Fail "project root not found: $Root" }
 $RL = $Root.Replace('\', '/'); while ($RL.Length -gt 1 -and $RL.EndsWith('/')) { $RL = $RL.Substring(0, $RL.Length - 1) }
 $RootFull = (Resolve-Path -LiteralPath $Root).Path
 
 $Findings = New-Object System.Collections.Generic.List[object]
 function Add-Finding($sev, $file, $line, $rule, $msg) { $Findings.Add([pscustomobject]@{ Sev = $sev; File = $file; Line = [int]$line; Rule = $rule; Msg = $msg }) }
-function JEsc([string]$s) { return $s.Replace('\', '\\').Replace('"', '\"') }
+function JEsc([string]$s) { $s = $s.Replace('\', '\\').Replace('"', '\"').Replace("`t", '\t'); return [regex]::Replace($s, '[\x00-\x08\x0b-\x1f]', '') }
 
 $I = [System.Text.RegularExpressions.RegexOptions]::IgnoreCase
 $ReFence = [regex]'^\s*(```|~~~)'
@@ -87,7 +93,7 @@ if (-not $Skip) {
   $cs = Join-Path $PSScriptRoot 'check-structure.ps1'
   if (-not (Test-Path -LiteralPath $cs)) { Fail 'check-structure.ps1 not found next to trace.ps1' }
   $null = & $cs --root $Root --json 2>$null; $sx = $LASTEXITCODE
-  if ($sx -eq 3) { Fail "check-structure failed on root: $Root" }
+  if ($sx -eq 3) { Fail "check-structure failed on root: $RL" }
   if ($sx -ne 0) {
     $Gate = $true
     Add-Finding 'error' 'structure' 0 'structure-gate' "Phase 0 structure incomplete; run scripts/check-structure --root $RL and complete plans/agile/ with the team first"
@@ -115,8 +121,8 @@ function Scan-Dir([string]$rel, [bool]$namesOnly) {
   if (-not (Test-Path -LiteralPath $full -PathType Container)) { return }
   foreach ($f in Get-ChildItem -LiteralPath $full -Recurse -File -Force) {
     $p = $f.FullName.Substring($RootFull.Length).Replace('\', '/')
-    if ($p -match '/(node_modules|\.git)/' -or $p -match '/\.memory/local/') { continue }
-    if ($namesOnly -and -not ($f.Name -clike '*test*' -or $f.Name -clike '*.spec.*')) { continue }
+    if ($p -match '/(node_modules|\.git|fixtures|testdata|__fixtures__|\.work|templates|expected|golden|goldens|snapshots|__snapshots__)/' -or $p -match '/\.memory/local/') { continue }
+    if ($namesOnly -and -not ($f.Name -like '*test*' -or $f.Name -like '*.spec.*')) { continue }
     $text = [System.IO.File]::ReadAllText($f.FullName, $Utf8)
     $ids = @{}
     foreach ($m in $ReFr.Matches($text)) { $ids[$m.Value] = 1 }

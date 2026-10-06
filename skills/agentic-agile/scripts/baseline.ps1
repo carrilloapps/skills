@@ -15,7 +15,7 @@ try { [Console]::OutputEncoding = New-Object System.Text.UTF8Encoding($false) } 
 $EM = [string][char]0x2014
 $Utf8 = New-Object System.Text.UTF8Encoding($false)
 
-$Root = '.'; $Spec = ''; $Mode = ''; $Dry = $false; $File = 'plans/agile/baseline.txt'; $Today = ''; $Strict = $false; $Json = $false; $Skip = $false
+$Root = '.'; $Spec = ''; $All = $false; $Mode = ''; $Dry = $false; $File = 'plans/agile/baseline.txt'; $Today = ''; $Strict = $false; $Json = $false; $Skip = $false
 function Fail([string]$msg) { [Console]::Error.WriteLine("baseline: $msg"); exit 3 }
 for ($k = 0; $k -lt $args.Count; $k++) {
   $a = [string]$args[$k]
@@ -26,23 +26,26 @@ for ($k = 0; $k -lt $args.Count; $k++) {
     'dry-run' { $Dry = $true }
     'root' { if ($k + 1 -ge $args.Count) { Fail '--root needs a value' }; $k++; $Root = [string]$args[$k] }
     'spec' { if ($k + 1 -ge $args.Count) { Fail '--spec needs a value' }; $k++; $Spec = [string]$args[$k] }
-    'all' { }
+    'all' { $All = $true }
     'file' { if ($k + 1 -ge $args.Count) { Fail '--file needs a value' }; $k++; $File = [string]$args[$k] }
     'today' { if ($k + 1 -ge $args.Count) { Fail '--today needs a value' }; $k++; $Today = [string]$args[$k] }
     'strict' { $Strict = $true }
     'json' { $Json = $true }
     'skip-structure' { $Skip = $true }
-    { $_ -eq 'h' -or $_ -eq 'help' } { Write-Output 'Usage: baseline.ps1 --write [--dry-run] | --check [specs/<initiative> | --spec specs/<initiative> | --all] [--root DIR] [--file PATH] [--today YYYY-MM-DD] [--strict] [--json]'; exit 0 }
+    { $_ -eq 'h' -or $_ -eq 'help' } { Write-Output 'Usage: baseline --write [--dry-run] | --check [specs/<initiative> | --spec specs/<initiative> | --all] [--root DIR] [--file PATH] [--today YYYY-MM-DD] [--strict] [--json]'; exit 0 }
     default { Fail "unknown option: $a" }
   }
 }
+if ($All -and $Spec -ne '') { Fail '--all takes no initiative folder' }
 if ($Mode -eq '') { Fail 'choose --write or --check' }
 if ($Dry -and $Mode -ne 'write') { Fail '--dry-run only applies to --write' }
 if (-not (Test-Path -LiteralPath $Root -PathType Container)) { Fail "project root not found: $Root" }
 $RL = $Root.Replace('\', '/'); while ($RL.Length -gt 1 -and $RL.EndsWith('/')) { $RL = $RL.Substring(0, $RL.Length - 1) }
 $RootFull = (Resolve-Path -LiteralPath $Root).Path
 $File = $File.Replace('\', '/')
-function JEsc([string]$s) { return $s.Replace('\', '\\').Replace('"', '\"') }
+if ($File.StartsWith('/') -or $File -match '^[A-Za-z]:') { Fail '--file must be a path relative to the project' }
+if (('/' + $File + '/').Contains('/../')) { Fail "--file must not contain '..'" }
+function JEsc([string]$s) { $s = $s.Replace('\', '\\').Replace('"', '\"').Replace("`t", '\t'); return [regex]::Replace($s, '[\x00-\x08\x0b-\x1f]', '') }
 function Invoke-Tool([string]$tool, [object[]]$targs) {
   $p = Join-Path $PSScriptRoot "$tool.ps1"
   $out = (@(& $p @targs 2>$null) -join "`n"); $x = $LASTEXITCODE
@@ -55,7 +58,7 @@ if (-not $Skip) {
   $cs = Join-Path $PSScriptRoot 'check-structure.ps1'
   if (-not (Test-Path -LiteralPath $cs)) { Fail 'check-structure.ps1 not found next to baseline.ps1' }
   $null = & $cs --root $Root --json 2>$null; $sx = $LASTEXITCODE
-  if ($sx -eq 3) { Fail "check-structure failed on root: $Root" }
+  if ($sx -eq 3) { Fail "check-structure failed on root: $RL" }
   if ($sx -ne 0) {
     $msg = "Phase 0 structure incomplete; run scripts/check-structure --root $RL and complete plans/agile/ with the team first"
     if ($Json) { Write-Output ('{"root":"' + (JEsc $RL) + '","mode":"' + $Mode + '","gate":"closed","message":"' + (JEsc $msg) + '","exit":1}') }
@@ -77,13 +80,16 @@ if ($Spec -ne '') {
 }
 
 # Collect fingerprints
-$ReF = [regex]'"file":"((\\.|[^"\\])*)","line":[0-9]+,"rule":"([^"]*)","message":"((\\.|[^"\\])*)"'
+$ReF = [regex]'("severity":"([A-Za-z]*)",)?"file":"((\\.|[^"\\])*)","line":[0-9]+,"rule":"([^"]*)","message":"((\\.|[^"\\])*)"'
 $Fp = New-Object System.Collections.Generic.List[string]
 function Collect([string]$tool, [string]$json, [string]$prefix) {
   foreach ($m in $ReF.Matches($json)) {
-    $f = $m.Groups[1].Value
+    $f = $m.Groups[3].Value
     if (-not ($f.StartsWith('plans/') -or $f.StartsWith('specs/') -or $f -eq 'structure')) { $f = $prefix + $f }
-    $Fp.Add($tool + '|' + $m.Groups[3].Value + '|' + $f + '|' + $m.Groups[4].Value)
+    # A blocking question or a CRITICAL finding is a pending decision, never an accepted finding:
+    # it is never written to the baseline and always counts as new ("!" marks it).
+    $pin = ''; if ($m.Groups[5].Value -eq 'blocking-question' -or $m.Groups[2].Value -eq 'CRITICAL') { $pin = '!' }
+    $Fp.Add($pin + $tool + '|' + $m.Groups[5].Value + '|' + $f + '|' + $m.Groups[6].Value)
   }
 }
 foreach ($d in $Names) {
@@ -96,8 +102,12 @@ Collect 'audit-agile' (Invoke-Tool 'audit-agile' $aa) ''
 Collect 'trace' (Invoke-Tool 'trace' (@('--root', $Root, '--skip-structure', '--json') + $Scope)) ''
 
 $arr = [string[]]$Fp.ToArray(); [Array]::Sort($arr, [System.StringComparer]::Ordinal)
-$Cur = New-Object System.Collections.Generic.List[string]
-foreach ($x in $arr) { if ($Cur.Count -eq 0 -or $Cur[$Cur.Count - 1] -ne $x) { $Cur.Add($x) } }
+$Cur = New-Object System.Collections.Generic.List[string]; $Pend = New-Object System.Collections.Generic.List[string]
+$prevX = $null
+foreach ($x in $arr) {
+  if ($x -eq $prevX) { continue }; $prevX = $x
+  if ($x.StartsWith('!')) { $Pend.Add($x.Substring(1)) } else { $Cur.Add($x) }
+}
 
 if ($Mode -eq 'write') {
   if (-not $Dry) {
@@ -113,10 +123,15 @@ if ($Mode -eq 'write') {
   if ($Json) {
     $dj = 'false'; if ($Dry) { $dj = 'true' }
     $items = @($Cur | ForEach-Object { '"' + (JEsc $_) + '"' }) -join ','
-    Write-Output ('{"root":"' + (JEsc $RL) + '","mode":"write","dry_run":' + $dj + ',"file":"' + (JEsc $File) + '","fingerprints":[' + $items + '],"count":' + $Cur.Count + ',"exit":0}')
+    $pitems = @($Pend | ForEach-Object { '"' + (JEsc $_) + '"' }) -join ','
+    Write-Output ('{"root":"' + (JEsc $RL) + '","mode":"write","dry_run":' + $dj + ',"file":"' + (JEsc $File) + '","fingerprints":[' + $items + '],"pending":[' + $pitems + '],"count":' + $Cur.Count + ',"exit":0}')
   } else {
     Write-Output "baseline $EM $RL (write)"
     for ($i = 0; $i -lt $Cur.Count; $i++) { Write-Output ('{0}. {1}' -f ($i + 1), $Cur[$i]) }
+    if ($Pend.Count -gt 0) {
+      Write-Output 'Not recorded (pending decisions are never baselined):'
+      for ($i = 0; $i -lt $Pend.Count; $i++) { Write-Output ('{0}. {1}' -f ($i + 1), $Pend[$i]) }
+    }
     if ($Dry) { Write-Output "Result: would write $($Cur.Count) fingerprint(s) to $File (dry run)" }
     else { Write-Output "Result: wrote $($Cur.Count) fingerprint(s) to $File" }
   }
@@ -132,6 +147,7 @@ foreach ($l in [System.IO.File]::ReadAllLines($bf, $Utf8)) {
   $Base.Add($l)
 }
 $New = New-Object System.Collections.Generic.List[string]; $Res = New-Object System.Collections.Generic.List[string]; $Acc = 0
+foreach ($p in $Pend) { $New.Add($p) }
 foreach ($c in $Cur) { if ($Base.Contains($c)) { $Acc++ } else { $New.Add($c) } }
 $barr = [string[]]$Base.ToArray(); [Array]::Sort($barr, [System.StringComparer]::Ordinal)
 $prev = $null

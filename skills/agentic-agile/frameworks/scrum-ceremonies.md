@@ -46,14 +46,14 @@ Unconfirmed facts stay **Proposed** and never change the file.
 4. **Readiness gate** from `plans/agile/definition-of-ready.md`: mark ✅ only what is explicit in the source; everything else ❌ or ⚠️ with the reason.
 5. **Adversarial pass** (delegated to `devils-advocate` when installed): assumptions, contradictions with the system, ambiguous words ("all", "automatic", "fast"), missing roles, what is recorded on failure. Each finding → open question with an addressee. **An empty category is declared empty** ("Missing roles: none found") — never silently omitted.
 6. **Estimate**: withheld until the team votes.
-7. End with open questions, epistemic state, and "Nothing was written to the tracker."
+7. Close as [`output-format.md`](output-format.md) rule 4 prescribes.
 
 ## Refinement
 
 - Walk the draft's open questions first; record answers with attribution — for initiatives with a spec, run the clarify protocol ([`clarify.md`](clarify.md)): ≤ 5 questions, one at a time, answers written to `spec.md` → *Clarifications* with `Confirmed by:`.
 - Every refined item names its `FR-###` and priority; items that change behavior link to `specs/<i>/spec.md`. Bugs use `templates/bug.md` (mandatory regression scenario); new ideas use `templates/idea-assessment.md` before they become backlog items.
 - Unanswered questions that block the sprint keep the item **Not Ready**.
-- Items over 13 points are split before leaving refinement.
+- Items above the team's split threshold (`plans/agile/methodology.md`) are split before leaving refinement.
 
 ## Planning
 

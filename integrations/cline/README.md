@@ -41,5 +41,5 @@ Delete `.clinerules/hooks/PreToolUse` (or `PreToolUse.ps1`) and `.clinerules/hoo
 
 ## Sources
 
-- Cline hooks (locations, naming, `.ps1` on Windows, input `preToolUse.tool`/`parameters`, output `cancel`/`errorMessage`/`contextModification`): <https://mintlify.wiki/cline/cline/customization/hooks>
+- Cline hooks (locations, naming, `.ps1` on Windows, input `preToolUse.tool`/`parameters`, output `cancel`/`errorMessage`/`contextModification`): <https://docs.cline.bot/> ⚠️ (vendor docs; field names verified against a third-party mirror)
 - Release notes: <https://cline.ghost.io/cline-v3-36-hooks/>

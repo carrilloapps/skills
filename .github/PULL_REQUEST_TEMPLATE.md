@@ -14,8 +14,8 @@
 ## Type of Change
 
 - [ ] 🐛 Bug fix — incorrect or misleading guidance corrected
-- [ ] ✨ New example (`examples/*.md`) — devils-advocate only
-- [ ] 📚 New framework (`frameworks/*.md`) — devils-advocate only
+- [ ] ✨ New example (`examples/*.md`)
+- [ ] 📚 New framework (`frameworks/*.md`)
 - [ ] 🔧 Improvement to existing framework, checklist, or rule
 - [ ] 🏗️ Core protocol change (`SKILL.md` or a core framework file)
 - [ ] 📦 Project infrastructure (README, CI, templates, `AGENTS.md`, `copilot-instructions.md`)

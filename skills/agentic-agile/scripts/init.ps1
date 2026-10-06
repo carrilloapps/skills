@@ -22,7 +22,7 @@ while ($i -lt $args.Count) {
     'root' { if ($i + 1 -ge $args.Count) { Fail '--root needs a value' }; $Root = [string]$args[$i + 1]; $i += 2 }
     'dryrun' { $Dry = $true; $i += 1 }
     'preset' { if ($i + 1 -ge $args.Count) { Fail '--preset needs a value' }; $Preset = [string]$args[$i + 1]; $i += 2 }
-    { $_ -eq 'h' -or $_ -eq 'help' } { Write-Output 'Usage: init.ps1 [--root DIR] [--preset scrum|kanban|regulated] [--dry-run]'; exit 0 }
+    { $_ -eq 'h' -or $_ -eq 'help' } { Write-Output 'Usage: init [--root DIR] [--preset scrum|kanban|regulated] [--dry-run]'; exit 0 }
     default { Fail "unknown option: $a" }
   }
 }

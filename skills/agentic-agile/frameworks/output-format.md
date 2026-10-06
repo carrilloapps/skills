@@ -7,11 +7,12 @@
 1. First line: the result — what was written (path) or the verdict. While the Phase 0 gate is closed, the first line says so: `Phase 0 gate closed — <N> structure item(s) open; nothing else will be created until they are done.`
 2. Options are **numbered or lettered**. Never checkbox lists: nobody can tick them in a chat, and they invite the agent to "tick" by inference.
 3. Gate items in artifacts: `1. ✅ / ❌ / ⚠️ <item> — <evidence>`.
-4. Every draft closes with open questions (or "Open questions: none"), the epistemic state, and "Nothing was written to the tracker."
+4. Every draft closes with open questions (or "Open questions: none"), the epistemic state, and the sentence **"Nothing was written to the tracker."** — this rule is the single owner of that closing line; other files point here.
 5. Short. Details live in the files; the chat says where they are.
 6. Script results are quoted verbatim (finding IDs, severities, exit code) before any interpretation; the agent's own reading is labelled **Proposed**.
 7. Requirements are cited by ID (`FR-003`, `SC-001`, `T012`) so every statement can be traced ([`traceability.md`](traceability.md)).
 8. Clarifying questions: one at a time, numbered options, one marked *(recommended)* with the reason ([`clarify.md`](clarify.md)).
+9. In **filled** team files (`plans/agile/*`), path parameters are written as uppercase tokens (`INITIATIVE`, `SPRINT`, `DATE`) inside code spans — never `<…>`, which the Phase 0 gate reads as an unfilled placeholder. Templates keep `<…>`.
 
 ## ❌ Bad
 

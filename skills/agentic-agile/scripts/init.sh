@@ -23,7 +23,7 @@ while [ $# -gt 0 ]; do
     --root) [ $# -ge 2 ] || die "--root needs a value"; ROOT=$2; shift 2 ;;
     --dry-run) DRY=1; shift ;;
     --preset) [ $# -ge 2 ] || die "--preset needs a value"; PRESET=$2; shift 2 ;;
-    -h|--help) echo "Usage: init.sh [--root DIR] [--preset scrum|kanban|regulated] [--dry-run]"; exit 0 ;;
+    -h|--help) echo "Usage: init [--root DIR] [--preset scrum|kanban|regulated] [--dry-run]"; exit 0 ;;
     *) die "unknown option: $1" ;;
   esac
 done

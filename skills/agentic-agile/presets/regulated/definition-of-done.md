@@ -18,7 +18,7 @@
 ## Verification
 
 1. `specs/<initiative>/verification.md` has a row per scenario with reproducible evidence (timestamp, artifact, commit)
-2. `scripts/trace` reports every FR/SC covered by a scenario, a task, and a passing test
+2. `trace` reports every FR/SC covered by a scenario, a task, and a passing test
 3. Verdict ✅; a ⚠️ needs a dated follow-up **and** a decision record naming who accepted the risk
 
 ## Documentation
@@ -29,7 +29,7 @@
 ## Out of scope respected
 
 1. Nothing outside the spec shipped silently
-2. `scripts/analyze` reports no CRITICAL or HIGH finding outside the baseline
+2. `analyze` reports no CRITICAL or HIGH finding outside the baseline
 
 ## Not Done when
 

@@ -1,0 +1,3 @@
+Usage: trace [specs/<initiative> | --spec specs/<initiative> | --all] [--root DIR] [--tests-dir DIR]... [--strict] [--json]
+Test files: tests/, test/, spec/, __tests__/, src/ (names with 'test' or '.spec.', case-insensitive) and every --tests-dir.
+Skipped: node_modules, .git, .memory/local, fixtures, testdata, __fixtures__, .work, templates, expected, golden, goldens, snapshots, __snapshots__.

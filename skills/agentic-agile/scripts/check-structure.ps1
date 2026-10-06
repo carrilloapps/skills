@@ -21,7 +21,7 @@ for ($k = 0; $k -lt $args.Count; $k++) {
     'strict' { $Strict = $true }
     'json' { $Json = $true }
     'scorecard' { $Score = $true }
-    { $_ -eq 'h' -or $_ -eq 'help' } { Write-Output 'Usage: check-structure.ps1 [--root DIR] [--strict] [--json] [--scorecard]'; exit 0 }
+    { $_ -eq 'h' -or $_ -eq 'help' } { Write-Output 'Usage: check-structure [--root DIR] [--strict] [--json] [--scorecard]'; exit 0 }
     default { Fail "unknown option: $a" }
   }
 }
@@ -88,7 +88,7 @@ else {
 }
 
 # ── Team operating system (plans/agile/) ─────────────────────────────────────
-foreach ($t in @('methodology', 'definition-of-ready', 'definition-of-done', 'ceremonies', 'team', 'capabilities', 'kpi-directives', 'language', 'autonomy', 'constitution')) {
+foreach ($t in @('methodology', 'definition-of-ready', 'definition-of-done', 'ceremonies', 'team', 'capabilities', 'kpi-directives', 'language', 'autonomy', 'constitution', 'hooks')) {
   $f = "plans/agile/$t.md"
   if (-not (Test-Path -LiteralPath (P $f) -PathType Leaf)) { Add-Finding 'error' $f 0 'missing-file' 'missing file (run scripts/init, then complete it with the team)'; continue }
   $doc = Read-Doc (P $f); $DocLines = $doc.Lines; $DocRows = $doc.Rows
@@ -110,7 +110,7 @@ foreach ($t in @('methodology', 'definition-of-ready', 'definition-of-done', 'ce
       if (-not (Test-Any '(scale|escala)\s*:\s*\S')) { Add-Finding 'error' $f 0 'content' "no estimation scale (e.g. 'Scale: Fibonacci 1, 2, 3, 5, 8, 13')" }
     }
     { $_ -eq 'definition-of-ready' -or $_ -eq 'definition-of-done' } { if ($nums -lt 3) { Add-Finding 'error' $f 0 'content' 'fewer than 3 numbered items' } }
-    { $_ -eq 'ceremonies' -or $_ -eq 'kpi-directives' } { if ($DocRows.Count -eq 0) { Add-Finding 'error' $f 0 'content' 'no table rows' } }
+    { $_ -eq 'ceremonies' -or $_ -eq 'kpi-directives' -or $_ -eq 'hooks' } { if ($DocRows.Count -eq 0) { Add-Finding 'error' $f 0 'content' 'no table rows' } }
     'team' {
       $ok = $false; foreach ($r in $DocRows) { if ((Get-Cell $r.Text 1) -ne '' -and (Get-Cell $r.Text 4) -ne '') { $ok = $true } }
       if (-not $ok) { Add-Finding 'error' $f 0 'content' 'no role row with a usual capacity' }
@@ -155,11 +155,11 @@ $E = 0; $W = 0
 foreach ($x in $Findings) { if ($x.Sev -eq 'error') { $E++ } else { $W++ } }
 $Exit = 0; if ($E -gt 0) { $Exit = 1 } elseif ($Strict -and $W -gt 0) { $Exit = 2 }
 $Gate = 'closed'; if ($Exit -eq 0) { $Gate = 'open' }
-function Get-JsonEsc([string]$s) { return $s.Replace('\', '\\').Replace('"', '\"') }
+function Get-JsonEsc([string]$s) { $s = $s.Replace('\', '\\').Replace('"', '\"').Replace("`t", '\t'); return [regex]::Replace($s, '[\x00-\x08\x0b-\x1f]', '') }
 
 # ── Scorecard ────────────────────────────────────────────────────────────────
 $Areas = @('process', 'capabilities', 'autonomy', 'metrics', 'transcripts')
-$AreaFiles = @{ process = @('methodology', 'definition-of-ready', 'definition-of-done', 'ceremonies', 'constitution'); capabilities = @('capabilities'); autonomy = @('autonomy', 'team'); metrics = @('kpi-directives'); transcripts = @('language') }
+$AreaFiles = @{ process = @('methodology', 'definition-of-ready', 'definition-of-done', 'ceremonies', 'constitution', 'hooks'); capabilities = @('capabilities'); autonomy = @('autonomy', 'team'); metrics = @('kpi-directives'); transcripts = @('language') }
 function Test-AnyFile([string]$dir, [string]$name) { # dir/*/name or dir/*name
   if (-not (Test-Path -LiteralPath $dir -PathType Container)) { return $false }
   foreach ($d in Get-ChildItem -LiteralPath $dir -Directory) { if (Test-Path -LiteralPath (Join-Path $d.FullName $name) -PathType Leaf) { return $true } }

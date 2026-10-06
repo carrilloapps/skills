@@ -28,5 +28,16 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         run: |
+          set -o pipefail
           if [ -z "$SNYK_TOKEN" ]; then echo "SNYK_TOKEN secret is not set" >&2; exit 1; fi
-          uvx --python 3.13 snyk-agent-scan==0.6.8 skills
+          # One scan only (each run uploads content and counts against the Snyk daily quota);
+          # --json (documented flag) goes to the log and to an artifact. Non-zero exit = findings.
+          uvx --python 3.13 snyk-agent-scan==0.6.8 skills --json | tee snyk-agent-scan.json
+
+      - name: Upload JSON report
+        if: always() && hashFiles('snyk-agent-scan.json') != ''
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a  # v7.0.1
+        with:
+          name: snyk-agent-scan
+          path: snyk-agent-scan.json
+          retention-days: 30

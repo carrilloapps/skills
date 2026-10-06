@@ -11,7 +11,7 @@
 The agent runs the gate before anything else:
 
 ```text
-$ scripts/check-structure.sh --root .
+$ bash <skill-dir>/scripts/check-structure.sh --root .
 check-structure — .
 1. error plans/agile/ [missing-dir] missing directory (run scripts/init)
 …
@@ -24,7 +24,7 @@ Phase 0 gate: closed. Do not create specs, plans, drafts, sprint artifacts, tick
 
 > Phase 0 gate closed — the project has no agile structure yet; nothing else will be created until it exists.
 >
-> 1. Scaffold it with `scripts/init.sh` (creates `plans/agile/`, `plans/{sprints,initiatives,decisions,drafts}/`, `specs/`; never overwrites).
+> 1. Scaffold it with `bash <skill-dir>/scripts/init.sh --root .` (creates `plans/agile/`, `plans/{sprints,initiatives,decisions,drafts}/`, `specs/`; never overwrites).
 > 2. Then we complete it together, one item at a time.
 >
 > Reply in your own words — for example "dale con 1".
@@ -52,7 +52,7 @@ Two rules the agent keeps while filling:
 ## 4. Gate open
 
 ```text
-$ scripts/check-structure.sh --root . --strict
+$ bash <skill-dir>/scripts/check-structure.sh --root . --strict
 check-structure — .
 No findings.
 Result: 0 error(s), 0 warning(s) — PASS

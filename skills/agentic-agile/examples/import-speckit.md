@@ -1,6 +1,6 @@
 # Example: Importing a Spec Kit Project
 
-> ⚠️ **Example only** — fictional project and paths; shows the mapping, not real output.
+> ⚠️ **Example only** — fictional project and paths; shows the mapping. The import listing uses the real format of `import-speckit`; the `check-spec` block is illustrative (real rule ids, abridged messages).
 
 **Skill version**: 1.0.0
 
@@ -10,19 +10,32 @@
 
 > Phase 0 gate closed — `plans/agile/` does not exist yet. The import can convert the Spec Kit constitution into `plans/agile/constitution.md`, but the rest of the team's operating system (DoR, DoD, team, capabilities…) still has to be completed with you before any spec is created.
 >
-> 1. Run `scripts/init` and then import (recommended)
-> 2. Only show what the import would do (`--dry-run`)
+> 1. Run `aa init` and then import (recommended)
+> 2. Only show what the import would do (the default: nothing is written without `--write`)
 > 3. Stop
 
-The user answers "1". The agent runs `scripts/init`, the team completes `plans/agile/`, and `check-structure` passes.
+The user answers "1". The agent runs `aa init`, the team completes `plans/agile/`, and `check-structure` passes.
 
 ## 2. Import
 
-Command proposed and approved (`scripts/import-speckit --help` lists the exact flags):
+Commands proposed and approved (`import-speckit --help` lists the exact flags; the first run is a dry run by default):
 
 ```bash
-bash scripts/import-speckit.sh --from . --root . --dry-run
-bash scripts/import-speckit.sh --from . --root .
+bash <skill-dir>/scripts/import-speckit.sh --from . --root .
+bash <skill-dir>/scripts/import-speckit.sh --from . --root . --write
+```
+
+Dry-run listing (real format):
+
+```text
+Feature: specs/001-photo-albums → specs/photo-albums
+1. create specs/photo-albums/spec.md (from specs/001-photo-albums/spec.md)
+2. create specs/photo-albums/design.md (from specs/001-photo-albums/plan.md)
+3. create specs/photo-albums/domain-model.md (from specs/001-photo-albums/data-model.md)
+4. create specs/photo-albums/tasks.md (from specs/001-photo-albums/tasks.md)
+5. skip plans/agile/constitution.md (exists)
+Imported content is Proposed: confirm it with the team (Confirmed by), link scenarios to FR-###, then run: aa verify <feature>
+Dry run: nothing written. Re-run with --write to apply.
 ```
 
 Mapping applied:
@@ -45,9 +58,9 @@ Mapping applied:
 
 ```text
 check-spec — specs/photo-albums
-1. warning spec.md [clarification-attribution] answer 2 has no named confirmer
-2. error spec.md [placeholder] design.md elements 3, 5, 8 unfilled
-Result: 1 error(s), 1 warning(s) — FAIL
+1. error spec.md:41 [clarify-unconfirmed] clarification answer without 'Confirmed by:'
+2. error design.md:12 [placeholder] unfilled template placeholder(s): <architectural style>, <state model>, <anti-violations>
+Result: 2 error(s), 0 warning(s) — FAIL
 ```
 
 > Imported 2 initiatives. Both fail `check-spec` on purpose: the importer never invents what Spec Kit did not record (design elements, attribution). Next:

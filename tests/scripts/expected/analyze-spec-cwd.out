@@ -1,0 +1,20 @@
+analyze — aa-analyze/issues
+1. A001 CRITICAL specs/search/design.md:12 [constitution-violation] constitution check violates Article 2 (MUST): Test-first
+2. A002 HIGH specs/search/design.md:13 [constitution-unknown-article] constitution check references Article 4, which is not in plans/agile/constitution.md
+3. A003 HIGH specs/search/design.md:14 [constitution-unknown-article] constitution check row marked ❌ without an article number
+4. A004 HIGH specs/search/requirements-checklist.md [checklist-coverage] requirements checklist traces 3 of 5 items (60%) to a spec reference; minimum 80%
+5. A005 HIGH specs/search/spec.md:7 [ambiguous-term] FR-001 uses ambiguous term(s) without a measurable criterion: fast
+6. A006 HIGH specs/search/spec.md:8 [ambiguous-term] FR-002 uses ambiguous term(s) without a measurable criterion: fast
+7. A007 HIGH specs/search/spec.md:10 [ambiguous-term] FR-004 uses ambiguous term(s) without a measurable criterion: instant
+8. A008 HIGH specs/search/spec.md:12 [ambiguous-term] FR-006 uses ambiguous term(s) without a measurable criterion: rápida, robusta
+9. A009 HIGH specs/search/spec.md:14 [needs-clarification] unresolved [NEEDS CLARIFICATION: relevance or recency?] marker
+10. A010 HIGH specs/search/spec.md:42 [blocking-question] blocking open question: Which index engine?
+11. A011 HIGH specs/search/tasks.md [task-cycle] tasks in or blocked by a dependency cycle: T002, T003
+12. A012 HIGH specs/search/tasks.md:10 [task-unknown-dep] T004 depends on T009, which does not exist
+13. A013 HIGH specs/search/tasks.md:11 [task-duplicate-id] task ID T001 is used more than once
+14. A014 MEDIUM plans/initiatives/search/tickets/01-search.md:4 [term-drift] FR-002 text differs from spec.md: The search is instant
+15. A015 MEDIUM specs/search/design.md:5 [constitution-violation] design.md violates Article 3 (SHOULD): Library-first
+16. A016 MEDIUM specs/search/spec.md:8 [duplicate-requirement] FR-002 duplicates the text of FR-001
+17. A017 MEDIUM specs/search/spec.md:36 [ambiguous-term] SC-001 uses ambiguous term(s) without a measurable criterion: easily
+18. A018 LOW specs/search/spec.md:26 [duplicate-scenario] scenario title repeats an earlier scenario: keyword returns   results
+Result: 18 finding(s): 1 critical, 12 high, 4 medium, 1 low — FAIL

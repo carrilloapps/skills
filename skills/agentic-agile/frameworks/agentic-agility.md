@@ -74,8 +74,10 @@ Computed from `plans/agile/metrics/events.jsonl` (append-only, one JSON object p
 | `item_started` / `item_done` | Work starts / meets the DoD |
 | `defect_escaped` | A defect is found in production (meta: item) |
 | `decision_recorded` | A decision record is written (meta: has_author, has_reason) |
+| `structure_updated` | A `plans/agile/` file changes after confirmation (meta: file, confirmed_by) |
+| `tickets_written` | Tickets are created in the tracker after N3 approval (meta: ids) |
 
-The agent appends events only for actions it performed or that the user reported; it never back-fills inferred events.
+The agent appends events only for actions it performed or that the user reported; it never back-fills inferred events. This table is the only definition of event names and keys — every other file and example uses exactly these.
 
 | # | Indicator | Formula |
 |---|-----------|---------|

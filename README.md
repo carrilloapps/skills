@@ -17,10 +17,10 @@
 | Skill | Description | Version | Install |
 |-------|-------------|---------|---------|
 | [🔴 **devils-advocate**](skills/devils-advocate/) | Adversarial pre-execution gate — risk-scaled, evidence-based critique that returns a corrected plan and waits for your approval | [![v3.0.0](https://img.shields.io/badge/v3.0.0-blue.svg)](CHANGELOG.md) | `npx skills add carrilloapps/skills@devils-advocate` |
-| [🛡️ **sar-cybersecurity**](skills/sar-cybersecurity/) | Automated Security Assessment Report (SAR) generator — deep cybersecurity analysis mapped to 20+ compliance standards | [![v2.0.0](https://img.shields.io/badge/v2.0.0-blue.svg)](CHANGELOG.md) | `npx skills add carrilloapps/skills@sar-cybersecurity` |
+| [🛡️ **sar-cybersecurity**](skills/sar-cybersecurity/) | Automated Security Assessment Report (SAR) generator — deep cybersecurity analysis mapped to 21 baseline compliance standards | [![v2.0.0](https://img.shields.io/badge/v2.0.0-blue.svg)](CHANGELOG.md) | `npx skills add carrilloapps/skills@sar-cybersecurity` |
 | [📋 **ai-rules**](skills/ai-rules/) | Personal behavioral rules for AI tools — documentation discipline, secure practices, code quality, version control, and structured estimation | [![v1.1.0](https://img.shields.io/badge/v1.1.0-blue.svg)](CHANGELOG.md) | `npx skills add carrilloapps/skills@ai-rules` |
 | [🔁 **agentic-agile**](skills/agentic-agile/) | Spec-driven development on Scrum with agentic agility — gated specs and plans, ceremonies, autonomy levels, attribution, transcripts and MCP integrations by capability | [![v1.0.0](https://img.shields.io/badge/v1.0.0-blue.svg)](CHANGELOG.md) | `npx skills add carrilloapps/skills@agentic-agile` |
-| 🔜 **postmortem-writing** | Post-incident analysis — structured postmortem reports with root cause analysis, timeline reconstruction, and lessons learned | *Planned* | — |
+| 🔜 **postmortem-writing** | Incident postmortem authoring beyond the team flow in agentic-agile (scope pending decision) | *Planned* | — |
 
 ---
 
@@ -60,13 +60,13 @@ Per agent (`-a <id>`, repeatable):
 Manual install (any agent): clone the repository and copy or symlink `skills/<name>/` into the agent's skills folder, keeping the folder name equal to the skill name:
 
 ```bash
-git clone https://github.com/carrilloapps/skills.git
-cp -r skills/skills/agentic-agile .agents/skills/        # Linux / macOS / Git Bash
+git clone https://github.com/carrilloapps/skills.git skills-src
+cp -r skills-src/skills/agentic-agile .agents/skills/              # Linux / macOS / Git Bash
 ```
 
 ```powershell
-git clone https://github.com/carrilloapps/skills.git
-Copy-Item -Recurse skills\skills\agentic-agile .agents\skills\   # Windows PowerShell
+git clone https://github.com/carrilloapps/skills.git skills-src
+Copy-Item -Recurse skills-src\skills\agentic-agile .agents\skills\   # Windows PowerShell
 ```
 
 Keep up to date with `npx skills check` / `npx skills update`. Per-agent project and global paths, always-on instruction files, and optional guards: [`docs/INSTALL.md`](docs/INSTALL.md).
@@ -102,7 +102,7 @@ flowchart LR
 | 2 — Full critique | Production, data, auth, PII, git history, architecture/vendor decisions | ≤ 5 evidence-backed risks, better option, corrected plan, gate |
 | 3 — Critical stop | 🔴 Critical risk that depends on facts only you have | 2–4 targeted questions, then the report |
 
-**12 domains covered:**
+**12 domain frameworks** (+ 6 protocol and optional files — output format, critical stop, pre-mortem, building protocol, capabilities, Docker lab — = 18):
 
 | Domain | Framework |
 |--------|-----------|
@@ -127,7 +127,7 @@ flowchart LR
 
 ### 🛡️ [SAR Cybersecurity](skills/sar-cybersecurity/) · [![v2.0.0](https://img.shields.io/badge/v2.0.0-blue.svg)](skills/sar-cybersecurity/README.md)
 
-> Automated Security Assessment Report (SAR) generator — deep cybersecurity analysis mapped to 20+ compliance standards.
+> Automated Security Assessment Report (SAR) generator — deep cybersecurity analysis mapped to 21 baseline compliance standards.
 
 Transforms any AI agent into a senior cybersecurity expert that produces professional, bilingual (EN/ES) Security Assessment Reports with full compliance standard mapping.
 
@@ -150,7 +150,7 @@ flowchart LR
 | Injection Patterns | SQL, NoSQL operator, Regex/ReDoS, Mass Assignment, GraphQL abuse, ORM/ODM-specific |
 | Storage & Exfiltration | S3/GCS/Azure Blob, secrets in source, file uploads, logging, message queues, CDN, IaC |
 | Database Access | SQL (PostgreSQL, MySQL), NoSQL (MongoDB, DynamoDB), Redis — index verification, bounded queries |
-| Compliance Mapping | 20+ standards: ISO 27001, NIST, OWASP, PCI-DSS, GDPR, MITRE ATT&CK, and more |
+| Compliance Mapping | 21 baseline standards (plus an expanded reference): ISO/IEC 27001:2022, NIST CSF 2.0, OWASP Top 10:2025, PCI-DSS, GDPR, MITRE ATT&CK, CWE Top 25, and more |
 
 **Key features:**
 
@@ -214,9 +214,9 @@ Defines the baseline behavioral contract that all AI agents must follow. Works a
 flowchart TD
     AR["📋 ai-rules\nBehavioral baseline — loads FIRST\nHOW to act: docs, code quality, language,\nversion control, estimation"]
     DA["🔴 devils-advocate\nAdversarial gate — runs before every action\nWHETHER to act: risk-scaled critique · 12 domains"]
-    SAR["🛡️ sar-cybersecurity\nDeep security analysis on request\n20+ standards · bilingual EN/ES · findings registry"]
+    SAR["🛡️ sar-cybersecurity\nDeep security analysis on request\n21 baseline standards · bilingual EN/ES · findings registry"]
     AA["🔁 agentic-agile\nSDD on Scrum — specs, plans, ceremonies\nautonomy N0–N4 · attribution"]
-    PM["🔜 postmortem-writing (planned)\nPost-incident analysis\nRoot cause → lessons learned → feeds back into DA"]
+    PM["🔜 postmortem-writing (planned)\nIncident postmortems beyond the team flow\nscope pending → feeds back into DA"]
 
     AR --> DA
     AR --> AA
@@ -235,7 +235,7 @@ flowchart TD
 | `devils-advocate` | Execution gate | Before each action, at the depth its risk tier requires |
 | `sar-cybersecurity` | Deep security analysis | On security assessment request |
 | `agentic-agile` | SDD + Scrum lifecycle | Specs, plans, ceremonies, work items |
-| `postmortem-writing` | Incident learning loop | After incidents (planned) |
+| `postmortem-writing` | Incident learning loop (scope pending decision) | After incidents (planned) |
 
 Use ai-rules as the behavioral foundation for every session, Devil's Advocate as the risk-scaled gate before actions, Agentic Agile to specify, plan, and deliver work (it delegates its adversarial pass to Devil's Advocate and security reviews to SAR), SAR Cybersecurity for deep security assessments, and (when available) Postmortem Writing after incidents to close the feedback loop. Every skill is independently installable; missing companions fall back to a minimal built-in behavior.
 
@@ -368,16 +368,11 @@ Each skill is self-contained and independently installable via `@<skill-name>`.
 
 ## Quality Gates
 
-Run before every commit (all are also run in CI):
-
-1. `bash scripts/validate.sh` — version cascade (`metadata.version`), fences, indexes, safeguards, `.memory/` convention, install hygiene, Docker lab pinning, numbered options, script twins, PowerShell ASCII safety, SAR scoring arithmetic, and more.
-2. `bash tests/scripts/run-parity.sh` (or `pwsh tests/scripts/run-parity.ps1`) — every `.sh` / `.ps1` pair produces identical output and exit codes; `bash tests/scripts/run-e2e.sh` validates the agentic-agile end-to-end example in every available shell.
-3. `node --test integrations/core/core.test.mjs integrations/*/test/*.test.mjs` and `node integrations/sync-core.mjs --check` — guard classifier and adapters.
-4. `bash shared/sync.sh --check` — vendored shared scripts identical in every skill.
+The commands to run before every commit — `validate.sh`, the `.sh`/`.ps1` parity tests and the agentic-agile end-to-end example, the guard tests, and the shared-script sync check — are listed once in [`AGENTS.md` → *Commands*](AGENTS.md#commands). CI runs all of them (`validate`, `scripts-parity`, `skills-audit` jobs).
 
 ### Before publishing
 
-1. Run all quality gates above.
+1. Run the quality gates ([`AGENTS.md` → *Commands*](AGENTS.md#commands)).
 2. Run the local skills.sh-equivalent audit (needs Docker; nothing leaves the machine; any finding fails):
 
    ```bash
@@ -392,11 +387,7 @@ Run before every commit (all are also run in CI):
 
 Skill instructions cannot guarantee that an agent follows them. [`integrations/`](integrations/) provides optional guards that hook into each agent's pre-tool event and classify every tool call deterministically before it runs (one shared classifier: no AI, no network, no writes). Read-only calls pass; writes, side-effecting commands, and git writes ask for confirmation or are blocked, depending on what the agent's hooks support.
 
-| Agent | Guard |
-|-------|-------|
-| Claude Code, GitHub Copilot, Cursor, Gemini CLI, OpenAI Codex CLI, Windsurf / Devin Desktop, Cline, OpenCode | Stable |
-| Kiro, Antigravity CLI (`agy`) | Experimental |
-| Roo Code | Advisory rule (no blocking hook) |
+Adapters exist for Claude Code, GitHub Copilot, Cursor, Gemini CLI, OpenAI Codex CLI, Windsurf / Devin Desktop, Cline, OpenCode, Kiro, Antigravity CLI (`agy`) and Roo Code; the per-agent matrix (status, hook event, decision mapping, failure behavior) is maintained only in [`integrations/README.md`](integrations/README.md).
 
 Guards are installed separately (Node.js ≥ 18) and are never pulled in by `npx skills add`. Claude Code users can install from the marketplace: `/plugin marketplace add carrilloapps/skills`, then `/plugin install devils-advocate-guard@carrilloapps-skills`. Details: [`integrations/README.md`](integrations/README.md).
 

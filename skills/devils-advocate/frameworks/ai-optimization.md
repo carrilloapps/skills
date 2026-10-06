@@ -75,7 +75,7 @@ File size guidelines:
 
 ### What to Check
 
-1. Do all `[link text](path)` references point to files that actually exist on disk?
+1. Do all relative Markdown links point to files that actually exist on disk?
 2. Do all section anchors (e.g., `[see here](#section-name)`) resolve to real headings?
 3. Are there references to external URLs that may have changed or gone offline?
 4. Are there references to code symbols (function names, class names) that may have been renamed?

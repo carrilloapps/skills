@@ -169,6 +169,8 @@ skills/ai-rules/
 ├── frameworks/
 │   ├── capabilities.md      # Optional tools: docgraph (agent mode), skill-rules
 │   ├── docker-lab.md        # Docker lab: markdownlint-cli2, Vale, lychee
+│   ├── memory-convention.md # Owner of the .memory/ rule (versioned vs private, VCS ignore table, capabilities.json)
+│   ├── project-files.md     # Templates: docs/project-context.md, docs/elementals.md
 │   └── lab-catalog.tsv      # Lab tools with criticality and resources, read by scripts/lab-probe
 └── scripts/                 # lab-probe.sh / lab-probe.ps1 (vendored from shared/)
 ```

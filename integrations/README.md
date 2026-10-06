@@ -27,7 +27,7 @@ Same input → same tier → same decision. Each adapter only translates its age
 | **Gemini CLI** | [`gemini-cli/`](gemini-cli/) | `BeforeTool` | notice | **deny** | likely fails open | Stable | [hooks reference](https://geminicli.com/docs/hooks/reference/) |
 | **OpenAI Codex CLI** | [`codex/`](codex/) | `PreToolUse` | pass (Codex approval policy) | **deny** | fails open | Stable | [hooks](https://developers.openai.com/codex/hooks) |
 | **Windsurf / Devin Desktop** | [`windsurf/`](windsurf/) | `pre_run_command`, `pre_write_code`, `pre_mcp_tool_use` | notice | **block (exit 2)** | fails open | Stable | [Cascade hooks](https://docs.devin.ai/desktop/cascade/hooks) |
-| **Cline** | [`cline/`](cline/) | `PreToolUse` | context note | **cancel** | undocumented | Stable | [hooks](https://mintlify.wiki/cline/cline/customization/hooks) |
+| **Cline** | [`cline/`](cline/) | `PreToolUse` | context note | **cancel** | undocumented | Stable | [hooks](https://docs.cline.bot/) ⚠️ (vendor docs; the field names below were verified against a third-party mirror) |
 | **Kiro** | [`kiro/`](kiro/) | `PreToolUse` | notice | **block (exit 2)** | fails open | **Experimental** | [hooks](https://kiro.dev/docs/hooks/) |
 | **OpenCode** | [`opencode/`](opencode/) (plugin) | `tool.execute.before` | pass (pair with `permission: ask`) | **throw (block)** | in-process: always blocks | Stable | [plugins](https://opencode.ai/docs/plugins/) |
 | **Roo Code** | [`roo/`](roo/) | — (no blocking hook found) | advisory rule | advisory rule | — | Advisory only | [rules](https://docs.roocode.com/features/custom-instructions) |

@@ -82,19 +82,7 @@ If the registry exists at the other path (the repository changed visibility), us
 
 ### `.memory/` convention — version team state, ignore private state
 
-`.memory/` is shared by every skill in this collection. Shared team state lives in `.memory/<skill>/` and **is versioned**. Agent-private state — local preferences, caches, tool outputs, recovery files, public-repository registries — lives in `.memory/local/` or uses the `.local.` / `.recovered.json` naming, and **is never versioned**.
-
-Before the first write under `.memory/`, the agent ensures the ignore entries exist, using **file writes only** — never a VCS command. Existing lines written by the user are never removed; only missing lines are appended.
-
-| VCS (marker at the project root) | Action |
-|----------------------------------|--------|
-| **Always** (Git, and tools that honor `.gitignore`, such as Jujutsu) | Ensure `.memory/.gitignore` contains the block below. This file **is versioned** so every clone ignores the same paths. |
-| Mercurial (`.hg/`) | Ensure the root `.hgignore` contains, in `regexp` syntax (the default; if the file has any `syntax:` line, append `syntax: regexp` first): `^\.memory/local/` · `^\.memory/.*\.local\.` · `^\.memory/.*\.recovered\.json$` |
-| Fossil (`.fossil-settings/` or a `.fslckout` / `_FOSSIL_` checkout file) | Ensure `.fossil-settings/ignore-glob` contains `.memory/local/*` · `.memory/*.local.*` · `.memory/*.recovered.json` (Fossil's `*` also matches `/`). |
-| Subversion (`.svn/`) | Ignore rules are a property — the agent cannot set them. Tell the user to run `svn propset svn:ignore local .memory` and, if private files use the `.local.` / `.recovered.json` naming, `svn propset svn:global-ignores "*.local.* *.recovered.json" .memory` (do not run them); record the reminder in the Appendix. |
-| Other or unknown VCS markers | Tell the user which paths must be ignored and that the agent could not configure it; record it in the Appendix. |
-
-`.memory/.gitignore`:
+Shared team state lives in `.memory/<skill>/` (SAR: `.memory/sar/`) and is versioned; agent-private state — tool outputs, caches, recovery files, public-repository registries — lives under `.memory/local/` or uses the `.local.` / `.recovered.json` naming and is never versioned. Before the first write under `.memory/`, ensure `.memory/.gitignore` contains this block (file writes only, never a VCS command; user lines are never removed):
 
 ```gitignore
 # Managed by carrilloapps/skills — ignores agent-private paths only.
@@ -104,7 +92,7 @@ local/
 *.recovered.json
 ```
 
-If the agent can see that a private path (anything under `.memory/local/`, or a public-mode registry) is **already tracked** (e.g., it appears in a VCS file listing available to the agent's read-only tools), it warns the user in the closing message and the Appendix. Ignore rules do not affect tracked files; the team must untrack them. The agent never untracks, deletes, or rewrites history.
+Mercurial, Fossil, Subversion, and unknown-VCS handling, and the "private path already tracked" warning: ai-rules `frameworks/memory-convention.md` (owner of the rule). SAR additions: record the SVN reminder and any already-tracked private path in the report's Appendix and the closing message.
 
 ### Schema
 

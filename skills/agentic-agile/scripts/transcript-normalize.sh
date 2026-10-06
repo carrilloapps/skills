@@ -18,7 +18,7 @@ die() { echo "transcript-normalize: $1" >&2; exit 3; }
 while [ $# -gt 0 ]; do
   case "$1" in
     --out) [ $# -ge 2 ] || die "--out needs a value"; OUT=$2; shift 2 ;;
-    -h|--help) echo "Usage: transcript-normalize.sh <file> [--out DIR]"; exit 0 ;;
+    -h|--help) echo "Usage: transcript-normalize <file> [--out DIR]"; exit 0 ;;
     -*) die "unknown option: $1" ;;
     *) [ -z "$IN" ] || die "only one input file is allowed"; IN=$1; shift ;;
   esac

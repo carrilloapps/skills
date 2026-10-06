@@ -14,10 +14,10 @@
 
 ## KPIs (as defined in `plans/agile/kpi-directives.md`)
 
-| KPI | Value | Source | Note |
-|-----|-------|--------|------|
+| KPI | Value | Threshold | State | Notes / source |
+|-----|-------|-----------|-------|----------------|
 
-A KPI that cannot be measured validly is written as "not measurable — <reason>", never as a number.
+Row schema and states: the skill's `frameworks/kpi.md` §3. A KPI that cannot be measured validly is written as "not measurable — <reason>", never as a number.
 
 ## Agentic indicators (from `plans/agile/metrics/events.jsonl`)
 

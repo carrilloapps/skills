@@ -25,5 +25,6 @@ check-structure — structure/partial
 24. error plans/agile/autonomy.md:34 [content] precondition 'Baseline over two full cycles' has no status
 25. warning plans/agile/autonomy.md [unconfirmed] mentions Proposed values but has no 'Confirmed by:' line
 26. error plans/agile/constitution.md [missing-file] missing file (run scripts/init, then complete it with the team)
-Result: 24 error(s), 2 warning(s) — FAIL
+27. error plans/agile/hooks.md [missing-file] missing file (run scripts/init, then complete it with the team)
+Result: 25 error(s), 2 warning(s) — FAIL
 Phase 0 gate: closed. Do not create specs, plans, drafts, sprint artifacts, tickets or decision records; complete the items above with the team first.

@@ -10,5 +10,5 @@ Canonical copies of scripts that every skill needs. Skills are installed indepen
 
 1. Edit only the files in `shared/scripts/` (both twins, identical behavior).
 2. Vendor them into every skill: `bash shared/sync.sh` (or `pwsh shared/sync.ps1`).
-3. Verify: `bash shared/sync.sh --check` exits `1` on any drift; `validate.sh` (check 29) and CI run it too.
+3. Verify: `bash shared/sync.sh --check` exits `1` on any drift; `validate.sh` and CI run it too.
 4. Run the parity tests: `bash tests/scripts/run-parity.sh`.

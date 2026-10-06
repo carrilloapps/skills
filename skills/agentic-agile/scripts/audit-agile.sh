@@ -25,7 +25,7 @@ while [ $# -gt 0 ]; do
     --templates) [ $# -ge 2 ] || die "--templates needs a value"; TPL=$2; shift 2 ;;
     --today) [ $# -ge 2 ] || die "--today needs a value"; TODAY=$2; shift 2 ;;
     --json) JSON=1; shift ;;
-    -h|--help) echo "Usage: audit-agile.sh [--root DIR] [--json] [--templates DIR] [--today YYYY-MM-DD]"; exit 0 ;;
+    -h|--help) echo "Usage: audit-agile [--root DIR] [--json] [--templates DIR] [--today YYYY-MM-DD]"; exit 0 ;;
     *) die "unknown option: $1" ;;
   esac
 done
@@ -90,7 +90,9 @@ done < <(sorted plans/decisions -maxdepth 1 -type f -name '*.md')
 
 # ── 2. Drift between skill templates and plans/agile/ copies ─────────────────
 if [ -d "$TPL" ]; then
-  for t in methodology definition-of-ready definition-of-done ceremonies team capabilities kpi-directives language autonomy; do
+  # constitution.md is excluded on purpose: its articles are team content that amendments
+  # rename or replace, so template section names must not be enforced there.
+  for t in methodology definition-of-ready definition-of-done ceremonies team capabilities kpi-directives language autonomy hooks; do
     [ -f "$TPL/$t.md" ] && [ -f "$ROOT/plans/agile/$t.md" ] || continue
     load "$ROOT/plans/agile/$t.md"
     have=$'\n'
@@ -178,7 +180,7 @@ done < <(sorted plans/initiatives -mindepth 2 -maxdepth 2 -type f -name overview
 # ── Report ───────────────────────────────────────────────────────────────────
 N=${#F_FILE[@]}
 EXIT=0; [ $N -gt 0 ] && EXIT=1
-jesc() { local s=$1; s=${s//\\/\\\\}; s=${s//\"/\\\"}; printf '%s' "$s"; }
+jesc() { local s=$1; s=${s//\\/\\\\}; s=${s//\"/\\\"}; s=${s//$'\t'/\\t}; s=$(printf '%s' "$s" | tr -d '\000-\010\013-\037'); printf '%s' "$s"; }
 if [ $JSON -eq 1 ]; then
   out="{\"root\":\"$(jesc "$LABEL")\",\"today\":\"$TODAY\",\"findings\":["
   for ((i = 0; i < N; i++)); do

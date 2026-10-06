@@ -1,0 +1,12 @@
+trace — aa-trace/skipdirs
+
+specs/login
+| Req | Scenarios | Tasks | Tickets | Tests | Verify |
+|-----|-----------|-------|---------|-------|--------|
+| FR-001 | 1 | 1 | 1 | 0 | ✅ |
+| FR-002 | 1 | 1 | 1 | 0 | ⚠ |
+| SC-001 | yes | - | - | - | - |
+
+1. warning specs/login/spec.md [fr-no-test] FR-001 is not referenced by any test file
+2. warning specs/login/spec.md [fr-no-test] FR-002 is not referenced by any test file
+Result: 0 error(s), 2 warning(s) — PASS

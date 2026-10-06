@@ -1,7 +1,7 @@
 # Spec: <Initiative title>
 
 **Initiative**: `<initiative-kebab>` · **Phase**: 1 — Spec · **Status**: Draft | In review | Approved
-**Plan**: [`plans/initiatives/<initiative-kebab>/overview.md`](../../plans/initiatives/<initiative-kebab>/overview.md)
+**Plan**: `plans/initiatives/<initiative-kebab>/overview.md`
 
 This spec is the living source of truth for the behavior it describes (constitution Article 5): behavior changes start here, and the code is reconciled with it.
 
@@ -57,6 +57,7 @@ Edge cases (category → scenario name or `N/A — reason`):
 6. Idempotency / retries — <…>
 7. Authorization — <…>
 8. Time zone / locale — <…>
+9. Encoding — <…>
 
 ## 1.3 Out of scope
 

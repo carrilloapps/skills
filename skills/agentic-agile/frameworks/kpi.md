@@ -73,7 +73,7 @@ Some KPIs move the "wrong" way for good reasons: velocity drops while the team p
 4. ✅/❌ Work is classified by initiative.
 5. ✅/❌ Every ❌ was checked against §4.
 6. ✅/❌ Agentic indicators computed from `events.jsonl` ([`agentic-agility.md`](agentic-agility.md)).
-7. ✅/❌ "Nothing was written to the tracker/docs." until approval.
+7. ✅/❌ Closing line per [`output-format.md`](output-format.md) rule 4 until approval (nothing written to tracker or docs).
 
 ---
 

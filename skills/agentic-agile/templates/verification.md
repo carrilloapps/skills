@@ -8,7 +8,7 @@
 |---|--------------------------|-----|------|--------|----------|
 | 1 | <scenario name> | <FR-### / SC-###> | unit / integration / e2e / manual | ✅ / ⚠️ / ❌ / skipped — reason | <test name, CI run, log path> |
 
-One row per scenario; every `FR-###` and `SC-###` of the spec appears in `Req` at least once (`scripts/trace` checks it). A ✅ without evidence is **not verified**; a ❌ blocks closing the item. Evidence = timestamp · artifact (test name, CI run, log or screenshot path) · commit.
+One row per scenario; every `FR-###` and `SC-###` of the spec appears in `Req` at least once (`trace` checks it). A ✅ without evidence is **not verified**; a ❌ blocks closing the item. Evidence = timestamp · artifact (test name, CI run, log or screenshot path) · commit.
 
 ## 4.2 Edge-case battery
 
@@ -28,7 +28,7 @@ EVIDENCE: <YYYY-MM-DDTHH:MMZ> · <artifact: test name, CI run, log or screenshot
 
 ## 4.4 Coverage
 
-<Coverage of the changed code; uncovered lines and why. Requirement coverage comes from `scripts/trace` — paste its summary line.>
+<Coverage of the changed code; uncovered lines and why. Requirement coverage comes from `trace` — paste its summary line.>
 
 ## 4.5 Verdict
 

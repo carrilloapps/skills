@@ -39,6 +39,7 @@ If SAR's SonarQube (`sar-sonarqube`) is already running, **consume it instead of
 | `.memory/local/devsecops/results/<YYYY-MM-DD>/` | No (`local/`) | Raw outputs (`lizard.csv`, `jscpd/`, `depcruise.json`, …) |
 | `.memory/local/devsecops/pghero.env` | No | `DATABASE_URL` of the **local** dev database (read-only role) + `PGHERO_USERNAME`/`PGHERO_PASSWORD` copied from `credentials.env` |
 | `.memory/local/devsecops/credentials.env` | No | Shared dashboard login, generated once by SAR's `sar-bootstrap`. Never print it in chat |
+| `.memory/local/devsecops/env/sonar-scanner.env` | No | `SONAR_TOKEN` for the SonarQube Web API reads in §4 (written by `sar-bootstrap apply`) |
 
 The `.memory/.gitignore` rule (`local/`) already covers every private path above.
 
@@ -198,7 +199,7 @@ Gate tiers: a one-shot read-only scan (`run --rm`, `/src:ro`) is **Tier 1**. The
 
 ## 4. Consuming SAR's SonarQube (when it is running)
 
-Read the token from `.memory/local/devsecops/tokens.env` (`SONAR_TOKEN`); never echo it. Read-only Web API calls on `http://127.0.0.1:9000` (each a Tier 1 command):
+Read `SONAR_TOKEN` from `.memory/local/devsecops/env/sonar-scanner.env` (the per-service file written by SAR's `bootstrap.sh apply`; `tokens.env` is internal to bootstrap and never mounted); never echo it. Read-only Web API calls on `http://127.0.0.1:9000` (each a Tier 1 command):
 
 | Need | Endpoint |
 |---|---|

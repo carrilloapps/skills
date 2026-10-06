@@ -21,7 +21,7 @@ for ($k = 0; $k -lt $args.Count; $k++) {
     'root' { if ($k + 1 -ge $args.Count) { Fail '--root needs a value' }; $k++; $Root = [string]$args[$k] }
     'from' { if ($k + 1 -ge $args.Count) { Fail '--from needs a value' }; $k++; $From = [string]$args[$k] }
     'write' { $Write = $true }
-    { $_ -eq 'h' -or $_ -eq 'help' } { Write-Output 'Usage: import-speckit.ps1 [--root DIR] [--from DIR] [--write]'; exit 0 }
+    { $_ -eq 'h' -or $_ -eq 'help' } { Write-Output 'Usage: import-speckit [--root DIR] [--from DIR] [--write]'; exit 0 }
     default { Fail "unknown option: $a" }
   }
 }

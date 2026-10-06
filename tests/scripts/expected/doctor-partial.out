@@ -1,5 +1,5 @@
 doctor — structure/partial
-1. Phase 0 gate: closed (24 error(s), 2 warning(s))
+1. Phase 0 gate: closed (25 error(s), 2 warning(s))
 2. Readiness: 30% (6/20) — process L1, capabilities L1, autonomy L1, metrics L0, transcripts L3
 3. Hygiene (audit-agile): 2 finding(s)
 4. Docker lab: unavailable — Docker daemon not reachable

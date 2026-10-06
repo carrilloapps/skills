@@ -1,0 +1,9 @@
+baseline — . (write)
+1. check-spec|clarify-unconfirmed|specs/bad/spec.md|clarification answer without Confirmed by:
+2. check-spec|fr-duplicate|specs/bad/spec.md|duplicate requirement ID FR-001
+3. check-spec|sc-scenario|specs/bad/spec.md|success criterion SC-001 maps to unknown scenario: Missing scenario name
+4. check-spec|sc-scenario|specs/bad/spec.md|success criterion SC-002 maps to no scenario
+5. check-spec|scenario-fr|specs/bad/spec.md|scenario tags unknown requirement FR-009
+6. check-spec|scenario-fr|specs/bad/spec.md|scenario without an @FR-### tag
+7. check-spec|scenario-priority|specs/bad/spec.md|scenario without a priority tag (@P1, @P2 or @P3)
+Result: wrote 7 fingerprint(s) to plans/agile/baseline.txt

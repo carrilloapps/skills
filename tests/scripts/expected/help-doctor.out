@@ -1,0 +1,1 @@
+Usage: doctor [--root DIR] [--json] [--today YYYY-MM-DD] [--templates DIR]

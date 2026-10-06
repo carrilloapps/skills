@@ -6,6 +6,7 @@
 # skills/*/scripts/ by shared/sync.ps1).
 #
 # Usage: lab-probe.ps1 [--root DIR] [--catalog FILE]... [--budget-ram MB]
+# Note: the macOS branch (sysctl + vm_stat) mirrors lab-probe.sh but has not been run on a Mac yet.
 #                      [--include-dashboards] [--json]      (-Root, -Json, ... also accepted)
 # Exit:  0 ok · 3 configuration error · 4 Docker unavailable
 $ErrorActionPreference = 'Stop'
@@ -120,8 +121,16 @@ if ($Fake -ne '') {
         if ($l -match '^MemTotal:\s+([0-9]+)') { $RamTotal = [string][long][Math]::Floor([long]$Matches[1] / 1024) }
         if ($l -match '^MemAvailable:\s+([0-9]+)') { $RamAvail = [string][long][Math]::Floor([long]$Matches[1] / 1024) }
       }
-    } elseif ($OS -eq 'macos') {
+    } elseif ($OS -eq 'macos') { # same sources as lab-probe.sh: sysctl hw.memsize + vm_stat (free, inactive, speculative pages)
       try { $RamTotal = [string][long][Math]::Floor([long](& sysctl -n hw.memsize) / 1048576) } catch { }
+      try {
+        $pageSize = [long]0; $pages = [long]0
+        foreach ($l in @(& vm_stat 2>$null)) {
+          if ($l -match 'page size of ([0-9]+)') { $pageSize = [long]$Matches[1] }
+          elseif ($l -match '^Pages (free|inactive|speculative):\s+([0-9]+)') { $pages += [long]$Matches[2] }
+        }
+        if ($pageSize -gt 0) { $RamAvail = [string][long][Math]::Floor($pages * $pageSize / 1048576) }
+      } catch { }
     }
     try { $df = (& df -Pk $RootFull 2>$null) | Select-Object -Skip 1 -First 1; $DiskFree = [string][long][Math]::Floor([long](($df -split '\s+')[3]) / 1024) } catch { }
   }

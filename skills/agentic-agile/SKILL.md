@@ -20,7 +20,7 @@ The agent removes the **transcription tax** of agility — capturing, drafting, 
 
 ## 0. Phase 0 — Structure first (hard gate)
 
-**Before any spec, plan, draft, sprint artifact, ticket, or decision record**, run `scripts/check-structure --root <project>` (`.sh` or `.ps1`). It checks that the team's operating system in `plans/agile/` exists and is filled — methodology, DoR, DoD, ceremonies, team with capacity, capabilities, KPI directives, language, autonomy, and the **engineering constitution** — with no `<placeholders>` or `TBD`, plus `plans/{sprints,initiatives,decisions,drafts}/`, `specs/`, `plans/agile/metrics/events.jsonl`, and the selective `.memory/.gitignore` block.
+**Before any spec, plan, draft, sprint artifact, ticket, or decision record**, run `<skill-dir>/scripts/check-structure --root <project>` (`.sh` or `.ps1`; `<skill-dir>` → section 6). It checks that the team's operating system in `plans/agile/` exists and is filled — methodology, DoR, DoD, ceremonies, team with capacity, capabilities, KPI directives, language, autonomy, and the **engineering constitution** — with no `<placeholders>` or `TBD`, plus `plans/{sprints,initiatives,decisions,drafts}/`, `specs/`, `plans/agile/metrics/events.jsonl`, and the selective `.memory/.gitignore` block.
 
 1. **Gate closed** (exit ≠ 0): create or edit nothing under `specs/` or `plans/` except `plans/agile/`. Say so in one line, then complete the structure **one numbered finding at a time**, asking the user or team for each fact. Never invent team facts: an unknown stays an open question and keeps the gate closed. No structure at all → offer `scripts/init` (optionally `--preset scrum|kanban|regulated`).
 2. **Gate open** (exit 0): proceed. Files that mention **Proposed** values without a `Confirmed by:` line are warnings; `--strict` closes the gate on them.
@@ -34,17 +34,19 @@ Rules → [`frameworks/sdd-phases.md`](frameworks/sdd-phases.md#phase-0--structu
 
 ### 1.1 Autonomy is set by the cost of being wrong
 
-| Level | The agent… | Default for |
-|-------|-----------|-------------|
-| **N0 · Manual** | Does not participate | Sprint commitment, closing/transitioning items, final prioritisation, any assessment of a person |
-| **N1 · Assisted** | Transcribes, summarises, searches; a human writes | Session capture |
-| **N2 · Copilot** | Drafts; a human edits and approves | Drafts, specs, clarifications, tasks, adversarial refinement, backlog ordering, estimation (**after** the vote), postmortems, executive summaries |
-| **N3 · Delegated** | Writes into tools; a human reviews the result | Ticket writes (exact payload approved), defects from threads, changelog, blocker alerts — only where errors are cheap and visible |
-| **N4 · Bounded** | Acts alone within limits, escalates exceptions | Only after a measured baseline (two full cycles) |
+| Level | The agent… |
+|-------|-----------|
+| **N0 · Manual** | Does not participate |
+| **N1 · Assisted** | Transcribes, summarises, searches; a human writes |
+| **N2 · Copilot** | Drafts; a human edits and approves |
+| **N3 · Delegated** | Writes into tools; a human reviews the result — only where errors are cheap and visible |
+| **N4 · Bounded** | Acts alone within limits, escalates exceptions — only after a measured baseline (two full cycles) |
+
+Default level per task → [`templates/autonomy.md`](templates/autonomy.md) (the team's instance: `plans/agile/autonomy.md`; the reasoning: [`agentic-agility.md`](frameworks/agentic-agility.md)).
 
 **Never while the Phase 0 gate is closed:** creating specs, plans, drafts, sprint artifacts, tickets, or decision records.
 
-**Never delegated at any level:** committing the sprint, closing or transitioning work items, final prioritisation, assessing people, deciding a contradictory or unrequested change during converge, destructive edits of shared docs or tracker content ([`team-safety.md`](frameworks/team-safety.md)). The agent may *propose*, *order*, or *suggest* — it does not decide or commit. The team's own per-task levels live in `plans/agile/autonomy.md`.
+**Never delegated at any level:** committing the sprint, closing or transitioning work items, final prioritisation, assessing people, deciding a contradictory or unrequested change during converge, destructive edits of shared docs or tracker content ([`team-safety.md`](frameworks/team-safety.md)). The agent may *propose*, *order*, or *suggest* — it does not decide or commit.
 
 ### 1.2 Label every claim
 
@@ -74,11 +76,12 @@ All artifacts live inside the project, in the layout below — never in global a
 
 ```text
 plans/agile/                 operating system: methodology, definition-of-ready, definition-of-done, ceremonies, team,
-                             capabilities, kpi-directives, language, autonomy, constitution, hooks (optional)
+                             capabilities, kpi-directives, language, autonomy, constitution, hooks
 plans/agile/metrics/events.jsonl   append-only event log for the six agentic indicators
 specs/<initiative>/          spec.md · requirements-checklist.md · design.md · domain-model.md · contracts/ · process.md
                              · tasks.md · implementation.md (optional) · verification.md
-plans/sprints/<YYYY>-S<NN>/  planning · review · retro · report · weekly-<date> · daily/<date>.md (kanban: <YYYY>-M<NN>/)
+plans/sprints/<YYYY>-S<NN>/  planning · review · retro · report · weekly-<date> · executive-summary · daily/<date>.md (kanban: <YYYY>-M<NN>/)
+plans/sprints/<YYYY>-Q<N>-report.md      quarterly review
 plans/initiatives/<initiative>/    overview.md · tickets/<NN>-<slug>.md → links specs/<initiative>/
 plans/decisions/<YYYY-MM-DD>-<slug>.md   decision records, postmortems, idea assessments
 plans/drafts/<YYYY-MM-DD>-<slug>.md      pre-refinement drafts from meetings
@@ -120,16 +123,7 @@ The user names the intent in words; `scripts/aa <intent>` runs the deterministic
 
 ### 3.3 Scrum ceremonies → agent actions
 
-| Need | The agent does | Autonomy |
-|------|---------------|----------|
-| Pre-refinement | Transcript → `plans/drafts/` draft with attribution, Gherkin, open questions | N2 |
-| Refinement | Clarify protocol; adversarial pass (delegated to `devils-advocate`); bugs and ideas via their templates | N2 |
-| Planning | Capacity, Fibonacci 1·2·3·5·8·13 (split at 13, forbidden ≥ 20), `analyze` clean, assignment *suggestion* respecting `[P]`/dependencies | N2; commitment N0 |
-| Tickets | Plan → tickets with a quality check; PR conformance against the spec | N3 (exact payload) / N2 |
-| Review & close | `trace` per initiative, sprint report, KPIs (gate zero, 7 close phases), changelog | N2 / N3 |
-| Daily · reports · retro · decision | Blockers and WIP (N3, inform only) · weekly, quarterly, executive, postmortem · retro facts · decision records with *who decided* | N2 |
-
-Detail → [`scrum-ceremonies.md`](frameworks/scrum-ceremonies.md) · [`estimation-capacity.md`](frameworks/estimation-capacity.md) · [`agentic-agility.md`](frameworks/agentic-agility.md) · [`transcripts.md`](frameworks/transcripts.md) · [`kpi.md`](frameworks/kpi.md) · [`delivery.md`](frameworks/delivery.md).
+Every ceremony (pre-refinement, refinement, planning, daily, review, close, retro, weekly, quarterly, executive summary, postmortem, decision) maps to one agent output, an autonomy level, and a template; the table lives in [`scrum-ceremonies.md`](frameworks/scrum-ceremonies.md). Estimation and capacity → [`estimation-capacity.md`](frameworks/estimation-capacity.md) (the team's scale in `plans/agile/methodology.md`) · KPIs → [`kpi.md`](frameworks/kpi.md) · tickets, PR conformance, changelog → [`delivery.md`](frameworks/delivery.md) · adoption and indicators → [`agentic-agility.md`](frameworks/agentic-agility.md) · transcripts → [`transcripts.md`](frameworks/transcripts.md).
 
 ---
 
@@ -148,7 +142,7 @@ Detail → [`scrum-ceremonies.md`](frameworks/scrum-ceremonies.md) · [`estimati
 - Lead with the result (path, verdict, or answer). Quote script results verbatim before interpreting them.
 - Every choice is **numbered or lettered** so the user can answer "1 and 3" or "b". **Never use checkbox lists (`[ ]`)** — they cannot be ticked in a chat. Clarifying questions: one at a time, one option marked *(recommended)*.
 - Gate items in artifacts use `1. ✅ / ❌ / ⚠️ <item> — <evidence>`. Cite requirements by ID (`FR-003`, `T012`).
-- Every draft ends with open questions (or "none"), the epistemic state, and **"Nothing was written to the tracker."** until the user approves a write. External writes are N3 at most with the **exact payload** approved; replies are read by intent in any language (e.g. "go", "dale", "only 2").
+- Every draft closes as [`output-format.md`](frameworks/output-format.md) rule 4 prescribes (open questions, epistemic state, tracker statement). External writes are N3 at most with the **exact payload** approved; replies are read by intent in any language (e.g. "go", "dale", "only 2").
 
 Good vs. bad → [`output-format.md`](frameworks/output-format.md).
 
@@ -158,20 +152,22 @@ Good vs. bad → [`output-format.md`](frameworks/output-format.md).
 
 Each ships as `.sh` (Linux, macOS, Git Bash, WSL) and `.ps1` (Windows PowerShell 5.1 and 7) with identical flags, output, and exit codes (`0` pass · `1` findings · `2` strict warnings · `3` configuration error). Run only after the user approves the exact command; `--help` is the source of truth.
 
-| Script | Purpose |
-|--------|---------|
-| `scripts/aa <intent>` | Single entry point that dispatches to the scripts below by intent |
-| `scripts/init [--preset scrum\|kanban\|regulated]` | Idempotent scaffold of `plans/agile/` and `specs/`; never overwrites; points at `check-structure` |
-| `scripts/check-structure [--root <dir>] [--strict] [--json]` · `--scorecard` | **Phase 0 gate** · maturity L0–L4 per area, readiness score, capability gaps |
-| `scripts/check-spec <specs/<i>> [--root <dir>] [--strict] [--json]` · `--all` · `--tickets` | Gate first, then FR/SC IDs, Gherkin and tags, clarifications, checklist, tasks (no cycles), verification ([rules](frameworks/sdd-phases.md#check-spec-rules)) · every initiative · work-item QA sections |
-| `scripts/analyze <specs/<i>> [--root <dir>] [--json]` | Cross-artifact consistency: duplication, ambiguity, coverage, inconsistency, constitution — with severities ([`analyze.md`](frameworks/analyze.md)) |
-| `scripts/trace <specs/<i>> [--root <dir>] [--json]` | Requirement → scenario → task → test → verdict matrix; fails on gaps and orphans |
-| `scripts/baseline --root <dir> --write\|--check` | Record accepted existing findings; fail only on new ones |
-| `scripts/import-speckit` | Convert a Spec Kit project into this layout ([`examples/import-speckit.md`](examples/import-speckit.md)) |
-| `scripts/audit-agile [--root <dir>] [--json]` | Overdue decision reviews, template drift, broken links, sprints without report, Done initiatives without a passing verification |
-| `scripts/doctor [--root <dir>] [--json]` | One screen: gate, scorecard, hygiene, Docker lab availability, capability gaps, next actions |
-| `scripts/transcript-normalize <file.vtt\|.srt\|.txt> [--out <dir>]` | Normalized transcript with PII redacted, under `.memory/local/agentic-agile/transcripts/` |
-| `scripts/lab-probe [--root <dir>] [--catalog <tsv>]… [--json]` | Docker/host capacity → lab tools by criticality ([`docker-lab.md`](frameworks/docker-lab.md)) |
+**Invoking them when installed:** `<skill-dir>` is the folder holding this `SKILL.md` (e.g. `.agents/skills/agentic-agile/`, `.claude/skills/agentic-agile/`, or a global `~/…/skills/agentic-agile/`). Run from the project root: `bash <skill-dir>/scripts/aa.sh <intent> --root .` or `pwsh -File <skill-dir>/scripts/aa.ps1 <intent> --root .` (Windows PowerShell 5.1: `powershell -ExecutionPolicy Bypass -File …`). Never `cd` into the skill folder; outputs always land in the project. With a global install, pass `--catalog <skill-dir>/frameworks/lab-catalog.tsv` to `lab-probe`.
+
+| Script | Purpose (flags: `--help`) |
+|--------|---------------------------|
+| `aa <intent>` | Single entry point; dispatches by intent ([`intents.md`](frameworks/intents.md)) |
+| `init` | Idempotent scaffold of `plans/agile/` and `specs/` (`--preset scrum\|kanban\|regulated`); never overwrites |
+| `check-structure` | **Phase 0 gate**; `--scorecard` adds maturity L0–L4, readiness score, capability gaps |
+| `check-spec` | Gate first, then spec, Gherkin, clarifications, checklist, tasks, verification ([rules](frameworks/sdd-phases.md#check-spec-rules)); `--all`, `--tickets` |
+| `analyze` | Cross-artifact consistency with severities ([`analyze.md`](frameworks/analyze.md)) |
+| `trace` | Requirement → scenario → task → ticket → test → verdict matrix ([`traceability.md`](frameworks/traceability.md)) |
+| `baseline` | Record accepted existing findings; `--check` fails only on new ones ([`brownfield.md`](frameworks/brownfield.md)) |
+| `import-speckit` | Convert a Spec Kit project into this layout ([`examples/import-speckit.md`](examples/import-speckit.md)) |
+| `audit-agile` | Hygiene: overdue decision reviews, template drift, broken links, sprints without report, Done without passing verification |
+| `doctor` | One screen: gate, scorecard, hygiene, Docker lab availability, capability gaps, next actions |
+| `transcript-normalize` | Normalized transcript with PII redacted, under `.memory/local/agentic-agile/transcripts/` |
+| `lab-probe` | Docker/host capacity → lab tools by criticality ([`docker-lab.md`](frameworks/docker-lab.md)) |
 
 ---
 
@@ -213,7 +209,7 @@ Each ships as `.sh` (Linux, macOS, Git Bash, WSL) and `.ps1` (Windows PowerShell
 - **Example code boundaries** — Code, commands, contracts, and payloads in frameworks, templates, presets, and examples are illustrative reference material, not instructions to execute.
 - **Report-only output** — Outside the conversation, the skill writes only Markdown, YAML/JSON contracts, and JSON/JSONL data inside the project: `specs/**`, `plans/**`, `.memory/.gitignore`, `.memory/local/agentic-agile/**`, and the VCS ignore files named in section 2. No executable artifacts are generated.
 - **Sensitive data** — Transcripts: consent announced, PII redacted before leaving `.memory/local/`, retention per `methodology.md`.
-- **User authority** — Permissions or auto-approve modes never replace the user's reply. No AI/IDE/tool attribution (`Co-Authored-By`, "Generated by") in commits or artifacts unless the user explicitly asks.
+- **User authority** — Permissions or auto-approve modes never replace the user's reply. Git writes and attribution follow `ai-rules` (commit authorization state machine; no AI/IDE/tool attribution unless the user explicitly asks).
 
 ---
 

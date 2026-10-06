@@ -22,6 +22,7 @@ An existing system starts with findings (ambiguities, untested FRs). They are no
 1. `scripts/baseline --root <dir> --write` records the current findings of `check-spec`, `analyze`, and `audit-agile` in a versioned baseline file.
 2. `scripts/baseline --root <dir> --check` fails only on findings **not** in the baseline — new problems block, old ones are visible but tolerated.
 3. The baseline shrinks over time: removing an entry is a normal task; adding one needs a reason and an approver.
+4. **Never baselined:** findings with rule `blocking-question` and findings of severity CRITICAL. They are pending decisions, not accepted debt — the script skips them on `--write`, and if one is found in the file, `--check` reports it as a stale entry to remove.
 
 `--help` of each script is the source of truth for flags and file locations.
 

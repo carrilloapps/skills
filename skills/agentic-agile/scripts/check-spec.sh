@@ -41,7 +41,7 @@ while [ $# -gt 0 ]; do
     --all) ALL=1; shift ;;
     --root) [ $# -ge 2 ] || die "--root needs a value"; ROOT=$2; shift 2 ;;
     --skip-structure) SKIP=1; shift ;;
-    -h|--help) echo "Usage: check-spec.sh <specs/initiative> [--root DIR] [--strict] [--json] [--tickets] | --all [--root DIR] [--strict] [--json]"; exit 0 ;;
+    -h|--help) echo "Usage: check-spec <specs/initiative> [--root DIR] [--strict] [--json] [--tickets] | --all [--root DIR] [--strict] [--json]"; exit 0 ;;
     -*) die "unknown option: $1" ;;
     *) [ -z "$DIR" ] || die "only one initiative folder is allowed"; DIR=$1; shift ;;
   esac
@@ -104,12 +104,16 @@ RE_SPAN='^(.*)`[^`]*`(.*)$'
 RE_PH='<([A-Za-z][-A-Za-z0-9 _.,:/|]*)>(.*)$'
 RE_NUMITEM='^[[:space:]]*[0-9]+[.)][[:space:]]'
 
+# Heading match: the pattern must start the heading text (after optional "1.2 " numbering) and end
+# at a word boundary — "Non-functional requirements" or "Known problems" do not count.
+hpat() { HP="^([0-9]+([.][0-9]+)*[.)]?[[:space:]]+)?($1)([^A-Za-z]|$)"; }
 has_heading() { # $1 = case-insensitive ERE
   local i h
+  hpat "$1"
   shopt -s nocasematch
   for ((i = 0; i < ${#L_TEXT[@]}; i++)); do
     [ "${L_G[i]}" = 1 ] && continue # Gherkin '# comments' are not headings
-    if [[ ${L_TEXT[i]} =~ $RE_HEAD ]]; then h=${BASH_REMATCH[1]}; if [[ $h =~ $1 ]]; then shopt -u nocasematch; return 0; fi; fi
+    if [[ ${L_TEXT[i]} =~ $RE_HEAD ]]; then h=${BASH_REMATCH[1]}; if [[ $h =~ $HP ]]; then shopt -u nocasematch; return 0; fi; fi
   done
   shopt -u nocasematch
   return 1
@@ -231,7 +235,7 @@ json_report() { # prints the JSON object of the collected findings
   if [ $STRICT -eq 1 ]; then st=true; else st=false; fi
   printf '%s\n' "$out],\"errors\":$E,\"warnings\":$W,\"strict\":$st,\"exit\":$EXIT}"
 }
-jesc() { local s=$1; s=${s//\\/\\\\}; s=${s//\"/\\\"}; printf '%s' "$s"; }
+jesc() { local s=$1; s=${s//\\/\\\\}; s=${s//\"/\\\"}; s=${s//$'\t'/\\t}; s=$(printf '%s' "$s" | tr -d '\000-\010\013-\037'); printf '%s' "$s"; }
 
 
 # ── Section and table helpers ────────────────────────────────────────────────
@@ -252,6 +256,7 @@ sec() {
   S_LINE=() S_LNO=() S_ROW=() S_RNO=() S_HDR=() S_FOUND=0
   local i x in=0 lvl=0 hl h hdr=
   [ -z "$1" ] && { in=1; S_FOUND=1; }
+  [ -n "$1" ] && hpat "$1"
   for ((i = 0; i < ${#L_TEXT[@]}; i++)); do
     [ "${L_G[i]}" = 1 ] && continue
     x=${L_TEXT[i]}
@@ -259,7 +264,7 @@ sec() {
       hl=${#BASH_REMATCH[1]} h=${BASH_REMATCH[2]} hdr=
       [ -z "$1" ] && continue
       [ $in -eq 1 ] && [ $hl -le $lvl ] && in=0
-      if [ $in -eq 0 ]; then shopt -s nocasematch; [[ $h =~ $1 ]] && { in=1; lvl=$hl; S_FOUND=1; }; shopt -u nocasematch; fi
+      if [ $in -eq 0 ]; then shopt -s nocasematch; [[ $h =~ $HP ]] && { in=1; lvl=$hl; S_FOUND=1; }; shopt -u nocasematch; fi
       continue
     fi
     [ $in -eq 1 ] || continue
@@ -302,10 +307,16 @@ if [ $ALL -eq 1 ] && [ $GATE -eq 0 ]; then
   if [ -d "$ROOT/specs" ]; then
     while IFS= read -r d; do
       [ -n "$d" ] || continue
-      j=$(bash "$0" "$ROOT/specs/$d" "${CHILD[@]}" --json 2>/dev/null); x=$?
+      if [ $JSON -eq 1 ]; then # one child run per initiative; its output is reused for the report
+        j=$(bash "$0" "$ROOT/specs/$d" "${CHILD[@]}" --json 2>/dev/null); x=$?
+        ES+=("$(printf '%s' "$j" | sed -n 's/.*"errors":\([0-9]*\).*/\1/p')")
+        WS+=("$(printf '%s' "$j" | sed -n 's/.*"warnings":\([0-9]*\).*/\1/p')")
+      else
+        j=$(bash "$0" "$ROOT/specs/$d" "${CHILD[@]}" 2>/dev/null); x=$?
+        ES+=("$(printf '%s\n' "$j" | sed -n 's/^Result: \([0-9][0-9]*\) error(s), .*/\1/p' | tail -n 1)")
+        WS+=("$(printf '%s\n' "$j" | sed -n 's/^Result: [0-9][0-9]* error(s), \([0-9][0-9]*\) warning(s).*/\1/p' | tail -n 1)")
+      fi
       NAMES+=("$d"); XS+=("$x"); JS+=("$j")
-      ES+=("$(printf '%s' "$j" | sed -n 's/.*"errors":\([0-9]*\).*/\1/p')")
-      WS+=("$(printf '%s' "$j" | sed -n 's/.*"warnings":\([0-9]*\).*/\1/p')")
     done < <(cd "$ROOT/specs" && for d in */; do [ -d "$d" ] && printf '%s\n' "${d%/}"; done | sort)
   fi
   E=0 W=0 EXIT=0
@@ -323,7 +334,7 @@ if [ $ALL -eq 1 ] && [ $GATE -eq 0 ]; then
     [ ${#NAMES[@]} -eq 0 ] && echo "No initiatives under specs/."
     for ((i = 0; i < ${#NAMES[@]}; i++)); do
       echo
-      bash "$0" "$ROOT/specs/${NAMES[i]}" "${CHILD[@]}" 2>/dev/null
+      printf '%s\n' "${JS[i]}"
     done
     echo
     echo "Summary:"

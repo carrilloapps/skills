@@ -18,5 +18,6 @@
     "memory-storage",
     "project-local-storage",
     "commit-authorization"
-  ]
+  ],
+  "abstract": "Behavioral baseline for AI coding agents: project-local storage, lazy project context, documentation discipline, en_US code identifiers, commit authorization state machine, qualitative estimates, and the shared .memory/ convention every companion skill follows."
 }

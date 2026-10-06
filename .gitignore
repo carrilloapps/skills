@@ -58,8 +58,9 @@ yarn-error.log*
 # Created locally when running: npx skills add ./
 # These are installation output — not source. Do not commit.
 
-# Universal / GitHub Copilot / Cursor / Codex / Amp / Gemini CLI / OpenCode
-.agents/
+# Universal / GitHub Copilot / Cursor / Codex / Amp / Gemini CLI / OpenCode / Antigravity
+# Only skill installs: .agents/hooks.json, .agents/hooks/ and .agents/rules/ are project config (guards) and stay tracked
+.agents/skills/
 
 # Antigravity
 .agent/
@@ -67,11 +68,11 @@ yarn-error.log*
 # Augment
 .augment/
 
-# Claude Code
-.claude/
+# Claude Code — only skill installs; .claude/settings.json and project hooks stay tracked
+.claude/skills/
 
-# Cline
-.cline/
+# Cline — only skill installs; .clinerules/ rules and .clinerules/hooks/ (guard) stay tracked
+.clinerules/skills/
 
 # CodeBuddy
 .codebuddy/
@@ -103,8 +104,8 @@ yarn-error.log*
 # Kilo Code
 .kilocode/
 
-# Kiro CLI
-.kiro/
+# Kiro — only skill installs; .kiro/hooks/ (guard) and .kiro/steering/ stay tracked
+.kiro/skills/
 
 # Kode
 .kode/
@@ -139,8 +140,8 @@ yarn-error.log*
 # Qwen Code
 .qwen/
 
-# Roo Code
-.roo/
+# Roo Code — only skill installs; .roo/rules/ (advisory guard rule) stays tracked
+.roo/skills/
 
 # Trae / Trae CN
 .trae/
@@ -193,4 +194,3 @@ tests/scripts/.work/
 *.bak
 dist/
 build/
-

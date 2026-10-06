@@ -1,7 +1,7 @@
 # image:tag@digest — the compose files reference exactly these. One shared lock: each lab skill
 # appends its own section on its first approved pull (docker buildx imagetools inspect <image>:<tag>).
 
-# sar-cybersecurity (compose.sar.yaml, compose.sar-dast.yaml)
+# sar-cybersecurity (compose.sar.yaml · compose.sar-dast.yaml = DAST, on request)
 semgrep/semgrep:1.179.0@sha256:93963d9295a366f59e4850127b1550400ee7b388f04fe144e4a1f6325d96e01b
 opensecurity/njsscan:1.0.1@sha256:f071932db202631d7834930f9f9ec9ce40c4a73e94dcd8b1dcbfb1520adfe597
 ghcr.io/securego/gosec:2.29.0@sha256:a6cd2f302b5f692e0b77b25751b299ddfbc0763a9711fa36e5a6bccd5292b0e8

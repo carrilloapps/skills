@@ -1,6 +1,6 @@
 # 🛡️ SAR Cybersecurity
 
-> **Automated Security Assessment Report (SAR) generator — deep cybersecurity analysis mapped to 20+ compliance standards.**
+> **Automated Security Assessment Report (SAR) generator — deep cybersecurity analysis mapped to 21 baseline compliance standards.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-red.svg)](../../LICENSE)
 [![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)](../../CHANGELOG.md)
@@ -20,7 +20,7 @@ It is not a scanner. It is not a linter. It is a complete cybersecurity analysis
 - **Fix-ready findings** — every finding includes Confidence (Confirmed / Probable / Possible), a non-weaponized attack scenario, a before/after fix diff, how to verify the fix, and effort (S/M/L)
 - **Remediation roadmap and attack chains** — findings ordered into this week / this sprint / this quarter; combined attack paths show the cheapest link to break
 - **Honest limits** — mandatory Out of Scope & Limitations section; unmeasured metrics are `N/A`, never estimated
-- **Maps to 20+ standards** — ISO 27001, NIST, OWASP, PCI-DSS, GDPR, MITRE ATT&CK, and more
+- **Maps to 21 baseline standards** (plus an expanded reference) — ISO/IEC 27001:2022, NIST CSF 2.0, OWASP Top 10:2025, PCI-DSS, GDPR, MITRE ATT&CK, CWE Top 25, and more
 - **Covers all database engines statically** — SQL (PostgreSQL, MySQL), NoSQL (MongoDB, DynamoDB, Firestore), Redis, and more — from schemas, migrations, grants, and query code; never by connecting to a live database
 - **Detects injection patterns** — SQL Injection, NoSQL Operator Injection, Regex/ReDoS, Mass Assignment, Field Injection, GraphQL abuse
 - **Audits storage and data leakage** — S3/GCS/Azure Blob, secrets in source code, file uploads, logs, message queues, CDN caching, IaC misconfigurations
@@ -181,7 +181,7 @@ Registry entry format:
 
 **Key rules**:
 
-- `F01, F02...` for Findings (score > 50), `W01, W02...` for Warnings (score <= 50)
+- `F01, F02...` for Findings (score > 50), `W01, W02...` for Warnings (score ≤ 50)
 - Sorted by status group (open findings, open warnings, mitigated), then by score descending within each group
 - Agent writes new entries with `status: "Pending"` — never overwrites team-managed fields (`status`, `assignee`, `mitigationDate`)
 - Recurring findings are matched by **primary CWE** + `component` (the file containing the vulnerable call)
@@ -438,7 +438,7 @@ skills/sar-cybersecurity/
 ├── frameworks/                           # On-demand analysis frameworks
 │   ├── output-format.md                  # [Protocol] SAR output specification
 │   ├── scoring-system.md                 # [Protocol] Deterministic scoring (0–100), Confidence, CVSS v4.0
-│   ├── compliance-standards.md           # [Domain] 20 baseline standards + expanded reference
+│   ├── compliance-standards.md           # [Domain] 21 baseline standards + expanded reference
 │   ├── database-access-protocol.md       # [Domain] Static DB analysis — schemas, grants, indexes
 │   ├── injection-patterns.md             # [Domain] 6 injection families across all engines
 │   ├── storage-exfiltration.md           # [Domain] 7 storage/exfiltration categories

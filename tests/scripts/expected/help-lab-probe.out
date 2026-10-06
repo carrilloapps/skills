@@ -1,0 +1,9 @@
+lab-probe — suggest the Docker lab tools this machine can run, most critical first.
+
+Options:
+  1. --root DIR             project root (default: current directory)
+  2. --catalog FILE         extra lab-catalog.tsv (repeatable; installed skills are auto-discovered)
+  3. --budget-ram MB        RAM budget instead of (available RAM - 1024 MB)
+  4. --include-dashboards   also consider dashboards (SonarQube, DefectDojo, PgHero)
+  5. --json                 machine-readable output
+Exit codes: 0 ok, 3 configuration error, 4 Docker unavailable.

@@ -1,0 +1,9 @@
+aa converge — agile-project/specs/good
+Missing:
+1. FR-001 has no row in verification.md (trace: fr-no-verification)
+2. FR-001 is not referenced by any test file (trace: fr-no-test)
+3. FR-002 has no row in verification.md (trace: fr-no-verification)
+4. FR-002 is not referenced by any test file (trace: fr-no-test)
+5. FR-003 has no row in verification.md (trace: fr-no-verification)
+6. FR-003 is not referenced by any test file (trace: fr-no-test)
+Next: add 6 task(s) under '## Phase N: Convergence' in agile-project/specs/good/tasks.md (one per gap, mapped to its FR-###), then run: aa converge good

@@ -59,7 +59,7 @@ Documentation linters running in Docker (markdownlint-cli2, Vale, lychee) → [`
 }
 ```
 
-**Ignore**: `.docgraph/` is a machine-local index → add it to the project's VCS ignore (same VCS rules as `.memory/` in `SKILL.md`: `.gitignore` line `.docgraph/`, `.hgignore` `^\.docgraph/`, Fossil `.docgraph/*`, SVN → tell the user).
+**Ignore**: `.docgraph/` is a machine-local index → add it to the project's VCS ignore (same VCS rules as [`memory-convention.md`](memory-convention.md): `.gitignore` line `.docgraph/`, `.hgignore` `^\.docgraph/`, Fossil `.docgraph/*`, SVN → tell the user).
 
 **Verify**: `npx docgraph --version` prints `1.0.4`, then one real MCP call (`search` for a heading known to exist in `docs/`) returns it.
 
@@ -108,7 +108,7 @@ Edit the file non-destructively: keep every existing server and key.
 
 1. **Detect read-only first.** Never run a probe command just to check for a tool when session tools, config files, or index directories answer the question.
 2. **Suggest at most once per tool**, in one short block: what it does, which step it improves, the pinned install command, its network/telemetry behavior, and the official link.
-3. **Record the answer** in `.memory/local/ai-rules/capabilities.json` (VCS-ignored):
+3. **Record the answer** in `.memory/local/<skill>/capabilities.json` (VCS-ignored — [`memory-convention.md`](memory-convention.md)); for this skill, `<skill>` = `ai-rules`:
 
    ```json
    [{ "tool": "@carrilloapps/docgraph", "status": "declined", "version": "1.0.4", "date": "2026-10-05" }]
@@ -116,7 +116,7 @@ Edit the file non-destructively: keep every existing server and key.
 
    `status`: `suggested` · `declined` · `installed` · `failed`. Never suggest a `declined` tool again unless the user asks.
 4. **One tool at a time, explicit approval.** Installing software is a side-effecting action: it goes through the Devil's Advocate gate when installed, otherwise needs the user's explicit "yes" to the exact command. The user may also run it themselves (`! <command>` in Claude Code).
-5. **Official registries only, pinned versions.** Never never pipe a downloaded script into a shell interpreter (POSIX or PowerShell), no unpinned `npx -y`.
+5. **Official registries only, pinned versions.** Never pipe a downloaded script into a shell interpreter (POSIX or PowerShell), no unpinned `npx -y`.
 6. **Make it work, then prove it**: install → version check → MCP config → VCS ignore → one real call. If any step fails, record `failed`, report it in one line, and continue without the tool.
 
 ---

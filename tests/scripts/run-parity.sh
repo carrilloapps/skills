@@ -19,6 +19,7 @@ while [ $# -gt 0 ]; do
     *) echo "run-parity: unknown option: $1" >&2; exit 3 ;;
   esac
 done
+case "$ONLY" in ''|bash|pwsh|powershell) ;; *) echo "run-parity: --only must be bash, pwsh or powershell (got: $ONLY)" >&2; exit 3 ;; esac
 
 RUNNERS=(bash)
 command -v pwsh >/dev/null 2>&1 && RUNNERS+=(pwsh)

@@ -1,0 +1,3 @@
+check-spec — aa-spec2/empty-checklist
+1. warning requirements-checklist.md [checklist-empty] no CHK### items
+Result: 0 error(s), 1 warning(s) — WARN

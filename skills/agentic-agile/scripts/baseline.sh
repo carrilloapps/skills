@@ -17,7 +17,7 @@ set -u
 LC_ALL=C
 export LC_ALL
 
-ROOT=. SPEC= MODE= DRY=0 FILE=plans/agile/baseline.txt TODAY= STRICT=0 JSON=0 SKIP=0
+ROOT=. SPEC= ALL=0 MODE= DRY=0 FILE=plans/agile/baseline.txt TODAY= STRICT=0 JSON=0 SKIP=0
 die() { echo "baseline: $1" >&2; exit 3; }
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -26,30 +26,33 @@ while [ $# -gt 0 ]; do
     --dry-run) DRY=1; shift ;;
     --root) [ $# -ge 2 ] || die "--root needs a value"; ROOT=$2; shift 2 ;;
     --spec) [ $# -ge 2 ] || die "--spec needs a value"; SPEC=$2; shift 2 ;;
-    --all) shift ;;
+    --all) ALL=1; shift ;;
     --file) [ $# -ge 2 ] || die "--file needs a value"; FILE=$2; shift 2 ;;
     --today) [ $# -ge 2 ] || die "--today needs a value"; TODAY=$2; shift 2 ;;
     --strict) STRICT=1; shift ;;
     --json) JSON=1; shift ;;
     --skip-structure) SKIP=1; shift ;;
-    -h|--help) echo "Usage: baseline.sh --write [--dry-run] | --check [specs/<initiative> | --spec specs/<initiative> | --all] [--root DIR] [--file PATH] [--today YYYY-MM-DD] [--strict] [--json]"; exit 0 ;;
+    -h|--help) echo "Usage: baseline --write [--dry-run] | --check [specs/<initiative> | --spec specs/<initiative> | --all] [--root DIR] [--file PATH] [--today YYYY-MM-DD] [--strict] [--json]"; exit 0 ;;
     -*) die "unknown option: $1" ;;
     *) [ -z "$SPEC" ] || die "only one initiative folder is allowed"; SPEC=$1; shift ;;
   esac
 done
+[ $ALL -eq 1 ] && [ -n "$SPEC" ] && die "--all takes no initiative folder"
 [ -n "$MODE" ] || die "choose --write or --check"
 [ $DRY -eq 1 ] && [ "$MODE" != write ] && die "--dry-run only applies to --write"
 [ -d "$ROOT" ] || die "project root not found: $ROOT"
 RL=${ROOT//\\//}; while [ "${RL%/}" != "$RL" ] && [ "$RL" != / ]; do RL=${RL%/}; done
 FILE=${FILE//\\//}
-jesc() { local s=$1; s=${s//\\/\\\\}; s=${s//\"/\\\"}; printf '%s' "$s"; }
+case "$FILE" in /*|[A-Za-z]:*) die "--file must be a path relative to the project" ;; esac
+case "/$FILE/" in */../*) die "--file must not contain '..'" ;; esac
+jesc() { local s=$1; s=${s//\\/\\\\}; s=${s//\"/\\\"}; s=${s//$'\t'/\\t}; s=$(printf '%s' "$s" | tr -d '\000-\010\013-\037'); printf '%s' "$s"; }
 
 # ── Phase 0 ──────────────────────────────────────────────────────────────────
 if [ $SKIP -eq 0 ]; then
   CS="$(cd "$(dirname "$0")" && pwd)/check-structure.sh"
   [ -f "$CS" ] || die "check-structure.sh not found next to baseline.sh"
   bash "$CS" --root "$ROOT" --json >/dev/null 2>&1; SX=$?
-  [ $SX -eq 3 ] && die "check-structure failed on root: $ROOT"
+  [ $SX -eq 3 ] && die "check-structure failed on root: $RL"
   if [ $SX -ne 0 ]; then
     MSG="Phase 0 structure incomplete; run scripts/check-structure --root $RL and complete plans/agile/ with the team first"
     if [ $JSON -eq 1 ]; then
@@ -66,7 +69,7 @@ fi
 NAMES=()
 if [ -n "$SPEC" ]; then
   s=${SPEC//\\//}; while [ "${s%/}" != "$s" ]; do s=${s%/}; done
-  { [ -d "$ROOT/$s" ] || { [ -d "$s" ] && [ -d "$ROOT/specs/${s##*/}" ]; }; } || die "initiative folder not found: $ROOT/$s"
+  { [ -d "$ROOT/$s" ] || { [ -d "$s" ] && [ -d "$ROOT/specs/${s##*/}" ]; }; } || die "initiative folder not found: $RL/$s"
   NAMES+=("${s##*/}"); SCOPE=(--spec "specs/${s##*/}")
 else
   SCOPE=()
@@ -74,14 +77,17 @@ else
 fi
 
 # ── Collect fingerprints ─────────────────────────────────────────────────────
-RE_F='"file":"((\\.|[^"\\])*)","line":[0-9]+,"rule":"([^"]*)","message":"((\\.|[^"\\])*)"'
+RE_F='("severity":"([A-Za-z]*)",)?"file":"((\\.|[^"\\])*)","line":[0-9]+,"rule":"([^"]*)","message":"((\\.|[^"\\])*)"'
 FP=()
 collect() { # tool json prefix (prefix is prepended to file names that do not start with plans/ or specs/)
-  local rest=$2 f
+  local rest=$2 f pin
   while [[ $rest =~ $RE_F ]]; do
-    f=${BASH_REMATCH[1]}
+    f=${BASH_REMATCH[3]}
     case "$f" in plans/*|specs/*|structure) ;; *) f="$3$f" ;; esac
-    FP+=("$1|${BASH_REMATCH[3]}|$f|${BASH_REMATCH[4]}")
+    # A blocking question or a CRITICAL finding is a pending decision, never an accepted finding:
+    # it is never written to the baseline and always counts as new ("!" marks it).
+    pin=; [ "${BASH_REMATCH[5]}" = blocking-question ] && pin='!'; [ "${BASH_REMATCH[2]}" = CRITICAL ] && pin='!'
+    FP+=("$pin$1|${BASH_REMATCH[5]}|$f|${BASH_REMATCH[6]}")
     rest=${rest#*"${BASH_REMATCH[0]}"}
   done
 }
@@ -100,8 +106,10 @@ AA=(--root "$ROOT" --json); [ -n "$TODAY" ] && AA+=(--today "$TODAY")
 run audit-agile "${AA[@]}"; collect audit-agile "$OUT" ""
 run trace --root "$ROOT" --skip-structure --json ${SCOPE[@]+"${SCOPE[@]}"}; collect trace "$OUT" ""
 
-CUR=()
-while IFS= read -r l; do [ -n "$l" ] && CUR+=("$l"); done < <(for l in ${FP[@]+"${FP[@]}"}; do printf '%s\n' "$l"; done | sort -u)
+CUR=() PEND=()
+while IFS= read -r l; do
+  case "$l" in '') ;; '!'*) PEND+=("${l#!}") ;; *) CUR+=("$l") ;; esac
+done < <(for l in ${FP[@]+"${FP[@]}"}; do printf '%s\n' "$l"; done | sort -u)
 
 # ── Write ────────────────────────────────────────────────────────────────────
 if [ "$MODE" = write ]; then
@@ -117,10 +125,16 @@ if [ "$MODE" = write ]; then
     if [ $DRY -eq 1 ]; then dj=true; else dj=false; fi
     printf '{"root":"%s","mode":"write","dry_run":%s,"file":"%s","fingerprints":[' "$(jesc "$RL")" "$dj" "$(jesc "$FILE")"
     for ((i = 0; i < ${#CUR[@]}; i++)); do [ $i -gt 0 ] && printf ','; printf '"%s"' "$(jesc "${CUR[i]}")"; done
+    printf '],"pending":['
+    for ((i = 0; i < ${#PEND[@]}; i++)); do [ $i -gt 0 ] && printf ','; printf '"%s"' "$(jesc "${PEND[i]}")"; done
     printf '],"count":%d,"exit":0}\n' ${#CUR[@]}
   else
     echo "baseline — $RL (write)"
     for ((i = 0; i < ${#CUR[@]}; i++)); do printf '%d. %s\n' $((i + 1)) "${CUR[i]}"; done
+    if [ ${#PEND[@]} -gt 0 ]; then
+      echo "Not recorded (pending decisions are never baselined):"
+      for ((i = 0; i < ${#PEND[@]}; i++)); do printf '%d. %s\n' $((i + 1)) "${PEND[i]}"; done
+    fi
     if [ $DRY -eq 1 ]; then echo "Result: would write ${#CUR[@]} fingerprint(s) to $FILE (dry run)"
     else echo "Result: wrote ${#CUR[@]} fingerprint(s) to $FILE"; fi
   fi
@@ -135,7 +149,7 @@ while IFS= read -r l || [ -n "$l" ]; do
   case "$l" in ''|'#'*) continue ;; esac
   BASE+=("$l")
 done <"$ROOT/$FILE"
-NEW=() RES=() ACC=0
+NEW=(${PEND[@]+"${PEND[@]}"}) RES=() ACC=0
 for c in ${CUR[@]+"${CUR[@]}"}; do
   hit=0; for b in ${BASE[@]+"${BASE[@]}"}; do [ "$b" = "$c" ] && { hit=1; break; }; done
   if [ $hit -eq 1 ]; then ACC=$((ACC + 1)); else NEW+=("$c"); fi

@@ -22,7 +22,7 @@ for ($k = 0; $k -lt $args.Count; $k++) {
     'templates' { if ($k + 1 -ge $args.Count) { Fail '--templates needs a value' }; $k++; $Tpl = [string]$args[$k] }
     'fake-resources-file' { if ($k + 1 -ge $args.Count) { Fail '--fake-resources-file needs a value' }; $k++; $Fake = [string]$args[$k] }
     'json' { $Json = $true }
-    { $_ -eq 'h' -or $_ -eq 'help' } { Write-Output 'Usage: doctor.ps1 [--root DIR] [--json] [--today YYYY-MM-DD] [--templates DIR]'; exit 0 }
+    { $_ -eq 'h' -or $_ -eq 'help' } { Write-Output 'Usage: doctor [--root DIR] [--json] [--today YYYY-MM-DD] [--templates DIR]'; exit 0 }
     default { Fail "unknown option: $a" }
   }
 }
@@ -50,8 +50,12 @@ $la = @('--root', $Root, '--json', '--catalog', (Join-Path (Split-Path -Parent $
 $lj = ''; $lx = 3
 try { $lj = (@(& (Join-Path $PSScriptRoot 'lab-probe.ps1') @la 2>$null) -join "`n"); $lx = $LASTEXITCODE } catch { $lx = 3 }
 if ($lx -eq 3 -or $lj -eq '') { $Dock = 'unknown'; $DDet = 'lab-probe configuration error' }
-elseif ((Get-Field $lj 'daemon') -eq 'true' -and (Get-Field $lj 'compose') -eq 'true') { $Dock = 'yes'; $DDet = 'Docker ' + (Get-SField $lj 'version') }
-else { $Dock = 'no'; $DDet = Get-SField $lj 'unavailable_reason'; if ($DDet -eq '') { $DDet = 'Docker not available' } }
+else {
+  # Read only the "docker":{...} object: "compose" also appears in every selected tool entry.
+  $dj = ''; $dm = [regex]::Match($lj, '"docker":\{([^}]*)\}'); if ($dm.Success) { $dj = $dm.Groups[1].Value }
+  if ((Get-Field $dj 'daemon') -eq 'true' -and (Get-Field $dj 'compose') -eq 'true') { $Dock = 'yes'; $DDet = 'Docker ' + (Get-SField $dj 'version') }
+  else { $Dock = 'no'; $DDet = Get-SField $dj 'unavailable_reason'; if ($DDet -eq '') { $DDet = 'Docker not available' } }
+}
 
 # ── Next actions ─────────────────────────────────────────────────────────────
 $Act = @()
@@ -65,7 +69,7 @@ if ($gl -ne '') { $Act += "Decide a tool or 'not applicable' for the capability 
 $Exit = 1; if ($Gate -eq 'open' -and $AN -eq 0) { $Exit = 0 }
 
 # ── Report ───────────────────────────────────────────────────────────────────
-function Get-JsonEsc([string]$s) { return $s.Replace('\', '\\').Replace('"', '\"') }
+function Get-JsonEsc([string]$s) { $s = $s.Replace('\', '\\').Replace('"', '\"').Replace("`t", '\t'); return [regex]::Replace($s, '[\x00-\x08\x0b-\x1f]', '') }
 if ($Json) {
   $sc = ''; if ($sj -match '"scorecard":(\{[^}]*\})') { $sc = $Matches[1] }
   $dv = 'false'; if ($Dock -eq 'yes') { $dv = 'true' }

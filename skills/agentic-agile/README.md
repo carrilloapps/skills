@@ -40,37 +40,50 @@ Per-agent paths, global installs, and manual install → [`docs/INSTALL.md`](../
 
 ## Project layout
 
-```text
-specs/<initiative>/            spec.md · design.md · implementation.md · verification.md
-plans/agile/                   methodology · definition-of-ready · definition-of-done · ceremonies ·
-                               team · capabilities · kpi-directives · language · autonomy · metrics/events.jsonl
-plans/sprints/<YYYY>-S<NN>/    planning · review · retro · report · daily/
-plans/initiatives/<initiative>/ overview · tickets/
-plans/decisions/               decision records
-plans/drafts/                  pre-refinement drafts
-.memory/local/agentic-agile/   raw and normalized transcripts (not versioned)
+1. `specs/<initiative>/` — spec, requirements checklist, design, domain model, contracts, process, tasks, verification (versioned).
+2. `plans/agile/` — the team's operating system incl. constitution and hooks; `plans/sprints/`, `plans/initiatives/`, `plans/decisions/`, `plans/drafts/` (versioned).
+3. `.memory/local/agentic-agile/` — raw and normalized transcripts only (never versioned).
+4. Nothing is written to global agent directories. Full layout: `SKILL.md` §2.
+
+## Using it after installing from skills.sh
+
+Most of the time you just talk to your agent ("specify the reminders feature", "clarify the spec", "plan the sprint", "is everything traced?"); the skill maps that to an intent and proposes the exact script command for your approval.
+
+To run the scripts yourself, call them from your project root through the folder where `npx skills add` installed the skill (`.agents/skills/agentic-agile/` for most agents; `.claude/skills/agentic-agile/` is a symlink to it; `-g` installs live under your home folder):
+
+```bash
+# Linux · macOS · Git Bash · WSL
+bash .agents/skills/agentic-agile/scripts/aa.sh init --root .
+bash .agents/skills/agentic-agile/scripts/aa.sh structure --root .
+bash .agents/skills/agentic-agile/scripts/aa.sh specify invoice-reminders --root .
 ```
 
-Nothing is written to global agent directories (`~/.claude`, `~/.gemini`, …).
+```powershell
+# Windows (PowerShell 7; for Windows PowerShell 5.1 use: powershell -ExecutionPolicy Bypass -File ...)
+pwsh -File .agents\skills\agentic-agile\scripts\aa.ps1 init --root .
+pwsh -File .agents\skills\agentic-agile\scripts\aa.ps1 structure --root .
+```
+
+Everything is written inside your project (`plans/`, `specs/`, `.memory/`), never inside the skill folder or your home directory.
 
 ## Scripts
 
 Every script exists as `.sh` and `.ps1` with identical behavior; the agent runs one only after you approve the exact command.
 
-| Script | What it does |
-|--------|--------------|
-| `aa <intent> [args]` | Single entry point: `init`, `structure`, `doctor`, `specify`, `clarify`, `plan`, `tasks`, `analyze`, `trace`, `converge`, `verify`, `baseline`, `audit`, `import-speckit` |
-| `init [--root DIR] [--dry-run] [--preset scrum\|kanban\|regulated]` | Scaffolds `plans/agile/`, `plans/{sprints,initiatives,decisions,drafts}/`, `specs/`, `.memory/.gitignore`; never overwrites |
-| `check-structure [--root DIR] [--strict] [--json] [--scorecard]` | **Phase 0 gate** — `plans/agile/` complete (no placeholders/TBD/checkboxes, roles with capacity, every capability slot decided, autonomy levels…); `--scorecard` adds maturity L0–L4 per area and a readiness score; exit 0/1/2/3 |
-| `check-spec <specs/x> [--root DIR] [--strict] [--json] [--tickets]` · `--all` | Runs the Phase 0 gate, then validates the SDD phases and Gherkin (Given/When/Then per scenario, Background only Given, one language per block, `Origin:`, no TBD or unfilled placeholders); `--tickets` requires QA test cases in work items; `--all` walks every `specs/*/` |
-| `analyze <specs/x> [--root DIR] [--json]` | Cross-artifact consistency: duplication, ambiguity, underspecification, coverage, inconsistency, constitution — CRITICAL/HIGH/MEDIUM/LOW, read-only |
-| `trace <specs/x> [--root DIR] [--json]` | Requirement → scenario → task → test → verdict matrix; fails on gaps and orphans |
-| `baseline --root DIR --write\|--check` | Records accepted existing findings; `--check` fails only on new ones |
-| `import-speckit` | Converts a Spec Kit project (`.specify/`, `specs/NNN-*`) into `plans/agile/` + `specs/` |
-| `audit-agile [--root DIR] [--json] [--templates DIR] [--today YYYY-MM-DD]` | Hygiene: decisions past *review on*, template drift, broken links, sprints without a report, Done initiatives without a passing verification |
-| `doctor [--root DIR] [--json] [--today YYYY-MM-DD] [--templates DIR]` | One screen: gate, scorecard, hygiene, Docker lab availability, capability gaps, lettered next actions |
-| `transcript-normalize <file> [--out DIR]` | VTT/SRT/text → normalized JSON Lines with PII and secrets redacted (default output `.memory/local/agentic-agile/transcripts/`) |
-| `lab-probe [--root DIR] [--catalog FILE] [--budget-ram MB] [--include-dashboards] [--json]` | Detects Docker and host capacity; suggests lab tools of installed skills by criticality (skips `fixtures/`, `testdata/`, `__fixtures__/`, `.work/`, `templates/`; extra paths in a root `.labprobeignore`) |
+| Script | What it does (flags: `--help`) |
+|--------|-------------------------------|
+| `aa <intent>` | Single entry point: `init`, `structure`, `doctor`, `specify`, `clarify`, `plan`, `tasks`, `analyze`, `trace`, `converge`, `verify`, `baseline`, `audit`, `import-speckit` |
+| `init` | Scaffolds `plans/agile/`, `plans/{sprints,initiatives,decisions,drafts}/`, `specs/`, `.memory/.gitignore`; presets `scrum`, `kanban`, `regulated`; never overwrites |
+| `check-structure` | **Phase 0 gate** — `plans/agile/` complete and confirmed; `--scorecard` adds maturity L0–L4 and a readiness score |
+| `check-spec` | Runs the gate, then validates spec, Gherkin, clarifications, checklist, tasks, verification; `--tickets` for work items, `--all` for every initiative |
+| `analyze` | Cross-artifact consistency with CRITICAL–LOW severities and stable IDs, read-only |
+| `trace` | Requirement → scenario → task → ticket → test → verdict matrix |
+| `baseline` | Records accepted existing findings; `--check` fails only on new ones |
+| `import-speckit` | Converts a Spec Kit project (`.specify/`, `specs/NNN-*`) into `plans/agile/` + `specs/`; dry run by default |
+| `audit-agile` | Hygiene: overdue decision reviews, template drift, broken links, sprints without a report, Done initiatives without a passing verification |
+| `doctor` | One screen: gate, scorecard, hygiene, Docker lab availability, capability gaps, lettered next actions |
+| `transcript-normalize` | VTT/SRT/text → normalized JSON Lines with PII and secrets redacted |
+| `lab-probe` | Detects Docker and host capacity; suggests lab tools of installed skills by criticality (`.labprobeignore` for extra skips) |
 
 ## Frameworks and templates
 

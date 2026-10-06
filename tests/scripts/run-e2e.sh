@@ -43,6 +43,9 @@ for r in "${RUNNERS[@]}"; do
   run "[$cmd] trace" $cmd "$S/trace.$ext" "$SPEC" --root "$WORK"
   run "[$cmd] analyze" $cmd "$S/analyze.$ext" "$SPEC" --root "$WORK"
   run "[$cmd] audit-agile" $cmd "$S/audit-agile.$ext" --root "$WORK" --today 2026-10-05
+  run "[$cmd] baseline --write --dry-run" $cmd "$S/baseline.$ext" --write --dry-run --root "$WORK" --today 2026-10-05
+  run "[$cmd] doctor" $cmd "$S/doctor.$ext" --root "$WORK" --today 2026-10-05
+  run "[$cmd] aa converge" $cmd "$S/aa.$ext" converge invoice-reminders --root "$WORK"
 done
 
 [ $KEEP -eq 1 ] || rm -rf "$WORK"

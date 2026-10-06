@@ -7,7 +7,7 @@ From an approved spec to shipped work. Every procedure here runs only with the P
 ## 1. Plan → tickets
 
 1. **Source** — the refined work item (`plans/initiatives/<i>/tickets/<NN>-<slug>.md`) whose readiness gate is all ✅ against `plans/agile/definition-of-ready.md`. A Not Ready item never becomes a tracker ticket.
-2. **Split** — one ticket per independently verifiable slice; each maps to one or more scenarios of `specs/<i>/spec.md`. Over 13 points → split before writing.
+2. **Split** — one ticket per independently verifiable slice; each maps to one or more scenarios of `specs/<i>/spec.md`. Above the team's split threshold (`plans/agile/methodology.md`) → split before writing.
 3. **Shape** — follow `templates/ticket-conventions.md` (title pattern, type, labels, links to the spec scenario and the DoR).
 4. **Quality check** (numbered, all must be ✅):
    1. Title follows the convention and states the outcome, not the task.
@@ -19,7 +19,7 @@ From an approved spec to shipped work. Every procedure here runs only with the P
 6. **Approval (N3)** — write only after the user approves the payload. One approval covers exactly the payloads shown; a changed payload needs a new approval.
 7. **Record** — append `{"event":"tickets_written",…}` to `plans/agile/metrics/events.jsonl` and link the created IDs in the work item.
 
-Until step 6 the draft ends with: **"Nothing was written to the tracker."**
+Until step 6 the draft closes as [`output-format.md`](output-format.md) rule 4 prescribes (nothing written to the tracker).
 
 ---
 

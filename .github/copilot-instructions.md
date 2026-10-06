@@ -28,21 +28,14 @@ This repository contains the following skills:
 
 ## Quality gate
 
-Run before every commit:
-
-1. `bash scripts/validate.sh`
-2. `bash tests/scripts/run-parity.sh` (`.sh` / `.ps1` parity)
-3. `node --test integrations/core/core.test.mjs integrations/*/test/*.test.mjs`
-4. Before publishing: `bash scripts/audit-skills.sh` (needs Docker)
-
-All must pass.
+Run the commands in `AGENTS.md` → *Commands* before every commit (quality gate, parity + end-to-end example, guard tests, shared-script sync); before publishing, `bash scripts/audit-skills.sh` (needs Docker). All must pass.
 
 ## Conventions
 
 - **Version cascade**: bump `metadata.version` in the affected skill's `SKILL.md` frontmatter, then follow the per-skill cascade checklist in `.github/CONTRIBUTING.md`
 - **Documentation**: `en_US` recommended; code identifiers always `en_US`
 - **Commits**: Conventional Commits format (`feat:`, `fix:`, `docs:`)
-- **Branch**: `main` only — enable branch protection in GitHub Settings → Branches (required status check: `validate`)
+- **Branch**: `main` only — enable branch protection in GitHub Settings → Branches (required status checks: `validate`, `scripts-parity`, `skills-audit`)
 
 ## skills.sh Security Audit Compliance
 
