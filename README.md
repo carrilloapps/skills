@@ -27,21 +27,49 @@
 ## Quick Install
 
 ```bash
-# All skills, every agent detected in the current project
+# Every skill, for every agent detected in the current project
 npx skills add carrilloapps/skills
 
-# One skill
-npx skills add carrilloapps/skills@devils-advocate
+# One skill (repeat @<skill> or use -s for several)
+npx skills add carrilloapps/skills@agentic-agile
+npx skills add carrilloapps/skills -s devils-advocate -s ai-rules
 
-# Specific agents (repeat -a) · every agent (-a '*') · global (-g)
-npx skills add carrilloapps/skills@sar-cybersecurity -a antigravity -a claude-code
+# Every agent (-a '*') · global install for all your projects (-g) · copy instead of symlink (--copy)
 npx skills add carrilloapps/skills -a '*'
 npx skills add carrilloapps/skills -g
+npx skills add carrilloapps/skills --copy
+
+# Non-interactive (CI)
+npx skills add carrilloapps/skills -a '*' -y
 ```
 
-Keep up to date with `npx skills check` / `npx skills update`.
+Per agent (`-a <id>`, repeatable):
 
-**Per-agent paths, always-on files, manual install, and optional guards → [`docs/INSTALL.md`](docs/INSTALL.md).**
+| Agent | Command |
+|-------|---------|
+| Claude Code | `npx skills add carrilloapps/skills -a claude-code` |
+| Antigravity IDE | `npx skills add carrilloapps/skills -a antigravity` |
+| Antigravity CLI (`agy`) | `npx skills add carrilloapps/skills -a antigravity-cli` |
+| Cursor | `npx skills add carrilloapps/skills -a cursor` |
+| GitHub Copilot | `npx skills add carrilloapps/skills -a github-copilot` |
+| OpenAI Codex | `npx skills add carrilloapps/skills -a codex` |
+| Gemini CLI | `npx skills add carrilloapps/skills -a gemini-cli` |
+| Windsurf / Devin Desktop | `npx skills add carrilloapps/skills -a windsurf` |
+| Cline · Roo Code · OpenCode · Kiro | `-a cline` · `-a roo` · `-a opencode` · `-a kiro-cli` |
+
+Manual install (any agent): clone the repository and copy or symlink `skills/<name>/` into the agent's skills folder, keeping the folder name equal to the skill name:
+
+```bash
+git clone https://github.com/carrilloapps/skills.git
+cp -r skills/skills/agentic-agile .agents/skills/        # Linux / macOS / Git Bash
+```
+
+```powershell
+git clone https://github.com/carrilloapps/skills.git
+Copy-Item -Recurse skills\skills\agentic-agile .agents\skills\   # Windows PowerShell
+```
+
+Keep up to date with `npx skills check` / `npx skills update`. Per-agent project and global paths, always-on instruction files, and optional guards: [`docs/INSTALL.md`](docs/INSTALL.md).
 
 ---
 
@@ -274,44 +302,64 @@ Every script ships as a POSIX `.sh` **and** a PowerShell `.ps1` (Windows PowerSh
 
 ## Repository Structure
 
+Ordered as on disk: hidden folders, folders, then files — each group alphabetical.
+
 ```text
 carrilloapps/skills/
+├── .claude-plugin/
+│   └── marketplace.json              ← Claude Code marketplace (guard plugin)
+├── .github/
+│   ├── ISSUE_TEMPLATE/               ← bug report · feature request
+│   ├── workflows/                    ← validate.yml (validate, guard tests, parity, e2e, skills-audit) · snyk-agent-scan.yml (manual)
+│   └── CODEOWNERS · CODE_OF_CONDUCT.md · CONTRIBUTING.md · PULL_REQUEST_TEMPLATE.md · SECURITY.md · copilot-instructions.md
+├── .memory/
+│   ├── .gitignore                    ← ignores local/, *.local.*, *.recovered.json only
+│   └── devsecops/                    ← Docker lab used on this repo (compose, configs, images.lock)
+├── docs/
+│   └── INSTALL.md                    ← per-agent install matrix (single source)
+├── integrations/                     ← optional guards per agent (installed separately, Node ≥ 18)
+│   ├── core/                         ← shared deterministic classifier + tests
+│   ├── <agent>/                      ← antigravity, claude-code, cline, codex, copilot, cursor,
+│   │                                    gemini-cli, kiro, opencode, roo, windsurf
+│   ├── README.md                     ← per-agent enforcement matrix
+│   ├── docgraph-agent-mode.md        ← feature spec for docgraph
+│   └── sync-core.mjs                 ← vendors core/classifier.mjs into every adapter
+├── scripts/
+│   ├── audit-skills.sh · .ps1        ← local skills.sh-equivalent audit (+ audit-skills.container.sh)
+│   └── validate.sh                   ← quality gate (also in CI)
+├── shared/
+│   ├── scripts/                      ← canonical lab-probe (.sh / .ps1)
+│   └── sync.sh · sync.ps1            ← vendor shared scripts into every skill (--check in CI)
+├── skills/
+│   ├── agentic-agile/                ← SKILL.md · README.md · metadata.json
+│   │   ├── examples/                 ← 9 reference examples (incl. end-to-end, validated in CI)
+│   │   ├── frameworks/               ← 20 frameworks + lab-catalog.tsv
+│   │   ├── presets/                  ← kanban/ · regulated/ (scrum = templates/)
+│   │   ├── scripts/                  ← 12 scripts × (.sh / .ps1): aa, analyze, audit-agile, baseline,
+│   │   │                                check-spec, check-structure, doctor, import-speckit, init,
+│   │   │                                lab-probe, trace, transcript-normalize
+│   │   └── templates/                ← 35 templates
+│   ├── ai-rules/                     ← SKILL.md · README.md · metadata.json
+│   │   ├── frameworks/               ← capabilities.md, docker-lab.md + lab-catalog.tsv
+│   │   └── scripts/                  ← lab-probe (.sh / .ps1, vendored)
+│   ├── devils-advocate/              ← SKILL.md · README.md · metadata.json
+│   │   ├── checklists/               ← 2 internal checklists
+│   │   ├── examples/                 ← 4 reference examples (one per tier)
+│   │   ├── frameworks/               ← 18 frameworks + lab-catalog.tsv
+│   │   └── scripts/                  ← lab-probe (.sh / .ps1, vendored)
+│   └── sar-cybersecurity/            ← SKILL.md · README.md · metadata.json
+│       ├── examples/                 ← 11 reference examples
+│       ├── frameworks/               ← 9 frameworks + lab-catalog.tsv
+│       └── scripts/                  ← lab-probe (.sh / .ps1, vendored)
+├── tests/
+│   └── scripts/                      ← cases.tsv, fixtures/, expected/ goldens,
+│                                        run-parity.sh · .ps1, run-e2e.sh
+├── .gitattributes · .gitignore
 ├── AGENTS.md                         ← AI agent entry point (CLAUDE.md imports it)
 ├── CHANGELOG.md                      ← version history
+├── CLAUDE.md                         ← @AGENTS.md
 ├── LICENSE                           ← MIT
-├── README.md                         ← this file
-├── .claude-plugin/marketplace.json   ← Claude Code marketplace (guard plugin)
-├── .github/workflows/                ← validate.yml (validate, guard tests, parity, skills-audit) · snyk-agent-scan.yml (manual)
-├── .memory/devsecops/                ← Docker lab used on this repo (compose, configs, images.lock); .memory/local/ is ignored
-├── docs/INSTALL.md                   ← per-agent install matrix (single source)
-├── integrations/                     ← optional guards per agent (installed separately, Node ≥ 18)
-│   ├── core/                         ← shared deterministic classifier (+ tests)
-│   ├── sync-core.mjs                 ← vendors core/classifier.mjs into every adapter
-│   └── <agent>/                      ← claude-code, copilot, cursor, gemini-cli, codex, windsurf,
-│                                        cline, kiro, antigravity, opencode, roo
-├── scripts/
-│   ├── validate.sh                   ← quality gate (also in CI)
-│   └── audit-skills.sh / .ps1        ← local skills.sh-equivalent audit (agentskills validate + skill-scanner)
-├── shared/                           ← canonical shared scripts (lab-probe) + sync.sh / sync.ps1
-├── tests/scripts/                    ← .sh / .ps1 parity tests (cases.tsv, fixtures, golden outputs)
-└── skills/
-    ├── devils-advocate/              ← SKILL.md · README.md · metadata.json
-    │   ├── frameworks/               ← 18 frameworks + lab-catalog.tsv
-    │   ├── checklists/               ← 2 internal checklists
-    │   ├── examples/                 ← 4 reference examples (one per tier)
-    │   └── scripts/                  ← lab-probe (.sh / .ps1, vendored)
-    ├── sar-cybersecurity/            ← SKILL.md · README.md · metadata.json
-    │   ├── frameworks/               ← 9 protocol & domain frameworks + lab-catalog.tsv
-    │   ├── examples/                 ← 11 reference examples
-    │   └── scripts/                  ← lab-probe (.sh / .ps1, vendored)
-    ├── ai-rules/                     ← SKILL.md · README.md · metadata.json
-    │   ├── frameworks/               ← capabilities.md, docker-lab.md + lab-catalog.tsv
-    │   └── scripts/                  ← lab-probe (.sh / .ps1, vendored)
-    └── agentic-agile/                ← SKILL.md · README.md · metadata.json
-        ├── frameworks/               ← 13 frameworks (SDD, Gherkin, Scrum, KPIs, delivery, …) + lab-catalog.tsv
-        ├── templates/                ← 29 templates (structure, specs, ceremonies, reports, delivery)
-        ├── examples/                 ← 7 reference examples
-        └── scripts/                  ← 7 scripts × (.sh / .ps1)
+└── README.md                         ← this file
 ```
 
 Each skill is self-contained and independently installable via `@<skill-name>`.
