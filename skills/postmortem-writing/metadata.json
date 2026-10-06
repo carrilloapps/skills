@@ -1,0 +1,39 @@
+{
+  "version": "1.0.0",
+  "author": "José Carrillo",
+  "organization": "carrilloapps",
+  "abstract": "Blameless incident postmortem generator for AI coding agents. Produces bilingual (EN/ES) post-incident reports with a deterministic five-dimension severity rubric, an attributed timeline with explicit evidence gaps, contributing-factor analysis with Confidence levels instead of a single root cause, a quantified detection gap, action items that require an owner role, a due date and a verification step, measured-only incident metrics, and a persistent incident registry (.memory/postmortem-writing/incidents.json). Closes the prevent-assess-learn loop by exporting lessons that devils-advocate consumes as risk evidence.",
+  "keywords": [
+    "postmortem",
+    "post-incident-review",
+    "incident-response",
+    "root-cause-analysis",
+    "rca",
+    "blameless",
+    "incident-report",
+    "timeline-reconstruction",
+    "contributing-factors",
+    "five-whys",
+    "severity-classification",
+    "sev1",
+    "detection-gap",
+    "action-items",
+    "lessons-learned",
+    "mttr",
+    "time-to-detect",
+    "incident-metrics",
+    "sre",
+    "reliability",
+    "observability",
+    "near-miss",
+    "journalctl",
+    "wsl",
+    "kubernetes",
+    "bilingual"
+  ],
+  "references": [
+    "https://github.com/carrilloapps/skills",
+    "https://skills.sh/carrilloapps/skills/postmortem-writing",
+    "https://carrillo.app"
+  ]
+}

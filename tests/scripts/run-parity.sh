@@ -104,5 +104,8 @@ for runner in "${RUNNERS[@]}"; do
     fi
   done <"$HERE/cases.tsv"
 done
+# Scratch dirs are only useful for a failure; leaving thousands of files behind
+# slows every later recursive scan (validate.sh, grep, editors). PARITY_KEEP=1 keeps them.
+if [ $fail -eq 0 ] && [ "${PARITY_KEEP-}" != 1 ]; then rm -rf "$WORK"; fi
 echo "Runners: ${RUNNERS[*]} · $pass passed · $fail failed"
 [ $fail -eq 0 ]

@@ -1,6 +1,6 @@
 # Copilot Instructions
 
-This repository publishes four AI agent skills: **devils-advocate**, **sar-cybersecurity**, **ai-rules**, and **agentic-agile**. A fifth skill (**postmortem-writing**) is planned. `AGENTS.md` is the full agent guide.
+This repository publishes five AI agent skills: **devils-advocate**, **sar-cybersecurity**, **ai-rules**, **agentic-agile**, and **postmortem-writing**. `AGENTS.md` is the full agent guide.
 
 ## Skill load order (required)
 

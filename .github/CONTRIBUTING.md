@@ -2,7 +2,7 @@
 
 Thank you for your interest in improving this skills repository! The collection is built on the idea that adversarial thinking makes software better — and we apply that same principle to contributions: every proposal is welcome, and every concern will be heard.
 
-This repository currently publishes four skills: **devils-advocate**, **sar-cybersecurity**, **ai-rules**, and **agentic-agile**. A fifth skill, **postmortem-writing**, is planned. Each skill is independently versioned and installable.
+This repository publishes five skills: **devils-advocate**, **sar-cybersecurity**, **ai-rules**, **agentic-agile**, and **postmortem-writing**. Each skill is independently versioned and installable.
 
 ---
 

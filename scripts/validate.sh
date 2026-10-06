@@ -27,6 +27,17 @@
 
 set -euo pipefail
 
+# Usage: bash scripts/validate.sh [--with-parity]
+#   --with-parity  also run tests/scripts/run-parity.sh (minutes; CI runs it in its own job)
+WITH_PARITY=0
+for a in "$@"; do
+  case "$a" in
+    --with-parity|-p) WITH_PARITY=1 ;;
+    -h|--help) echo "Usage: bash scripts/validate.sh [--with-parity]"; exit 0 ;;
+    *) echo "validate.sh: unknown option: $a" >&2; exit 3 ;;
+  esac
+done
+
 # Skill version lives in the SKILL.md frontmatter as metadata.version (Agent Skills spec)
 skill_version() {
   awk '/^---[[:space:]]*$/{n++; if (n==2) exit; next}
@@ -64,7 +75,7 @@ while IFS= read -r -d '' file; do
     fail "Odd fence count ($count) in: ${file#$REPO_ROOT/}"
     ((++FENCE_ISSUES))
   fi
-done < <(find "$REPO_ROOT" -name "*.md" -not -path "*/.git/*" -print0)
+done < <(find "$REPO_ROOT" \( -path "*/.git" -o -path "*/.work" -o -path "*/node_modules" -o -path "$REPO_ROOT/.memory/local" \) -prune -o -name "*.md" -print0)
 (( FENCE_ISSUES == 0 )) && ok "All .md files have balanced fences"
 
 # ─── Check 3: Gate blocks in all examples ────────────────────────────────────
@@ -134,7 +145,7 @@ while IFS= read -r -d '' file; do
       ((++STALE_ISSUES))
     fi
   fi
-done < <(find "$REPO_ROOT" -name "*.md" -not -path "*/.git/*" -print0)
+done < <(find "$REPO_ROOT" \( -path "*/.git" -o -path "*/.work" -o -path "*/node_modules" -o -path "$REPO_ROOT/.memory/local" \) -prune -o -name "*.md" -print0)
 (( STALE_ISSUES == 0 )) && ok "No stale text found"
 
 # ─── Check 7: Required GitHub project files ──────────────────────────────────
@@ -293,7 +304,11 @@ SAR_VER=$(skill_version "$SAR_ROOT")
 AIRULES_VER=$(skill_version "$AIRULES_ROOT")
 AA_ROOT="$REPO_ROOT/skills/agentic-agile"
 AA_VER=""; [ -f "$AA_ROOT/SKILL.md" ] && AA_VER=$(skill_version "$AA_ROOT")
-EXTRA_ENTRIES=(); [ -n "$AA_VER" ] && EXTRA_ENTRIES+=("agentic-agile:$AA_VER")
+PM_ROOT="$REPO_ROOT/skills/postmortem-writing"
+PM_VER=""; [ -f "$PM_ROOT/SKILL.md" ] && PM_VER=$(skill_version "$PM_ROOT")
+EXTRA_ENTRIES=()
+[ -n "$AA_VER" ] && EXTRA_ENTRIES+=("agentic-agile:$AA_VER")
+[ -n "$PM_VER" ] && EXTRA_ENTRIES+=("postmortem-writing:$PM_VER")
 for entry in "sar-cybersecurity:$SAR_VER" "ai-rules:$AIRULES_VER" "${EXTRA_ENTRIES[@]}"; do
   name="${entry%%:*}"; ver="${entry#*:}"
   if grep -qF "## $name [$ver]" "$REPO_ROOT/CHANGELOG.md"; then
@@ -479,7 +494,7 @@ while IFS= read -r -d '' file; do
     fail "Stale '40+ agents' wording in ${file#$REPO_ROOT/} (use 70+)"
     ((++COUNT_ISSUES))
   fi
-done < <(find "$REPO_ROOT" \( -name "README.md" -o -name "AGENTS.md" -o -name ".ai-context.md" -o -path "*/docs/*.md" -o -path "*/.github/*.md" \) -not -path "*/.git/*" -print0)
+done < <(find "$REPO_ROOT" \( -path "*/.git" -o -path "*/.work" -o -path "*/node_modules" -o -path "$REPO_ROOT/.memory/local" \) -prune -o \( -name "README.md" -o -name "AGENTS.md" -o -name ".ai-context.md" -o -path "*/docs/*.md" -o -path "*/.github/*.md" \) -print0)
 (( COUNT_ISSUES == 0 )) && ok "No stale agent-count wording in documentation"
 
 # ─── Check 26: Docker lab hygiene (pinned images, localhost ports, no literal passwords) ─
@@ -582,7 +597,30 @@ for f in "$REPO_ROOT"/skills/*/scripts/*.sh "$REPO_ROOT"/skills/*/scripts/*.ps1;
   [ -f "$twin" ] || { fail "No twin for ${f#$REPO_ROOT/} (expected ${twin#$REPO_ROOT/})"; ((++TWIN_ISSUES)); }
 done
 (( TWIN_ISSUES == 0 )) && ok "Every skill script has a .sh and a .ps1 implementation"
-if [ -f "$REPO_ROOT/tests/scripts/run-parity.sh" ]; then
+# The parity suite runs 161 cases in up to 3 shells; it is minutes of work and has
+# its own CI job, so it is NOT run here. This gate only checks that the suite is
+# internally consistent (every case has a golden, every golden has a case).
+# Run the suite itself with: bash tests/scripts/run-parity.sh  (or --with-parity).
+CASES="$REPO_ROOT/tests/scripts/cases.tsv"
+EXP="$REPO_ROOT/tests/scripts/expected"
+if [ -f "$CASES" ] && [ -d "$EXP" ]; then
+  PARITY_ISSUES=0
+  while IFS= read -r row; do
+    row=${row%$'\r'}
+    case "$row" in ''|'#'*) continue ;; esac
+    name=${row%%$'\t'*}
+    [ -f "$EXP/$name.out" ] || { fail "Parity case '$name' has no golden ($EXP/$name.out)"; ((++PARITY_ISSUES)); }
+  done <"$CASES"
+  for g in "$EXP"/*.out; do
+    [ -f "$g" ] || continue
+    n=$(basename "$g" .out)
+    grep -q "^$n"$'\t' "$CASES" || { fail "Golden '$n.out' has no case in cases.tsv"; ((++PARITY_ISSUES)); }
+  done
+  (( PARITY_ISSUES == 0 )) && ok "Parity suite consistent: $(grep -cvE '^#|^$' "$CASES") cases, each with a golden (run the suite separately)"
+fi
+
+if [ "${WITH_PARITY:-0}" = 1 ]; then
+  section "Parity suite (--with-parity)"
   if bash "$REPO_ROOT/tests/scripts/run-parity.sh" >/dev/null 2>&1; then
     ok "tests/scripts/run-parity.sh passed"
   else

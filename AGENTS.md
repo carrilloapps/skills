@@ -1,6 +1,6 @@
 # AGENTS.md
 
-This repository publishes four AI agent skills — **ai-rules**, **devils-advocate**, **sar-cybersecurity**, and **agentic-agile** — as Markdown instruction files (plus dual `.sh`/`.ps1` helper scripts where a skill needs them) distributed through [skills.sh](https://skills.sh) (`npx skills add carrilloapps/skills@<skill-name>`). A fifth skill (**postmortem-writing** — incident postmortem authoring beyond the team flow in agentic-agile (scope pending decision)) is planned.
+This repository publishes five AI agent skills — **ai-rules**, **devils-advocate**, **sar-cybersecurity**, **agentic-agile**, and **postmortem-writing** — as Markdown instruction files (plus dual `.sh`/`.ps1` helper scripts where a skill needs them) distributed through [skills.sh](https://skills.sh) (`npx skills add carrilloapps/skills@<skill-name>`).
 
 ## Skill load order (required)
 

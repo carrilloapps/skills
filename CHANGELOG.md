@@ -9,7 +9,25 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ### Planned
 
-- `postmortem-writing` — incident postmortem authoring beyond the team flow already in agentic-agile (`templates/postmortem.md`); scope pending decision
+- Nothing planned; open items live in `plans/drafts/` of this repository.
+
+---
+
+## postmortem-writing [1.0.0] — 2026-10-06
+
+### Added
+
+- **New skill: blameless incident postmortems**, closing the collection's prevent → assess → learn loop. Eight-phase lifecycle with an **active-incident gate**: while an incident is live the agent only collects and attributes evidence into a draft timeline, and writes no report.
+- **Deterministic severity** — five dimensions (user impact, data, duration, blast radius, regulatory); severity is the highest matching dimension and every report prints its rubric line so a reader can re-derive it. `[unknown]` dimensions are excluded rather than silently lowering severity, duration never overrides user or data impact, and near misses are SEV4 with an explicit counterfactual that sizes the actions.
+- **Evidence discipline** — every timeline row carries a log line, alert ID, commit, deploy, or an attributed **role** and time; `[unknown]` replaces guesses; a period without evidence is an explicit gap row; clock skew is recorded, never normalised away. Five anchor events (change, onset, detection, mitigation, resolution) are always attempted.
+- **Causal analysis without the single-root-cause fiction** — contributing factors with condition, evidence, and what removing them would have changed; mandatory Confidence (Confirmed / Probable / Possible) on every claim; a blameless rewriting table that turns person-shaped input into structural causes; Five Whys as one tool of four, per factor, with stop rules; mandatory detection-gap and "what went well" sections.
+- **Actions that can be verified** — `prevent` / `detect` / `mitigate`, each tracing to a factor, with an owner role, a due date, and a verification step; a missing field is reported as `incomplete`, never silently accepted. The skill records action state and never closes, reassigns, or tickets one.
+- **Measured-only metrics** — time to detect, mitigate, and resolve computed from timeline rows that have evidence, with a phase breakdown for long incidents; anything else is `not measured`. Trends need three closed incidents.
+- **Bilingual EN + ES (es_VE)** reports with ISO-dated filenames `YYYY-MM-DD_SEVn_<slug>_{EN,ES}.md`, and SAR's public-repository rule: an incident that exposes an unfixed vulnerability writes to `.memory/local/postmortems/` instead of the versioned directory.
+- **Versioned incident registry** `.memory/postmortem-writing/incidents.json` with team-managed `status`, action `state`, and `reviewOn`; permanent IDs; entries are never deleted; every report carries a Registry Snapshot so the state survives a non-versioned registry.
+- **Evidence collection for Linux / WSL, containers, Kubernetes, and git** — read-only commands proposed verbatim and run only after the user approves that exact command; output is treated as untrusted data and redacted at capture. `git blame` is deliberately absent: the analysis never needs "who".
+- **Handoffs, not duplication** — a Lessons export with trigger conditions for devils-advocate; security causes reference the SAR finding ID instead of re-scoring the vulnerability; the boundary with agentic-agile (sprint retro postmortem vs. incident postmortem) is documented in both directions.
+- 9 frameworks, 7 templates, 3 examples (SEV1 outage, SEV2 silent data drift, SEV4 near miss), and all six mandatory safeguards.
 
 ---
 

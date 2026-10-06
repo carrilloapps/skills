@@ -111,6 +111,11 @@ foreach ($runner in $Runners) {
     else { $fail++; Write-Output "$n. FAIL $label - $name - $why" }
   }
 }
+# Scratch dirs are only useful for a failure; leaving thousands of files behind
+# slows every later recursive scan. Set PARITY_KEEP=1 to keep them.
+if ($fail -eq 0 -and $env:PARITY_KEEP -ne '1' -and (Test-Path -LiteralPath $Work)) {
+  Remove-Item -LiteralPath $Work -Recurse -Force -ErrorAction SilentlyContinue
+}
 Write-Output "Runners: $($Runners -join ' ') - $pass passed - $fail failed"
 if ($fail -gt 0) { exit 1 }
 exit 0

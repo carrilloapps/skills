@@ -1,6 +1,6 @@
 # Installing carrilloapps/skills in any agent
 
-Single source of truth for installing `ai-rules`, `devils-advocate`, `sar-cybersecurity`, and `agentic-agile` in every supported AI coding agent. Skill READMEs link here.
+Single source of truth for installing `ai-rules`, `devils-advocate`, `sar-cybersecurity`, `agentic-agile`, and `postmortem-writing` in every supported AI coding agent. Skill READMEs link here, and the root [README](../README.md#install-per-tool) carries the per-tool install commands.
 
 > **Before installing**: review the source at [github.com/carrilloapps/skills](https://github.com/carrilloapps/skills) and the latest audit results at [skills.sh/audits](https://skills.sh/audits). The commands below fetch content from a remote repository.
 
@@ -11,7 +11,7 @@ Legend: ✅ verified in the agent's official docs or the [`skills` CLI README](h
 ## 1. Install with the `skills` CLI (recommended)
 
 ```bash
-# All four skills, every agent detected in the current project
+# All five skills, every agent detected in the current project
 npx skills add carrilloapps/skills
 
 # One skill
@@ -77,7 +77,8 @@ Verified with `skills` CLI 1.7.0 (`npx skills add carrilloapps/skills -a claude-
 | Kiro (IDE + CLI) ✅ | `kiro-cli` | `.kiro/skills/` | `~/.kiro/skills/` | `.kiro/steering/*.md` | [`kiro/`](../integrations/kiro/) (experimental) |
 | Amp ✅ | `amp` | `.agents/skills/` | `~/.config/agents/skills/` | `AGENTS.md` ⚠️ | — |
 | Replit ✅ | `replit` | `.agents/skills/` | `~/.config/agents/skills/` | `AGENTS.md` ⚠️ | — |
-| Kimi Code CLI | `kimi-code-cli` | see CLI table ⚠️ | see CLI table ⚠️ | ⚠️ | — |
+| Grok Build ✅ | `grok` | `.grok/skills/` | `~/.grok/skills/` | ⚠️ not documented in the CLI table | — |
+| Zed · Warp · Kimi Code CLI · Dexto · Loaf · Pi · Sarvam Code ✅ | `zed` · `warp` · `kimi-code-cli` · `dexto` · `loaf` · `pi` · `sarvam-code` | `.agents/skills/` | `~/.agents/skills/` | `AGENTS.md` ⚠️ | — |
 | Others (Continue, Goose, Augment, Droid, Kilo Code, OpenHands, Trae, Zed, Warp, Junie, Qwen Code, Zencoder, …) | see [CLI table](https://github.com/vercel-labs/skills) | ⚠️ | ⚠️ | mostly `AGENTS.md` ⚠️ | — |
 
 ### Agent notes
@@ -98,7 +99,7 @@ Verified with `skills` CLI 1.7.0 (`npx skills add carrilloapps/skills -a claude-
 ## 3. Manual install (no CLI)
 
 1. Clone the repository: `git clone https://github.com/carrilloapps/skills.git`
-2. From the clone root, copy (or symlink) `skills/<skill-name>/` into the agent's project or global skills path from the table (for example `cp -r skills/agentic-agile .agents/skills/`). **The folder name must equal the skill `name`** (`devils-advocate`, `sar-cybersecurity`, `ai-rules`, `agentic-agile`) — Cursor requires it.
+2. From the clone root, copy (or symlink) `skills/<skill-name>/` into the agent's project or global skills path from the table (for example `cp -r skills/agentic-agile .agents/skills/`). **The folder name must equal the skill `name`** (`devils-advocate`, `sar-cybersecurity`, `ai-rules`, `agentic-agile`, `postmortem-writing`) — Cursor requires it.
 3. For an agent without native skill support, add one line to its always-on instruction file pointing at the skill, for example in `AGENTS.md`:
 
    ```markdown
