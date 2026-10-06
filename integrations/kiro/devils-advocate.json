@@ -1,0 +1,12 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "devils-advocate-guard",
+      "trigger": "PreToolUse",
+      "matcher": "fs_write|str_replace|execute_bash|shell|write|@.*",
+      "action": { "type": "command", "command": "node .kiro/hooks/devils-advocate/guard.mjs" },
+      "timeout": 10
+    }
+  ]
+}

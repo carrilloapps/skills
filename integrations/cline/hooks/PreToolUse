@@ -1,0 +1,3 @@
+#!/bin/sh
+# Cline PreToolUse hook (macOS/Linux): forwards the event to the Devil's Advocate guard.
+exec node "$(dirname "$0")/devils-advocate/guard.mjs"

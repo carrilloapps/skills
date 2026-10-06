@@ -1,0 +1,5 @@
+check-spec — agile-project/specs/good
+1. error plans/initiatives/good/tickets/02-no-qa.md [ticket-qa] work item without a QA test cases section
+2. error plans/initiatives/good/tickets/02-no-qa.md:6 [scenario-steps] scenario without When, Then step(s)
+3. error plans/initiatives/good/tickets/02-no-qa.md:10 [checkbox] checkbox list item; use numbered or lettered items with a state
+Result: 3 error(s), 0 warning(s) — FAIL

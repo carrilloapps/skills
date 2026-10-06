@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "hooks": {
+    "beforeShellExecution": [
+      { "command": "node .cursor/hooks/devils-advocate/guard.mjs shell", "timeout": 10, "failClosed": true }
+    ],
+    "beforeMCPExecution": [
+      { "command": "node .cursor/hooks/devils-advocate/guard.mjs mcp", "timeout": 10, "failClosed": true }
+    ],
+    "preToolUse": [
+      {
+        "command": "node .cursor/hooks/devils-advocate/guard.mjs tool",
+        "matcher": "Write|StrReplace|Edit|MultiEdit|Delete|EditNotebook",
+        "timeout": 10,
+        "failClosed": true
+      }
+    ]
+  }
+}

@@ -1,0 +1,4 @@
+check-spec — aa-spec2/nocheck
+1. warning spec.md:13 [scenario-priority] scenario without a priority tag (@P1, @P2 or @P3)
+2. warning requirements-checklist.md [checklist-missing] requirements-checklist.md missing (required before Phase 2 under --strict)
+Result: 0 error(s), 2 warning(s) — WARN

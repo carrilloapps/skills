@@ -1,0 +1,14 @@
+# discovered catalog
+id	skill	criticality	ram_mb	disk_mb	kind	profile	compose	signals	requires	notes
+t-secrets	test-skill	100	256	150	scanner	secrets	.memory/devsecops/compose.t.yaml	*		CLI route: gitleaks dir . --redact
+t-sast	test-skill	95	1024	900	scanner	sast	.memory/devsecops/compose.t.yaml	*.js,*.py		
+t-sca	test-skill	90	512	200	scanner	sca	.memory/devsecops/compose.t.yaml	package-lock.json,go.sum		stdout "scanner" with a back\slash
+t-ci	test-skill	88	128	50	scanner	ci	.memory/devsecops/compose.t.yaml	.github/workflows/*.yml		
+t-db	test-skill	68	128	100	scanner	db	.memory/devsecops/compose.t.yaml	**/migrations/**/*.sql		
+t-iac	test-skill	85	1024	700	scanner	iac	.memory/devsecops/compose.t.yaml	*.tf		
+t-go	test-skill	60	1536	1500	scanner	go	.memory/devsecops/compose.t.yaml	*.go		
+t-tie-b	test-skill	50	256	10	scanner	x	.memory/devsecops/compose.t.yaml	*		
+t-tie-a	test-skill	50	256	10	scanner	x	.memory/devsecops/compose.t.yaml	*		
+t-cpu	test-skill	45	64	10	scanner	x	.memory/devsecops/compose.t.yaml	*	cpus>=64	
+t-sonar	test-skill	15	4096	2500	dashboard	sonarqube	.memory/devsecops/compose.t.yaml	*	max_map_count>=524288	http://127.0.0.1:9000
+t-dojo	test-skill	10	3072	3000	dashboard	defectdojo	.memory/devsecops/compose.t.yaml	*		

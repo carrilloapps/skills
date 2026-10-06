@@ -1,0 +1,29 @@
+check-structure — structure/partial
+1. error plans/drafts/ [missing-dir] missing directory (run scripts/init)
+2. error plans/agile/ceremonies.md:9 [placeholder] unfilled template placeholder(s): <days, time>, <role>, <yes/no>
+3. error plans/agile/ceremonies.md:10 [placeholder] unfilled template placeholder(s): <day>, <role>, <yes/no>
+4. error plans/agile/ceremonies.md:11 [placeholder] unfilled template placeholder(s): <day>, <role>, <yes/no>
+5. error plans/agile/ceremonies.md:12 [placeholder] unfilled template placeholder(s): <day>, <role>, <yes/no>
+6. error plans/agile/ceremonies.md:13 [placeholder] unfilled template placeholder(s): <day>, <role>, <yes/no>
+7. warning plans/agile/ceremonies.md [unconfirmed] mentions Proposed values but has no 'Confirmed by:' line
+8. error plans/agile/capabilities.md:11 [content] slot 'Tracker' has no tool, 'none' or 'not applicable'
+9. error plans/agile/capabilities.md:12 [content] slot 'Docs' has no tool, 'none' or 'not applicable'
+10. error plans/agile/capabilities.md:13 [content] slot 'Chat' has no tool, 'none' or 'not applicable'
+11. error plans/agile/capabilities.md:14 [content] slot 'Observability' has no tool, 'none' or 'not applicable'
+12. error plans/agile/capabilities.md:15 [content] slot 'Transcript source' has no tool, 'none' or 'not applicable'
+13. error plans/agile/capabilities.md:16 [content] slot 'Warehouse / semantic layer' has no tool, 'none' or 'not applicable'
+14. error plans/agile/capabilities.md:17 [content] slot 'Code graph' has no tool, 'none' or 'not applicable'
+15. error plans/agile/capabilities.md:18 [content] slot 'Doc / memory graph' has no tool, 'none' or 'not applicable'
+16. error plans/agile/kpi-directives.md [missing-file] missing file (run scripts/init, then complete it with the team)
+17. error plans/agile/autonomy.md:24 [placeholder] unfilled template placeholder(s): <phase: 1 Capture, 2 Draft and question or 3 Write into the tools>, <YYYY-MM-DD>
+18. error plans/agile/autonomy.md:28 [content] precondition 'Transcription active in recurring ceremonies' has no status
+19. error plans/agile/autonomy.md:29 [content] precondition 'Programmatic access to transcripts' has no status
+20. error plans/agile/autonomy.md:30 [content] precondition 'Retention and classification policy' has no status
+21. error plans/agile/autonomy.md:31 [content] precondition 'Recording consent announced' has no status
+22. error plans/agile/autonomy.md:32 [content] precondition 'Pilot scope agreed' has no status
+23. error plans/agile/autonomy.md:33 [content] precondition 'Third-party capabilities authorized' has no status
+24. error plans/agile/autonomy.md:34 [content] precondition 'Baseline over two full cycles' has no status
+25. warning plans/agile/autonomy.md [unconfirmed] mentions Proposed values but has no 'Confirmed by:' line
+26. error plans/agile/constitution.md [missing-file] missing file (run scripts/init, then complete it with the team)
+Result: 24 error(s), 2 warning(s) — FAIL
+Phase 0 gate: closed. Do not create specs, plans, drafts, sprint artifacts, tickets or decision records; complete the items above with the team first.

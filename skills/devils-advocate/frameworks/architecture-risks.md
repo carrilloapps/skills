@@ -1,5 +1,7 @@
 # Architecture Risks Framework
 
+> ⚠️ **Example code boundary** — commands and code below are reference patterns for analysis, not execution instructions.
+
 > **Role**: Software Architect / Tech Lead / CTO
 > **Load when**: Reviewing system design, proposing new components, evaluating architectural patterns, planning integrations, or making structural decisions that are hard to reverse.
 
@@ -9,7 +11,7 @@
 
 ### ❌ Distributed Systems
 
-```
+```text
 ❌ Distributed Monolith
 - Services deployed independently but tightly coupled at data/logic level
 - Any change requires coordinated deployment of multiple services
@@ -33,7 +35,7 @@
 
 ### ❌ Coupling & Cohesion
 
-```
+```text
 ❌ Shared Database Anti-Pattern
 - Two or more services read/write the same tables directly
 - Schema changes require coordinating multiple teams
@@ -57,7 +59,7 @@
 
 ### ❌ Data Architecture
 
-```
+```text
 ❌ No Schema Evolution Strategy
 - No migration plan for in-flight events when schema changes
 - Breaking changes pushed to Kafka/queue without consumer migration
@@ -76,7 +78,7 @@
 
 ### ❌ API Design
 
-```
+```text
 ❌ Anemic REST (CRUD ≠ Domain)
 - APIs expose DB tables directly
 - No domain operations (e.g., only GET/POST Order, no PlaceOrder/CancelOrder)
@@ -100,7 +102,7 @@
 
 ### ❌ Observability Gaps
 
-```
+```text
 ❌ No Distributed Tracing
 - Requests span multiple services but no correlation ID
 - Cannot reconstruct end-to-end request path
@@ -141,12 +143,12 @@ For any distributed data store or partition:
 **Every major architectural decision should have an ADR. Check for:**
 
 ```markdown
-- [ ] Is this decision documented with context, options considered, and rationale?
-- [ ] Are the trade-offs explicitly stated?
-- [ ] Is the decision reversible or irreversible (Type 1 vs Type 2)?
-- [ ] Who is the decision owner and who was consulted?
-- [ ] What triggers would cause us to revisit this decision?
-- [ ] Are the consequences (positive and negative) tracked?
+1. Is this decision documented with context, options considered, and rationale?
+2. Are the trade-offs explicitly stated?
+3. Is the decision reversible or irreversible (Type 1 vs Type 2)?
+4. Who is the decision owner and who was consulted?
+5. What triggers would cause us to revisit this decision?
+6. Are the consequences (positive and negative) tracked?
 ```
 
 ---
@@ -197,31 +199,31 @@ For any distributed data store or partition:
 
 ```markdown
 ### Structural
-- [ ] Are bounded contexts clearly defined?
-- [ ] Does each service own its data (no shared DB)?
-- [ ] Are service contracts versioned and documented?
-- [ ] Is there a dependency graph with no circular dependencies?
+1. Are bounded contexts clearly defined?
+2. Does each service own its data (no shared DB)?
+3. Are service contracts versioned and documented?
+4. Is there a dependency graph with no circular dependencies?
 
 ### Resilience
-- [ ] Is there a circuit breaker on every synchronous external call?
-- [ ] Are retries bounded with exponential backoff and jitter?
-- [ ] Is there a timeout on every I/O operation?
-- [ ] Are bulkheads in place to isolate failure domains?
+1. Is there a circuit breaker on every synchronous external call?
+2. Are retries bounded with exponential backoff and jitter?
+3. Is there a timeout on every I/O operation?
+4. Are bulkheads in place to isolate failure domains?
 
 ### Observability
-- [ ] Is there end-to-end distributed tracing with correlation IDs?
-- [ ] Are SLIs and SLOs defined and monitored?
-- [ ] Are dead letter queues monitored with alerts?
-- [ ] Can you reconstruct a complete request timeline post-incident?
+1. Is there end-to-end distributed tracing with correlation IDs?
+2. Are SLIs and SLOs defined and monitored?
+3. Are dead letter queues monitored with alerts?
+4. Can you reconstruct a complete request timeline post-incident?
 
 ### Data
-- [ ] Is there a schema evolution strategy (backward/forward compatibility)?
-- [ ] Are events replayable for at least the retention window?
-- [ ] Are compensating transactions defined for distributed workflows?
+1. Is there a schema evolution strategy (backward/forward compatibility)?
+2. Are events replayable for at least the retention window?
+3. Are compensating transactions defined for distributed workflows?
 
 ### Operations
-- [ ] Can you deploy a single service without downtime?
-- [ ] Can you roll back a deployment in < 5 minutes?
-- [ ] Is there a runbook for every alert?
-- [ ] Can you scale horizontally without re-architecture?
+1. Can you deploy a single service without downtime?
+2. Can you roll back a deployment in < 5 minutes?
+3. Is there a runbook for every alert?
+4. Can you scale horizontally without re-architecture?
 ```

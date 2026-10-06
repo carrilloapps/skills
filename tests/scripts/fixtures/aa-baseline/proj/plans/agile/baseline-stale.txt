@@ -1,0 +1,6 @@
+# agentic-agile baseline — accepted findings (tool|rule|file|message), one per line.
+# Regenerate with scripts/baseline --write; scripts/baseline --check fails only on findings not listed here.
+analyze|ambiguous-term|specs/export/spec.md|FR-002 uses ambiguous term(s) without a measurable criterion: fast
+trace|fr-no-test|specs/export/spec.md|FR-001 is not referenced by any test file
+trace|fr-no-test|specs/export/spec.md|FR-002 is not referenced by any test file
+check-spec|missing-section|specs/export/spec.md|missing section: Problem

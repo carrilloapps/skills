@@ -1,0 +1,12 @@
+{
+  "name": "carrilloapps-skills",
+  "description": "Optional enforcement plugins for the carrilloapps/skills agent skills",
+  "owner": { "name": "José Carrillo", "url": "https://carrillo.app" },
+  "plugins": [
+    {
+      "name": "devils-advocate-guard",
+      "source": "./integrations/claude-code",
+      "description": "Deterministic risk-tier guard that forces a confirmation before side-effecting tool calls"
+    }
+  ]
+}

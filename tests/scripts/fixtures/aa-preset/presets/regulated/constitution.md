@@ -1,0 +1,3 @@
+# constitution
+
+Regulated preset fixture.

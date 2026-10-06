@@ -1,0 +1,5 @@
+aa plan — specs/ready
+1. create specs/ready/design.md
+2. create specs/ready/domain-model.md
+3. create specs/ready/requirements-checklist.md
+Next: fill design.md (8 elements), domain-model.md and requirements-checklist.md, then run: aa tasks ready

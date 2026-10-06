@@ -1,0 +1,3 @@
+check-spec — specs/warn
+1. warning spec.md:14 [scenario-origin] scenario without Origin:/Origen: line
+Result: 0 error(s), 1 warning(s) — PASS

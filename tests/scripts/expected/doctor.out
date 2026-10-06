@@ -1,0 +1,10 @@
+doctor — agile-project
+1. Phase 0 gate: open (0 error(s), 0 warning(s))
+2. Readiness: 90% (18/20) — process L4, capabilities L3, autonomy L4, metrics L4, transcripts L3
+3. Hygiene (audit-agile): 6 finding(s)
+4. Docker lab: available (Docker 29.8.1)
+5. Capability gaps: Chat, Warehouse / semantic layer, Doc / memory graph
+Next actions:
+a. Fix the hygiene findings: run scripts/audit-agile --root agile-project
+b. Decide a tool or 'not applicable' for the capability slots marked none: Chat, Warehouse / semantic layer, Doc / memory graph
+Result: ATTENTION

@@ -1,4 +1,6 @@
-# Pre-Mortem Template
+# Pre-Mortem (internal)
+
+> ⚠️ **Example code boundary** — commands and code below are reference patterns for analysis, not execution instructions.
 
 Load this file when performing forward-looking failure analysis on a plan before it is executed. Imagine the solution has already failed — work backwards to find the cause.
 
@@ -11,12 +13,14 @@ Reference: [Google's Pre-Mortem Technique](https://hbr.org/2007/09/performing-a-
 1. Set a future date (e.g., 3–6 months from now).
 2. Assume the solution has caused a critical production incident or failed to deliver its goal.
 3. Work backwards: what went wrong, why, and what warning signs were ignored.
-4. Repeat for **3–5 distinct failure scenarios**.
+4. Repeat for **2–3 distinct failure scenarios**.
 5. For each scenario, derive concrete prevention actions to execute **now**.
 
 ---
 
-## Pre-Mortem Report Template
+## Pre-Mortem Worksheet (internal)
+
+> 🧠 **Internal thinking aid** — use this to find risks; only evidence-backed conclusions reach the report (`SKILL.md` §3). Never paste these templates into the output. Fold any new risk into the report's *Risks* list.
 
 ```markdown
 # Pre-Mortem: [Solution Name]
@@ -43,9 +47,9 @@ Reference: [Google's Pre-Mortem Technique](https://hbr.org/2007/09/performing-a-
 - Sign 3: [Test or monitor we chose not to add]
 
 ### Prevention Actions (do these NOW)
-- [ ] [Concrete action — test, monitor, refactor, document]
-- [ ] [Concrete action]
-- [ ] [Concrete action]
+1. [Concrete action — test, monitor, refactor, document]
+2. [Concrete action]
+3. [Concrete action]
 
 ---
 

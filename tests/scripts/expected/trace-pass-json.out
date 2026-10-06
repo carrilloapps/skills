@@ -1,0 +1,1 @@
+{"root":"aa-trace/pass","specs":[{"spec":"specs/login","matrix":[{"id":"FR-001","kind":"FR","scenarios":1,"tasks":1,"tickets":1,"tests":1,"verify":"✅"},{"id":"FR-002","kind":"FR","scenarios":1,"tasks":1,"tickets":1,"tests":1,"verify":"⚠"},{"id":"SC-001","kind":"SC","mapped":true}]}],"findings":[],"errors":0,"warnings":0,"strict":false,"exit":0}

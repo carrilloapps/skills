@@ -1,0 +1,37 @@
+== input/call.srt
+1
+00:00:01,000 --> 00:00:02,000
+Ana: Hola, equipo
+
+2
+00:00:03,000 --> 00:00:05,500
+Sin hablante identificado
+con token: ghp_abcdefghijklmnopqrstuvwxyz0123
+
+== input/meeting.vtt
+﻿WEBVTT
+
+NOTE this block is ignored
+
+intro-1
+00:00:01.000 --> 00:00:04.500 align:start
+<v Ana Pérez>We ship Friday. Mail me at ana@example.com</v>
+
+00:05.250 --> 00:07.000
+<v.lead Luis>Card 4111 1111 1111 1111 and phone +58 412-555-0199
+
+00:00:08.000 --> 00:00:10.000
+Carlos: api_key=EXAMPLE-NOT-A-REAL-KEY-0000 and IBAN DE89370400440532013000
+second line of the same cue
+
+== input/notes.txt
+Ana: kickoff starts
+Luis: write to luis@example.org
+
+Just a line without speaker
+
+== out/meeting.jsonl
+{"speaker":"Ana Pérez","start":"00:00:01.000","end":"00:00:04.500","text":"We ship Friday. Mail me at [REDACTED_EMAIL]","source":"meeting.vtt"}
+{"speaker":"Luis","start":"00:00:05.250","end":"00:00:07.000","text":"Card [REDACTED_CARD] and phone [REDACTED_PHONE]","source":"meeting.vtt"}
+{"speaker":"Carlos","start":"00:00:08.000","end":"00:00:10.000","text":"[REDACTED_SECRET] and IBAN [REDACTED_IBAN] second line of the same cue","source":"meeting.vtt"}
+{"summary":{"source":"meeting.vtt","format":"vtt","cues":3,"redactions":{"secret":1,"email":1,"iban":1,"card":1,"phone":1}}}

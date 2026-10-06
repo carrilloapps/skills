@@ -1,0 +1,4 @@
+# paths that must not count as stack signals
+legacy/
+
+docs/migrations/*.sql

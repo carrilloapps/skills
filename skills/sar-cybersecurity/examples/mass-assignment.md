@@ -29,18 +29,50 @@ An endpoint calls a database update method with the full request body without fi
 
 ### [88] — Mass Assignment + IDOR on User Update Endpoint
 
-- **Description**: `PATCH /users/:id` passes the full request body to the database update method without field filtering. Any authenticated user can modify any field (including privilege, admin status, and financial fields) on any user account (IDOR — no ownership check).
-- **Affected Component(s)**: `src/users/users.controller.ts:45`, `src/users/users.service.ts:30`
-- **Evidence**: Authenticated request to update another user's record with privilege-escalation fields — target user elevated to admin with modified financial data. No ownership verification, no field allowlist at any layer.
-- **Standards Violated**: OWASP Top 10 (A01:2021 Broken Access Control, A04:2021 Insecure Design), ISO 27001 A.9.4 (System Access Control), NIST SP 800-53 AC-6 (Least Privilege), PCI-DSS Req. 7.1, SOC 2 CC6.1
-- **MITRE ATT&CK**: T1098 (Account Manipulation), T1548 (Abuse Elevation Control Mechanism)
-- **Score**: **88** (High) — authenticated endpoint (not public, reducing from Critical), but privilege escalation + IDOR on financial data confirmed.
-- **Suggested Mitigation Actions**:
-  1. **Immediate**: Add ownership check — verify the authenticated user owns the target record or has admin privileges
-  2. **Field allowlist**: Replace raw body passthrough with a utility that picks only user-editable fields before passing to the update method
-  3. **Create a DTO**: Use validation decorators with explicit exclusion of privilege and financial fields
-  4. **Separate admin endpoint**: Create a dedicated admin route with explicit admin guard for privileged field modifications
-  5. **Audit trail**: Log all user update operations with before/after field values
+| Field | Value |
+|-------|-------|
+| Registry ID | F01 (new) |
+| Score | 88 (High) |
+| Confidence | Confirmed — traced JWT guard → controller → `findByIdAndUpdate(id, body)`; schema fields verified writable |
+| Impact classification | Integrity (privilege escalation) + data exfiltration |
+| CVSS v4.0 | `CVSS:4.0/AV:N/AC:L/AT:N/PR:L/UI:N/VC:H/VI:H/VA:N/SC:N/SI:N/SA:N` |
+| CWE | CWE-915 (Mass Assignment), CWE-639 (Authorization Bypass Through User-Controlled Key) |
+| MITRE ATT&CK | T1098 (Account Manipulation), T1548 (Abuse Elevation Control Mechanism) |
+| Effort | S (< 1 day) |
+| Affected | `src/users/users.controller.ts:45`, `src/users/users.service.ts:30` |
+
+**Description** — `PATCH /users/:id` writes the full request body to any user record. Any logged-in user can change any account's role, admin flag, or balance.
+
+**Evidence / Trace** — see Assessment Trace above.
+
+**Attack Scenario**
+
+1. A user registers a normal account and logs in.
+2. They send `PATCH /users/<their-id>` with an extra admin flag in the body — they are now admin.
+3. They send `PATCH /users/<victim-id>` changing the victim's financial fields — no ownership check stops it.
+
+**Score Justification**
+`Base 80 −10 (auth) +10 (write + privilege escalation, D2 capped at +10) +8 (financial) = 88 (cap: none) → Final 88`
+
+**Standards Violated** — OWASP Top 10:2025 (A01 Broken Access Control, A06 Insecure Design), ISO/IEC 27001:2022 A.5.15 & A.8.3, NIST SP 800-53 AC-6, PCI DSS v4.0.1 Req. 7, SOC 2 CC6.1
+
+**Fix**
+
+```diff
+  async update(@Param('id') id: string, @Body() body: UpdateUserDto, @Req() req) {
+-   return this.usersService.update(id, body);
++   if (req.user.id !== id) throw new ForbiddenException();
++   const { displayName, avatarUrl, bio } = body; // allowlist — no role/isAdmin/balance
++   return this.usersService.update(id, { displayName, avatarUrl, bio });
+  }
+```
+
+Follow-up (not in Effort): separate admin endpoint with an admin guard for privileged fields; audit log with before/after values.
+
+**How to Verify the Fix**
+
+- Integration test: user A patching user B returns 403.
+- Integration test: user A patching self with `isAdmin: true` returns 200 and `isAdmin` stays `false` in the database.
 
 ## Key Principles Demonstrated
 

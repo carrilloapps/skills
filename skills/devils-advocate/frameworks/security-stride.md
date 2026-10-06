@@ -2,7 +2,7 @@
 
 > **Role**: Developer / Security Engineer / AppSec / Tech Lead
 > **Load when**: The plan involves authentication, authorization, data handling, APIs, cryptography, secrets, supply chain, or infrastructure security.
-> **Always paired with**: `frameworks/vulnerability-patterns.md` for anti-patterns and known failure modes; `frameworks/building-protocol.md` when code is involved.
+> **See also** (load only if it changes the analysis): `frameworks/vulnerability-patterns.md` for known failure modes; `frameworks/building-protocol.md` when code is involved.
 
 Reference: [STRIDE Threat Modeling](https://docs.microsoft.com/en-us/azure/security/develop/threat-modeling-tool-threats) | [OWASP Top 10](https://owasp.org/www-project-top-ten/)
 
@@ -15,6 +15,7 @@ For each component under review, complete the following:
 ## Component: [Name]
 
 ### S — Spoofing
+
 **Threat**: Attacker impersonates legitimate user/service  
 **Attack Vector**: [How]  
 **Mitigation**: [What we do]  
@@ -22,6 +23,7 @@ For each component under review, complete the following:
 **Severity**: 🔴 / 🟠 / 🟡
 
 ### T — Tampering
+
 **Threat**: Attacker modifies data in transit or at rest  
 **Attack Vector**: [How]  
 **Mitigation**: [What we do]  
@@ -29,6 +31,7 @@ For each component under review, complete the following:
 **Severity**: 🔴 / 🟠 / 🟡
 
 ### R — Repudiation
+
 **Threat**: User denies an action they performed  
 **Attack Vector**: [How]  
 **Mitigation**: [What we do — audit logs, signatures, non-repudiation tokens]  
@@ -36,6 +39,7 @@ For each component under review, complete the following:
 **Severity**: 🔴 / 🟠 / 🟡
 
 ### I — Information Disclosure
+
 **Threat**: Unauthorized access to sensitive data  
 **Attack Vector**: [How]  
 **Mitigation**: [What we do]  
@@ -43,6 +47,7 @@ For each component under review, complete the following:
 **Severity**: 🔴 / 🟠 / 🟡
 
 ### D — Denial of Service
+
 **Threat**: Service becomes unavailable  
 **Attack Vector**: [How — flood, resource exhaustion, deadlock, malformed input]  
 **Mitigation**: [What we do — rate limiting, circuit breakers, input limits]  
@@ -50,6 +55,7 @@ For each component under review, complete the following:
 **Severity**: 🔴 / 🟠 / 🟡
 
 ### E — Elevation of Privilege
+
 **Threat**: Normal user gains admin or unauthorized access  
 **Attack Vector**: [How]  
 **Mitigation**: [What we do — RBAC, least privilege, defense in depth]  
@@ -58,7 +64,9 @@ For each component under review, complete the following:
 
 ---
 
-## STRIDE Quick Summary (for report output)
+## STRIDE Quick Sweep (internal)
+
+> 🧠 **Internal thinking aid** — use this to find risks; only evidence-backed conclusions reach the report (`SKILL.md` §3). Never paste these templates into the output. Only rows with a real, evidenced gap become Risks.
 
 | Threat | Risk | Mitigation in place | Gap |
 |--------|------|---------------------|-----|

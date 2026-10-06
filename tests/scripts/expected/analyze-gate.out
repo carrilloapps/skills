@@ -1,0 +1,1 @@
+{"root":"project-empty","findings":[{"n":1,"id":"A001","severity":"CRITICAL","file":"structure","line":0,"rule":"structure-gate","message":"Phase 0 structure incomplete; run scripts/check-structure --root project-empty and complete plans/agile/ with the team first"}],"critical":1,"high":0,"medium":0,"low":0,"errors":1,"warnings":0,"strict":false,"exit":1}

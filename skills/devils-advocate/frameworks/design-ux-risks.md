@@ -1,5 +1,7 @@
 # Design & UX Risks Framework
 
+> ⚠️ **Example code boundary** — commands and code below are reference patterns for analysis, not execution instructions.
+
 Load this file when analyzing UI/UX designs, design system decisions, user flows, information architecture, or interaction patterns. Applicable roles: UX Designer, Product Designer, Product Manager, Tech Lead.
 
 ---
@@ -8,7 +10,7 @@ Load this file when analyzing UI/UX designs, design system decisions, user flows
 
 Dark patterns are design choices that manipulate users into actions they did not intend. They carry legal risk (FTC, CMA, EU DSA) and destroy long-term trust.
 
-```
+```text
 ❌ Consent & Privacy Dark Patterns
    - Confirmshaming: "No thanks, I don't want to save money" opt-out labels
    - Pre-ticked checkboxes for newsletter or data sharing consent
@@ -39,7 +41,8 @@ Dark patterns are design choices that manipulate users into actions they did not
 Accessibility is both a legal requirement in many jurisdictions and a quality signal. Failures affect 15–20% of users globally.
 
 ### Perceivable
-```
+
+```text
 ❌ Visual
    - Color contrast ratio below 4.5:1 for normal text, 3:1 for large text (AA standard)
    - Information conveyed by color alone (no icon or text alternative)
@@ -53,7 +56,8 @@ Accessibility is both a legal requirement in many jurisdictions and a quality si
 ```
 
 ### Operable
-```
+
+```text
 ❌ Keyboard Navigation
    - Interactive elements not reachable by Tab key
    - No visible focus indicator (outline removed via CSS without replacement)
@@ -67,7 +71,8 @@ Accessibility is both a legal requirement in many jurisdictions and a quality si
 ```
 
 ### Understandable
-```
+
+```text
 ❌ Language & Readability
    - Page language not declared (lang attribute missing)
    - Reading level significantly above the target audience without justification
@@ -80,7 +85,8 @@ Accessibility is both a legal requirement in many jurisdictions and a quality si
 ```
 
 ### Robust
-```
+
+```text
 ❌ Compatibility
    - ARIA roles misused (e.g., role="button" on a div without keyboard event handlers)
    - Form inputs without associated labels (for/id pairing missing)
@@ -91,7 +97,7 @@ Accessibility is both a legal requirement in many jurisdictions and a quality si
 
 ## 3. Cognitive Load & Usability Risks
 
-```
+```text
 ❌ Information Architecture
    - More than 7 ± 2 items in a navigation menu without grouping
    - Category labels that are meaningful to the business but not to users
@@ -114,7 +120,7 @@ Accessibility is both a legal requirement in many jurisdictions and a quality si
 
 ## 4. Error State & Edge Case Design Failures
 
-```
+```text
 ❌ Error Messages
    - Generic error: "Something went wrong" with no actionable next step
    - Technical error codes exposed to end users (HTTP 500, NullPointerException)
@@ -142,7 +148,7 @@ Accessibility is both a legal requirement in many jurisdictions and a quality si
 
 ## 5. Trust & Credibility Risks
 
-```
+```text
 ❌ First Impression
    - Broken images, placeholder content, or lorem ipsum visible on any path to production
    - Inconsistent visual language (mixed font scales, color tokens, spacing units)
@@ -164,7 +170,7 @@ Accessibility is both a legal requirement in many jurisdictions and a quality si
 
 ## 6. Internationalization (i18n) & Localization Risks
 
-```
+```text
 ❌ Layout & Text
    - Fixed-width containers that break with longer translated strings (German, Finnish are ~30% longer than English)
    - Right-to-left (RTL) layout not implemented or not tested (Arabic, Hebrew, Farsi)
@@ -186,7 +192,7 @@ Accessibility is both a legal requirement in many jurisdictions and a quality si
 
 ## 7. Mobile & Cross-Platform Risks
 
-```
+```text
 ❌ Touch Targets
    - Tap targets smaller than 44×44px (Apple HIG) or 48×48dp (Material Design)
    - Interactive elements too close together (< 8px gap) causing mis-taps
@@ -209,21 +215,25 @@ Accessibility is both a legal requirement in many jurisdictions and a quality si
 Before sign-off on any design, verify:
 
 **Ethical**
-- [ ] No dark patterns present in the flow
-- [ ] Consent is explicit, informed, and easy to withdraw
-- [ ] Urgency and scarcity claims are accurate
+
+1. No dark patterns present in the flow
+2. Consent is explicit, informed, and easy to withdraw
+3. Urgency and scarcity claims are accurate
 
 **Accessible**
-- [ ] Color contrast passes AA (4.5:1 text, 3:1 large text)
-- [ ] All interactive elements are keyboard reachable
-- [ ] All images have meaningful alt text
-- [ ] Error messages identify the problem and the fix
+
+1. Color contrast passes AA (4.5:1 text, 3:1 large text)
+2. All interactive elements are keyboard reachable
+3. All images have meaningful alt text
+4. Error messages identify the problem and the fix
 
 **Usable**
-- [ ] Empty, loading, error, and offline states are all designed
-- [ ] Destructive actions require confirmation
-- [ ] Flow has been tested with real users (or explicit rationale why not)
+
+1. Empty, loading, error, and offline states are all designed
+2. Destructive actions require confirmation
+3. Flow has been tested with real users (or explicit rationale why not)
 
 **Compliant**
-- [ ] Applicable regulations identified (GDPR, WCAG, COPPA, etc.)
-- [ ] Legal review requested for consent flows and data collection
+
+1. Applicable regulations identified (GDPR, WCAG, COPPA, etc.)
+2. Legal review requested for consent flows and data collection

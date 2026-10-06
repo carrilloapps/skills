@@ -1,0 +1,3 @@
+# requirements-checklist
+
+Fixture template.

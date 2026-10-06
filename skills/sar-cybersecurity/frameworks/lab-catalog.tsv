@@ -1,0 +1,22 @@
+# Lab catalog for scripts/lab-probe — one row per service in frameworks/docker-lab.md.
+# criticality 1-100 (higher first) · ram_mb/disk_mb are estimates (image + working set) · signals are comma-separated globs ('*' = always).
+# Opt-in tools (sar-trivy, sar-scancode, local DAST) are intentionally absent: suggest them only when the user asks.
+id	skill	criticality	ram_mb	disk_mb	kind	profile	compose	signals	requires	notes
+sar-gitleaks	sar-cybersecurity	100	256	150	scanner	secrets	.memory/devsecops/compose.sar.yaml	*		CLI route without Docker: gitleaks dir . --redact (frameworks/capabilities.md)
+sar-semgrep	sar-cybersecurity	95	1024	900	scanner	sast	.memory/devsecops/compose.sar.yaml	*.js,*.jsx,*.ts,*.tsx,*.mjs,*.cjs,*.py,*.go,*.java,*.kt,*.rb,*.php,*.cs,*.c,*.cpp,*.rs,*.swift,*.scala,*.sh,*.ps1		CLI route without Docker: semgrep scan --metrics=off (frameworks/capabilities.md)
+sar-osv	sar-cybersecurity	90	512	200	scanner	sca	.memory/devsecops/compose.sar.yaml	package-lock.json,pnpm-lock.yaml,yarn.lock,poetry.lock,Pipfile.lock,requirements*.txt,go.sum,Gemfile.lock,composer.lock,pom.xml,Cargo.lock,gradle.lockfile		stdout scanner: redirect to .memory/local/devsecops/results/<date>/osv-scanner.json
+sar-checkov	sar-cybersecurity	85	1024	700	scanner	iac	.memory/devsecops/compose.sar.yaml	*.tf,*.tfvars,Dockerfile*,docker-compose*.yml,docker-compose*.yaml,.github/workflows/*.yml,.github/workflows/*.yaml,template.yaml,template.yml		stdout scanner: redirect to .memory/local/devsecops/results/<date>/checkov.json
+sar-njsscan	sar-cybersecurity	80	512	300	scanner	sast	.memory/devsecops/compose.sar.yaml	package.json		Node.js backends only (express, fastify, koa, nest, hapi); also covers NoSQL injection
+sar-semgrep-nosql	sar-cybersecurity	78	1024	900	scanner	nosql	.memory/devsecops/compose.sar.yaml	package.json,requirements*.txt,pyproject.toml,pom.xml,build.gradle,go.mod		Only when a MongoDB driver is present (mongoose, mongodb, pymongo, motor, spring-data-mongodb, mongo-driver)
+sar-bandit	sar-cybersecurity	75	512	400	scanner	sast	.memory/devsecops/compose.sar.yaml	*.py,requirements*.txt,pyproject.toml		
+sar-gosec	sar-cybersecurity	75	1024	600	scanner	sast	.memory/devsecops/compose.sar.yaml	go.mod		
+sar-kubescape	sar-cybersecurity	72	512	300	scanner	k8s	.memory/devsecops/compose.sar.yaml	Chart.yaml,**/k8s/**/*.yaml,**/k8s/**/*.yml,**/kubernetes/**/*.yaml,**/kubernetes/**/*.yml,**/manifests/**/*.yaml,**/manifests/**/*.yml		
+sar-hadolint	sar-cybersecurity	70	128	100	scanner	iac	.memory/devsecops/compose.sar.yaml	Dockerfile*,*.dockerfile		stdout scanner: redirect to the results folder
+sar-squawk	sar-cybersecurity	68	128	100	scanner	db	.memory/devsecops/compose.sar.yaml	**/migrations/**/*.sql		PostgreSQL migrations only; stdout scanner
+sar-spectral	sar-cybersecurity	65	256	200	scanner	api	.memory/devsecops/compose.sar.yaml	openapi.yaml,openapi.yml,openapi.json,swagger.yaml,swagger.yml,swagger.json,asyncapi.yaml,asyncapi.yml		
+sar-helm-template	sar-cybersecurity	60	256	100	scanner	k8s	.memory/devsecops/compose.sar.yaml	Chart.yaml		Renders charts; then run sar-checkov with -d /out/helm-rendered
+sar-brakeman	sar-cybersecurity	50	512	300	scanner	sast	.memory/devsecops/compose.sar.yaml	Gemfile		Rails only; Brakeman Public Use License (non-commercial free) — confirm licence first
+sar-syft	sar-cybersecurity	40	512	200	scanner	sca-sbom	.memory/devsecops/compose.sar.yaml	package-lock.json,pnpm-lock.yaml,yarn.lock,poetry.lock,Pipfile.lock,requirements*.txt,go.sum,Gemfile.lock,composer.lock,pom.xml,Cargo.lock,gradle.lockfile		Optional SBOM (CycloneDX) for Dependency-Track or grype
+sar-grype	sar-cybersecurity	40	1024	500	scanner	sca-sbom	.memory/devsecops/compose.sar.yaml	package-lock.json,pnpm-lock.yaml,yarn.lock,poetry.lock,Pipfile.lock,requirements*.txt,go.sum,Gemfile.lock,composer.lock,pom.xml,Cargo.lock,gradle.lockfile		Optional second SCA opinion from the SBOM
+sar-sonarqube	sar-cybersecurity	15	4096	2500	dashboard	sonarqube	.memory/devsecops/compose.sar.yaml	*	max_map_count>=524288	Run sar-bootstrap init first, then sar-bootstrap apply and sar-sonar-scanner; http://127.0.0.1:9000
+sar-dd-nginx	sar-cybersecurity	10	3072	3000	dashboard	defectdojo	.memory/devsecops/compose.sar.yaml	*		DefectDojo stack (7 containers); run sar-bootstrap init first; http://127.0.0.1:8080

@@ -1,0 +1,23 @@
+check-spec — agile-project/specs (all)
+
+check-spec — agile-project/specs/broken
+1. error spec.md [fr-missing] no Functional requirements table with FR-### rows
+2. error spec.md:13 [background-steps] Background may only contain Given steps
+3. error spec.md:15 [scenario-steps] scenario without When step(s)
+4. error spec.md:15 [scenario-fr] scenario without an @FR-### tag
+5. warning spec.md:15 [scenario-priority] scenario without a priority tag (@P1, @P2 or @P3)
+6. error spec.md:20 [scenario-fr] scenario without an @FR-### tag
+7. warning spec.md:20 [scenario-priority] scenario without a priority tag (@P1, @P2 or @P3)
+8. error spec.md:9 [gherkin-language] Gherkin block mixes English and Spanish keywords; use one language per block
+Result: 6 error(s), 2 warning(s) — FAIL
+
+check-spec — agile-project/specs/good
+1. error plans/initiatives/good/tickets/02-no-qa.md [ticket-qa] work item without a QA test cases section
+2. error plans/initiatives/good/tickets/02-no-qa.md:6 [scenario-steps] scenario without When, Then step(s)
+3. error plans/initiatives/good/tickets/02-no-qa.md:10 [checkbox] checkbox list item; use numbered or lettered items with a state
+Result: 3 error(s), 0 warning(s) — FAIL
+
+Summary:
+1. specs/broken — FAIL (6 error(s), 2 warning(s))
+2. specs/good — FAIL (3 error(s), 0 warning(s))
+Result: 2 initiative(s), 9 error(s), 2 warning(s) — FAIL

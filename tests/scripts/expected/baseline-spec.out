@@ -1,0 +1,7 @@
+baseline — aa-baseline/proj (check)
+New findings:
+1. analyze|ambiguous-term|specs/export/spec.md|FR-002 uses ambiguous term(s) without a measurable criterion: fast
+2. trace|fr-no-test|specs/export/spec.md|FR-002 is not referenced by any test file
+Resolved (no longer reported; refresh with --write):
+1. check-spec|missing-section|specs/export/spec.md|missing section: Problem
+Result: 2 new, 1 resolved, 1 accepted — FAIL

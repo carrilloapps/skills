@@ -2,16 +2,19 @@
 
 ## Supported Skills and Versions
 
-This repository publishes three AI agent skills — all are pure Markdown instruction files with no compiled code, binaries, or runtime. Security concerns relate primarily to:
+This repository publishes four AI agent skills — Markdown instruction files plus dependency-free `.sh`/`.ps1` helper scripts (no compiled code, binaries, or network access) — and, separately, optional Node.js guard hooks in `integrations/` and Docker lab templates (compose files, bootstrap scripts) that skills write into a project only after approval. Security concerns relate primarily to:
 
 - **Instruction integrity** — guidance should not be misleading, exploitable, or harmful
 - **Content accuracy** — risk analysis, security assessment, and behavioral frameworks should reflect current best practices
+- **Script and template safety** — helper scripts, guard hooks, and lab templates must not leak secrets, bypass the approval gate, or run more than they declare
 
 | Skill | Latest version | Supported |
 |-------|---------------|-----------|
 | devils-advocate | `main` branch | ✅ Active |
 | sar-cybersecurity | `main` branch | ✅ Active |
 | ai-rules | `main` branch | ✅ Active |
+| agentic-agile | `main` branch | ✅ Active |
+| integrations (guards) | `main` branch | ✅ Active |
 | Tagged releases (any skill) | Stated version scope | ✅ For their stated version |
 
 ---

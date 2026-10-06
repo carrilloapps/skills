@@ -1,17 +1,18 @@
 # Copilot Instructions
 
-This repository publishes three AI agent skills: **devils-advocate**, **sar-cybersecurity**, and **ai-rules**. A fourth skill (**postmortem-writing**) is planned.
+This repository publishes four AI agent skills: **devils-advocate**, **sar-cybersecurity**, **ai-rules**, and **agentic-agile**. A fifth skill (**postmortem-writing**) is planned. `AGENTS.md` is the full agent guide.
 
 ## Skill load order (required)
 
 Before implementing any plan, proposal, or code change in this repository, load skills in this order:
 
-```
+```text
 1. skills/ai-rules/SKILL.md          ← behavioral baseline (always first)
-2. skills/devils-advocate/SKILL.md   ← adversarial gate (runs before every action)
+2. skills/devils-advocate/SKILL.md   ← risk-scaled pre-execution gate
+3. others on demand                  ← sar-cybersecurity, agentic-agile
 ```
 
-ai-rules establishes the behavioral baseline (documentation, code quality, language rules, estimation). Devil's Advocate then gates every action — all changes require a full adversarial analysis and explicit user approval (`✅ Proceed`) before proceeding.
+ai-rules establishes the behavioral baseline (documentation, code quality, language rules, estimation). Devil's Advocate then gates actions at the depth their risk tier requires (`SKILL.md` §1): read-only work and trivial reversible edits pass with at most one line; every non-trivial change and every git write needs the user's explicit approval, which they may give in their own words.
 
 ## Available skills
 
@@ -20,23 +21,25 @@ This repository contains the following skills:
 | Skill | Path | Role |
 |-------|------|------|
 | ai-rules | `skills/ai-rules/SKILL.md` | Behavioral baseline — loads first |
-| Devil's Advocate | `skills/devils-advocate/SKILL.md` | Adversarial gate — runs before every action |
+| Devil's Advocate | `skills/devils-advocate/SKILL.md` | Risk-scaled pre-execution gate (Tiers 0–3) |
 | SAR Cybersecurity | `skills/sar-cybersecurity/SKILL.md` | Deep security analysis on request |
+| Agentic Agile | `skills/agentic-agile/SKILL.md` | Spec-driven development on Scrum — Phase 0 structure gate, Gherkin specs, ceremonies, autonomy N0–N4 |
 | Postmortem Writing | *Planned* | Post-incident learning |
 
 ## Quality gate
 
 Run before every commit:
 
-```bash
-bash scripts/validate.sh
-```
+1. `bash scripts/validate.sh`
+2. `bash tests/scripts/run-parity.sh` (`.sh` / `.ps1` parity)
+3. `node --test integrations/core/core.test.mjs integrations/*/test/*.test.mjs`
+4. Before publishing: `bash scripts/audit-skills.sh` (needs Docker)
 
-All checks must pass.
+All must pass.
 
 ## Conventions
 
-- **Version cascade**: bump `version:` in the affected skill's `SKILL.md` frontmatter, then follow the per-skill cascade checklist in `.github/CONTRIBUTING.md`
+- **Version cascade**: bump `metadata.version` in the affected skill's `SKILL.md` frontmatter, then follow the per-skill cascade checklist in `.github/CONTRIBUTING.md`
 - **Documentation**: `en_US` recommended; code identifiers always `en_US`
 - **Commits**: Conventional Commits format (`feat:`, `fix:`, `docs:`)
 - **Branch**: `main` only — enable branch protection in GitHub Settings → Branches (required status check: `validate`)

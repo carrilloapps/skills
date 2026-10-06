@@ -4,260 +4,461 @@
 
 ## Directory
 
-Use the output directory confirmed with the user in Step 0 of the Analysis Protocol (default: `docs/security/`). Create it if it does not exist. All SAR files go here and nowhere else.
+Use the output directory confirmed with the user in Step 0 of the Analysis Protocol. Default: `docs/security/` for a private repository, `.memory/local/sar/reports/` for a public one (see [Public repositories](#public-repositories)). Create it if it does not exist. All SAR report files go here. The only other files the skill writes are the findings registry, the `.memory/` ignore entries (see below), and — only after the user approves them — tool outputs under `.memory/local/devsecops/results/<YYYY-MM-DD>/` (the one canonical results location for CLI and container runs) and decisions in `.memory/local/sar/capabilities.json` (see [capabilities.md](capabilities.md)).
 
 ## File Naming
 
-Every report generates **exactly two linked files**:
+By default every report generates **two linked files** (one file when the user asks for a single language):
 
+```text
+[YYYY-MM-DD]_[SHORT-TITLE]_EN.md   ← English (en_US)
+[YYYY-MM-DD]_[SHORT-TITLE]_ES.md   ← Spanish (es_VE)
 ```
-[DD-MM-YYYY]_[SHORT-TITLE]_EN.md   ← English (en_US)
-[DD-MM-YYYY]_[SHORT-TITLE]_ES.md   ← Spanish (es_VE)
-```
+
+Dates are ISO 8601 (`YYYY-MM-DD`) so reports sort chronologically. Reports written by 1.x keep their original `DD-MM-YYYY` names; links to them use the name as it exists on disk.
 
 ### Title derivation rule — worst finding first
 
 The `[SHORT-TITLE]` **must** reflect the highest-scoring (worst) vulnerability discovered during the assessment. The title is derived from the **#1 finding** (the one with the highest criticality score) using the pattern:
 
-```
+```text
 [VULN-TYPE]-[AFFECTED-COMPONENT]
 ```
 
 | Worst finding | Generated SHORT-TITLE |
 |---------------|-----------------------|
-| SQL Injection on `/api/users` (score 92) | `SQLI-API-USERS` |
-| Public S3 bucket with PII (score 97) | `PUBLIC-S3-PII-EXPOSURE` |
-| NoSQL operator injection on login (score 92) | `NOSQL-INJECTION-AUTH-BYPASS` |
-| 12 secrets in source control (score 93) | `SECRETS-IN-SOURCE-CONTROL` |
+| SQL Injection on `/api/users` (score 90) | `SQLI-API-USERS` |
+| Public S3 bucket with PII (score 100) | `PUBLIC-S3-PII-EXPOSURE` |
+| NoSQL operator injection on login (score 95) | `NOSQL-INJECTION-AUTH-BYPASS` |
+| 12 secrets in source control (score 90) | `SECRETS-IN-SOURCE-CONTROL` |
 | Critical CVE in express@4.17.1 (score 90) | `CVE-2024-XXXXX-EXPRESS` |
 | Mass assignment + IDOR (score 88) | `MASS-ASSIGNMENT-PRIVILEGE-ESCALATION` |
 | No findings above 50 (clean assessment) | `CLEAN-ASSESSMENT` |
 
 **Rules**:
+
 - Use SCREAMING-KEBAB-CASE (uppercase, hyphens, no spaces)
 - Maximum 50 characters for the SHORT-TITLE
 - If the worst finding is a CVE in a dependency, include the CVE ID in the title
-- If two findings tie for the highest score, use the one with the broader impact scope
+- If two findings tie for the highest score, use the higher Confidence (Confirmed > Probable > Possible); if still tied, the lower registry `id`
 - The report's `# [Report Title]` heading must also lead with the worst finding: `# [Score] [Vuln Type]: [Component] — Security Assessment Report — [LANG]`
 
 Example with worst-finding title:
 
-```
-docs/security/12-03-2026_SQLI-API-USERS_EN.md
-docs/security/12-03-2026_SQLI-API-USERS_ES.md
+```text
+docs/security/2026-03-12_SQLI-API-USERS_EN.md
+docs/security/2026-03-12_SQLI-API-USERS_ES.md
 ```
 
 Each file must contain a cross-language link at the top:
 
 ```markdown
-> 🌐 **Also available in:** [Español (es_VE)](./12-03-2026_SQLI-API-USERS_ES.md)
+> 🌐 **Also available in:** [Español (es_VE)](./2026-03-12_SQLI-API-USERS_ES.md)
 ```
 
 ---
 
-## Vulnerabilities Registry
+## Findings Registry — `.memory/sar/findings.json`
 
-Every SAR generation must create or update `vulnerabilities.csv` in the output directory. This file is the **single source of truth** for all security findings across all assessments. It includes both primary findings (score > 50) and warnings (score <= 50).
+Every SAR generation creates or updates the findings registry at the **project root** (not in the output directory). It holds all findings across assessments — primary findings (score > 50) and warnings (≤ 50).
 
-### CSV structure — exactly 11 columns, in this order
+| Repository | Registry path | Versioned? |
+|------------|---------------|------------|
+| Private | `.memory/sar/findings.json` | **Yes** — it is the team's shared registry (`status`, `assignee`, `mitigationDate` are edited by the team and committed) |
+| Public, or will be public | `.memory/local/sar/findings.json` | **No** — open vulnerabilities must not be published |
 
-```csv
-ID,Type,Score,Label,Title,Detection Date,Mitigation Date,Status,Assignee,Priority,Existing Mitigation
+- The agent writes files with its normal file-write capability. No scripts, databases, or VCS commands are used.
+- Reports (EN/ES Markdown, optional SARIF) stay in the output directory. Each report also carries a **Registry Snapshot** (see below), so the state is readable without opening the JSON.
+
+### Public repositories
+
+Step 0 asks whether the repository is public (or will be). Committing a findings registry or SAR reports to a public repository discloses **unfixed, exploitable vulnerabilities** with their exact location and an attack scenario. Therefore:
+
+- **Public, or unknown in an automated context** (no one can answer) → treat as public: registry at `.memory/local/sar/findings.json`, default output directory `.memory/local/sar/reports/`. Both are ignored by the `.memory/` ignore rule.
+- The user may still choose a versioned output directory explicitly; the agent then repeats the disclosure warning once in the closing message and the Appendix.
+- **Private** → defaults above (`.memory/sar/findings.json`, `docs/security/`).
+
+If the registry exists at the other path (the repository changed visibility), use the existing file, mention the mismatch in the Appendix, and never move or delete files — the team decides.
+
+### `.memory/` convention — version team state, ignore private state
+
+`.memory/` is shared by every skill in this collection. Shared team state lives in `.memory/<skill>/` and **is versioned**. Agent-private state — local preferences, caches, tool outputs, recovery files, public-repository registries — lives in `.memory/local/` or uses the `.local.` / `.recovered.json` naming, and **is never versioned**.
+
+Before the first write under `.memory/`, the agent ensures the ignore entries exist, using **file writes only** — never a VCS command. Existing lines written by the user are never removed; only missing lines are appended.
+
+| VCS (marker at the project root) | Action |
+|----------------------------------|--------|
+| **Always** (Git, and tools that honor `.gitignore`, such as Jujutsu) | Ensure `.memory/.gitignore` contains the block below. This file **is versioned** so every clone ignores the same paths. |
+| Mercurial (`.hg/`) | Ensure the root `.hgignore` contains, in `regexp` syntax (the default; if the file has any `syntax:` line, append `syntax: regexp` first): `^\.memory/local/` · `^\.memory/.*\.local\.` · `^\.memory/.*\.recovered\.json$` |
+| Fossil (`.fossil-settings/` or a `.fslckout` / `_FOSSIL_` checkout file) | Ensure `.fossil-settings/ignore-glob` contains `.memory/local/*` · `.memory/*.local.*` · `.memory/*.recovered.json` (Fossil's `*` also matches `/`). |
+| Subversion (`.svn/`) | Ignore rules are a property — the agent cannot set them. Tell the user to run `svn propset svn:ignore local .memory` and, if private files use the `.local.` / `.recovered.json` naming, `svn propset svn:global-ignores "*.local.* *.recovered.json" .memory` (do not run them); record the reminder in the Appendix. |
+| Other or unknown VCS markers | Tell the user which paths must be ignored and that the agent could not configure it; record it in the Appendix. |
+
+`.memory/.gitignore`:
+
+```gitignore
+# Managed by carrilloapps/skills — ignores agent-private paths only.
+# Shared team state under .memory/<skill>/ stays versioned.
+local/
+*.local.*
+*.recovered.json
 ```
 
-### Column definitions
+If the agent can see that a private path (anything under `.memory/local/`, or a public-mode registry) is **already tracked** (e.g., it appears in a VCS file listing available to the agent's read-only tools), it warns the user in the closing message and the Appendix. Ignore rules do not affect tracked files; the team must untrack them. The agent never untracks, deletes, or rewrites history.
 
-| Column | Description |
-|--------|-------------|
-| `ID` | Sequential identifier: `F01, F02...` for Findings (score > 50), `W01, W02...` for Warnings (score <= 50). Numbering is sequential per type across the entire file, not per SAR. When adding new entries, continue from the last used number. |
-| `Type` | `Finding` (score > 50) or `Warning` (score <= 50) |
-| `Score` | Numeric criticality score from the SAR (0-100) |
-| `Label` | Severity label derived from score: `Critical` (>= 90), `High` (70-89), `Medium` (50-69), `Low` (< 50) |
-| `Title` | Concise finding title in English (same as the `### [SCORE] - [Title]` heading in the SAR) |
-| `Detection Date` | Date the finding was first reported: `YYYY-MM-DD` (date of the SAR that first detected it) |
-| `Mitigation Date` | Empty by default. Filled manually by the team when the finding is confirmed mitigated. The agent **never** fills this field automatically. |
-| `Status` | `Pending` by default. Valid values (lifecycle order): `Pending`, `In Development`, `Processing`, `In QA`, `In Staging`, `Mitigated`. The agent always writes `Pending` for new findings. All other transitions are managed by the team — the agent **never** moves a status forward or backward. |
-| `Assignee` | Empty by default. Assigned manually by the team. The agent **never** fills this field. |
-| `Priority` | Derived from score: `P0 - Immediate` (>= 90), `P1 - Urgent` (70-89), `P2 - Planned` (50-69), `P3 - Scheduled` (< 50) |
-| `Existing Mitigation` | Controls that **already exist** in the assessed code. Must reflect what the SAR documents as existing controls, **not** the suggested remediation actions. Decision criteria: `No` = zero controls found for this finding; a **named control** (e.g., `JWT required`, `express-mongo-sanitize`, `Helmet only`, `Rate limiting on gateway`) = a specific, identifiable control is present; `Partial` = multiple controls are expected but only some are present — append the present ones in parentheses (e.g., `Partial (JWT only, no RBAC)`). Prefer named controls over `Partial` when a single specific control can be identified. |
+### Schema
 
-### Priority derivation
+```json
+{
+  "schemaVersion": 1,
+  "findings": [
+    {
+      "id": "F01",
+      "type": "Finding",
+      "score": 90,
+      "label": "Critical",
+      "title": "SQL Injection on public user search",
+      "cwe": ["CWE-89"],
+      "component": "src/search/search.service.ts",
+      "detectionDate": "2026-03-12",
+      "mitigationDate": null,
+      "status": "Pending",
+      "assignee": null,
+      "priority": "P0 - Immediate",
+      "existingMitigation": "No",
+      "lastSeenSar": "2026-03-12_SQLI-API-USERS"
+    }
+  ]
+}
+```
 
-| Score range | Priority value |
-|-------------|---------------|
-| >= 90 (Critical) | `P0 - Immediate` |
-| 70-89 (High) | `P1 - Urgent` |
-| 50-69 (Medium) | `P2 - Planned` |
-| < 50 (Low/Warning) | `P3 - Scheduled` |
+### Field definitions
 
-### Generation rules
+| Field | Owner | Description |
+|-------|-------|-------------|
+| `id` | Agent (once) | `F01, F02…` for Findings (score > 50), `W01, W02…` for Warnings (≤ 50). Sequential per prefix across the whole file; new entries continue from the highest number used. Permanent — never reassigned. |
+| `type` | Agent | `Finding` (> 50) or `Warning` (≤ 50) |
+| `score` | Agent | Final score from the SAR (0–100), integer |
+| `label` | Agent | `Critical` (≥ 90), `High` (70–89), `Medium` (51–69), `Low` (≤ 50) |
+| `title` | Agent | Concise English title — same as the finding heading in the SAR |
+| `cwe` | Agent | Array of CWE IDs, **primary CWE first** (e.g., `["CWE-89", "CWE-200"]`). The first element is part of the recurring-match key. |
+| `component` | Agent | The file (or IaC resource) containing the **vulnerable call or configuration** — the sink, not the route that reaches it. For systemic findings spanning many files, the shared helper or base class; if there is none, the **first affected file in sorted path order plus a stable `#tag`** naming the pattern (e.g., `skills/a/frameworks/capabilities.md#unpinned-installs`). Path relative to the project root, no line number. Part of the recurring-match key. |
+| `detectionDate` | Agent (once) | `YYYY-MM-DD` of the SAR that first detected the finding. Never changed afterwards. |
+| `mitigationDate` | **Team** | `null` by default. The agent never sets or changes it. |
+| `status` | **Team** (agent sets `Pending` on creation only) | `Pending` · `In Development` · `Processing` · `In QA` · `In Staging` · `Mitigated` |
+| `assignee` | **Team** | `null` by default. The agent never sets or changes it. |
+| `priority` | Agent | `P0 - Immediate` (≥ 90), `P1 - Urgent` (70–89), `P2 - Planned` (51–69), `P3 - Scheduled` (≤ 50) |
+| `existingMitigation` | Agent | Controls that **already exist** (not suggested fixes): `No` = none; a **named control** (`JWT required`, `express-mongo-sanitize`, `Rate limiting on gateway`); or `Partial (…)` listing the controls present when several are expected (e.g., `Partial (JWT only, no RBAC)`). Prefer a named control over `Partial`. |
+| `lastSeenSar` | Agent | `[YYYY-MM-DD]_[SHORT-TITLE]` of the most recent SAR in which the finding was still present |
 
-1. **All findings must be included** — every finding and warning from the SAR, regardless of score.
-2. **Sort by status group, then Score descending** — (1) open findings (score > 50) by score descending, (2) open warnings (score <= 50) by score descending, (3) mitigated entries by score descending. Within each group, highest score first.
-3. **No additional columns** — exactly 11 columns as specified above, no more.
-4. **Agent-controlled fields**: `ID`, `Type`, `Score`, `Label`, `Title`, `Detection Date`, `Status` (always `Pending`), `Priority`, `Existing Mitigation`.
-5. **Team-controlled fields**: `Mitigation Date`, `Assignee`. The agent writes these as empty and **never** overwrites them if they already contain values.
-6. **Status preservation** — when updating an existing `vulnerabilities.csv`, if a row has **any** status other than `Pending` (i.e., `In Development`, `Processing`, `In QA`, `In Staging`, or `Mitigated`), the agent must **not** overwrite it. Only new entries get `Pending`. The status lifecycle is entirely team-managed.
-7. **Recurring findings** — if a finding from a previous SAR still exists in the current assessment, keep its original `ID`, `Detection Date`, `Mitigation Date`, `Status`, and `Assignee`. Update `Score`, `Label`, `Priority`, `Title`, and `Existing Mitigation` if they changed.
-8. **Rows are never deleted** — if a finding from a previous SAR no longer appears in the current assessment, keep the row exactly as-is. Do **not** delete it, do **not** change its `Status`. The team manages the full lifecycle. Mitigated findings remain in the CSV as historical record.
-9. **ID continuity** — IDs are permanent. Once `F01` is assigned, it is never reassigned to a different finding even if the original is mitigated.
-10. **Score reclassification** — if a recurring finding's score crosses the 50 threshold (e.g., W03 was 45, now scores 55), keep the original `ID` (W03) but update `Type` to `Finding`, `Score`, `Label`, and `Priority`. The ID prefix may no longer match the Type — this is expected and preserves traceability. Do not create a new ID.
+### Update rules
+
+1. **All findings included** — every finding and warning from the SAR.
+2. **Sort `findings`**: (1) open entries with score > 50, (2) open entries with score ≤ 50, (3) `Mitigated` entries — score descending within each group; ties by `id` ascending.
+3. **New finding** → next free `id`, `status: "Pending"`, `mitigationDate: null`, `assignee: null`, `detectionDate` = today, `lastSeenSar` = this SAR.
+4. **Recurring finding** — same **primary CWE** (first element of `cwe`) **and** same `component` as an existing entry. Keep `id`, `detectionDate`, `status`, `assignee`, `mitigationDate`. Update `score`, `label`, `priority`, `type`, `title`, `existingMitigation`, `lastSeenSar`. If unsure whether it is the same finding, create a new entry and note the possible overlap in the Appendix.
+5. **Team-managed fields are never written** after creation: `status` (any value other than the initial `Pending`), `assignee`, `mitigationDate`.
+6. **Entries are never deleted.** A finding absent from the current assessment keeps its entry unchanged (including `lastSeenSar`). Mitigated entries stay as history.
+7. **Score reclassification** — when a recurring score crosses 50, keep the original `id` (e.g., `W03` stays `W03`) and update `type`, `score`, `label`, `priority`. The prefix may no longer match `type`; this preserves traceability.
+8. **No extra fields** beyond the schema. Bump `schemaVersion` only through a skill release.
+
+### Validation (after every write)
+
+Re-read the file and confirm: (1) it parses as valid JSON with the schema above, (2) no duplicate `id`, (3) every `status`, `assignee`, and `mitigationDate` from the previous version is unchanged, (4) no entry from the previous version is missing, (5) sort order is correct. If any check fails, fix the file before writing the reports' final version.
+
+If the existing file does not parse, **do not overwrite it**: leave it untouched, write the new registry to `findings.recovered.json` next to it (ignored by the `.memory/` rule), and explain in the Appendix that the team must reconcile the two files.
+
+### One-time migration from `vulnerabilities.csv` (1.x)
+
+If the registry does **not** exist and `vulnerabilities.csv` exists in the output directory:
+
+1. Import every row: `ID → id`, `Type → type`, `Score → score`, `Label → label`, `Title → title`, `Detection Date → detectionDate`, `Mitigation Date → mitigationDate` (empty → `null`), `Status → status`, `Assignee → assignee` (empty → `null`), `Priority → priority`, `Existing Mitigation → existingMitigation`.
+2. Fields with no CSV column (`cwe`, `component`, `lastSeenSar`): CSV rows have no CWE/component, so during this first run a row is recurring when its `Title` names the same vulnerability type **and** the same endpoint/component as a current finding. Then fill `cwe`, `component`, and `lastSeenSar` from that finding. Otherwise set `cwe: []`, `component: null`, `lastSeenSar: null`. From the next run on, the normal CWE + `component` match applies.
+3. **Leave `vulnerabilities.csv` untouched** — never edit or delete it.
+4. Record the migration in the SAR Appendix: rows imported, any rows that could not be parsed (listed verbatim), and the registry path now in use.
+
+If both files exist, use `findings.json` and ignore the CSV. If no registry exists but a previous SAR does (for example, public mode on another machine, where the registry is not versioned), the agent reads the **Registry Snapshot** of the most recent SAR in the output directory and imports it the same way (snapshot rows → entries, keeping `id`, `status`, `assignee`, `mitigationDate`).
 
 ### Status lifecycle
 
-The following statuses represent the remediation lifecycle. Only `Pending` is set by the agent; all transitions are team-managed:
-
-```
+```text
 Pending → In Development → Processing → In QA → In Staging → Mitigated
 ```
 
 | Status | Meaning | Set by |
 |--------|---------|--------|
-| `Pending` | Finding detected, no remediation started | Agent (on creation) |
-| `In Development` | Developer is actively working on a fix | Team |
-| `Processing` | Fix is being reviewed (code review, PR) | Team |
-| `In QA` | Fix is deployed to QA environment for testing | Team |
-| `In Staging` | Fix is deployed to staging for final validation | Team |
-| `Mitigated` | Fix confirmed in production, vulnerability resolved | Team |
+| `Pending` | Detected, no remediation started | Agent (on creation) |
+| `In Development` | Developer is working on a fix | Team |
+| `Processing` | Fix under review (code review, PR) | Team |
+| `In QA` | Fix deployed to QA | Team |
+| `In Staging` | Fix deployed to staging | Team |
+| `Mitigated` | Fix confirmed in production | Team |
 
-### Example
-
-```csv
-ID,Type,Score,Label,Title,Detection Date,Mitigation Date,Status,Assignee,Priority,Existing Mitigation
-F01,Finding,92,Critical,SQL Injection in /api/users endpoint,2026-03-12,,Pending,,P0 - Immediate,No
-F02,Finding,85,High,express@4.17.1 CVE-2024-12345 (XSS),2026-03-12,,Pending,,P1 - Urgent,Helmet only
-F03,Finding,72,High,Regex injection with data enumeration in /api/search,2026-03-12,,Pending,,P1 - Urgent,Partial (regex escaping on search only)
-F04,Finding,55,Medium,Missing encryption at rest on user_sessions table,2026-03-12,,Pending,,P2 - Planned,TLS in transit only
-W01,Warning,45,Low,Missing rate limiting on public API,2026-03-12,,Pending,,P3 - Scheduled,No
-W02,Warning,38,Low,Inline validation without formal structure on /api/profile,2026-03-12,,Pending,,P3 - Scheduled,Partial (inline checks only, no schema)
-W03,Warning,35,Low,Unreachable SQL injection in deprecated admin module,2026-03-12,,Pending,,P3 - Scheduled,No
-```
+---
 
 ## Required Document Structure (each file)
 
+Sections marked *(if applicable)* are omitted entirely when empty — never write a section just to say "none". Everything else is mandatory.
+
 ```markdown
-# [Report Title] — [LANG]
+# [Score] [Vuln Type]: [Component] — Security Assessment Report — [LANG]
 
 > 🌐 Also available in: [link to counterpart]
 
 ## Table of Contents
-## Executive Summary
+## Executive Summary                 (≤ 5 lines, plain language, verdict first)
 ## Scope & Methodology
-## Findings  (ordered 100 → 51, then warnings 50 → 1)
+## Out of Scope & Limitations        (mandatory — what was NOT reviewed and why)
+## Data Flow & Trust Boundaries      (optional Mermaid diagram)
+## Findings                          (ordered 100 → 51, then warnings 50 → 1)
 ### [SCORE] — [Finding Title]
-- Description
-- Affected Component(s)
-- Evidence / Code Reference
-- Standards Violated
-- CWE ID(s) (mandatory — map to CWE/MITRE Top 25 when applicable)
-- MITRE ATT&CK Technique (if applicable)
-- Score Justification (list every exploitation complexity, impact scope, and data sensitivity factor)
-- Suggested Mitigation Actions
-## Mitigated Findings
-### [MITIGATED] — [ID] [Original Title] (was: [Original Score])
-- Original Detection Date
-- Mitigation Date
-- Original SAR Reference
+## Attack Chains                     (if applicable)
+## Remediation Roadmap
+## Mitigated Findings                (if applicable — from the registry)
+## Registry Snapshot                 (mandatory — registry state at assessment time)
 ## Dependency & Supply Chain Analysis
 ### Dependency Inventory Summary
 ### Vulnerable Dependencies (CVE list)
 ### Integrated Skills/Plugins Evaluation
-### CWE/MITRE Top 25 Coverage Matrix
+### CWE Top 25 Coverage Matrix
 ### OWASP Top 10 Alignment
-### SANS/CIS Controls Alignment
+### CIS Controls v8.1 Alignment
 ## Security Posture Dashboard
-## Risk Matrix
 ## Compliance Gap Summary
 ## Appendix
 ```
 
 ---
 
+## Executive Summary (mandatory)
+
+Written for non-technical leadership. **Maximum 5 lines**, no jargon, no CWE IDs, verdict first:
+
+```markdown
+## Executive Summary
+
+**Verdict: Not safe to expose publicly.** An anonymous attacker can download the full customer list (50,000+ records with emails and phone numbers) through the search page today.
+Fixing it takes about one day of work (F01). Two further issues let any logged-in user change other users' balances (F02) and should be fixed this sprint.
+Overall: 2 critical, 1 high, 3 medium findings; 4 warnings. Nothing was found that requires taking the service offline beyond F01.
+```
+
+Verdict values: **Not safe to expose publicly** · **Safe with urgent fixes** · **Acceptable with planned fixes** · **No significant findings**.
+
+---
+
+## Per-Finding Block (mandatory fields)
+
+Every primary finding (score > 50) uses this block. Warnings (≤ 50) use the same block but may omit Attack Scenario, CVSS vector (when a gate applies), and Fix diff.
+
+````markdown
+### [SCORE] — [Finding Title]
+
+| Field | Value |
+|-------|-------|
+| Registry ID | F01 (new) / F02 (recurring from YYYY-MM-DD) |
+| Score | 90 (Critical) |
+| Confidence | Confirmed / Probable (gap: …) / Possible |
+| Impact classification | Data exfiltration / Integrity / Dual-vector / Availability-only |
+| CVSS v4.0 | `CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N` |
+| CWE | CWE-89 |
+| MITRE ATT&CK | T1190 |
+| Effort | S (< 1 day) / M (1–5 days) / L (> 5 days) |
+| Affected | `src/search/search.service.ts:42`, `src/search/search.controller.ts:18` |
+
+**Description** — what is wrong, in two or three sentences.
+
+**Evidence / Trace** — the hop-by-hop trace from entry point to impact, with file:line references.
+
+**Attack Scenario** — numbered, narrative, non-weaponized steps describing what an attacker does and obtains. Use at most a minimal illustrative input (e.g., `q=' OR '1'='1' --`); never a working exploit chain, tool command, or automation script.
+
+**Score Justification**
+`Base 80 +5 (full enumeration) +5 (PII) = 90 (cap: none) → Final 90`
+One line per factor explaining why it applies.
+
+**Standards Violated** — OWASP, NIST, ISO, PCI-DSS, GDPR… (see compliance-standards.md).
+
+**Fix** — before/after diff (documentation only, not executed by the agent):
+
+```diff
+- const rows = await db.query(`SELECT … WHERE full_name LIKE '%${q}%'`);
++ const rows = await db.query('SELECT … WHERE full_name LIKE $1 LIMIT 50', [`%${q}%`]);
+```
+
+**How to Verify the Fix** — the test or check the team runs to prove the fix works (e.g., "integration test sends `q=' OR '1'='1' --` and asserts 0 rows and HTTP 200"; "`aws s3api get-public-access-block` shows all four flags true").
+````
+
+Rules:
+
+1. **Effort** is the remediation effort for the minimal fix in the diff, not the full hardening list.
+2. **Fix diffs** are short (≤ 15 lines), show only the changed lines, and are **syntactically valid** in the target language. A value only obtainable by running a command (an image digest, a generated hash) is written as `<value from: <command>>`. They are report content — the agent never applies them, and never writes or runs scratch files to check them; the How to Verify step proposes the command to the team.
+3. **How to Verify** must be observable and repeatable — "review the code" is not a verification.
+4. A finding with Confidence **Probable** must name its gap here and in Out of Scope & Limitations.
+
+---
+
+## Scope & Methodology (tools run)
+
+Besides the manual review, list **every tool actually run** — CLI ([capabilities.md](capabilities.md)) or container ([docker-lab.md](docker-lab.md)) — so the evidence is reproducible. Tools suggested but not run go to Out of Scope & Limitations with what they would have covered.
+
+```markdown
+## Scope & Methodology
+
+Manual review: 48 endpoints traced (Step 1 count), 6 services, IaC in `infra/`.
+
+| Tool | Version | Route / image digest | Profile | Run date | Result file | Findings ingested |
+|------|---------|----------------------|---------|----------|-------------|-------------------|
+| Gitleaks | 8.30.1 | docker · `ghcr.io/gitleaks/gitleaks@sha256:c00b6bd0…` | secrets | 2026-10-05 | `results/2026-10-05/gitleaks.json` | 3 candidates → 1 finding (F02), 2 test fixtures |
+| njsscan | 1.0.1 | docker · `opensecurity/njsscan@sha256:f071932d…` | nosql | 2026-10-05 | `results/2026-10-05/njsscan.json` | 2 candidates → F01 |
+| OSV-Scanner | 2.6.0 | CLI (winget) | — | 2026-10-05 | `.memory/local/devsecops/results/2026-10-05/osv-scanner.json` | 14 CVEs → 3 reachable |
+```
+
+Rules: tool versions and digests come from the shared `.memory/devsecops/images.lock` (every lab skill appends its images on the first approved pull; locally built images record their base image digest) or the tool's own `--version` output; scanner severities are never copied as scores; dynamic (DAST) results are marked *dynamic evidence*.
+
+---
+
+## Out of Scope & Limitations (mandatory)
+
+An honest SAR states what it did **not** see. List every area not reviewed and why, plus every trace gap:
+
+```markdown
+## Out of Scope & Limitations
+
+| Area | Status | Reason |
+|------|--------|--------|
+| `services/billing/` (Go) | Not reviewed | Excluded by the user in Step 0 |
+| Production IaC (Terraform state) | Not reviewed | Not present in repository |
+| Runtime WAF rules | Assumed absent | No config visible — F03 Confidence: Probable |
+| Transitive dependencies of `pnpm-lock.yaml` | Reviewed via advisory DB only | No reachability analysis for 14 transitive CVEs |
+```
+
+A clean assessment with an empty limitations table is a red flag — almost every assessment has limits.
+
+---
+
+## Data Flow & Trust Boundaries (optional)
+
+When the system has more than one service or trust zone, include a Mermaid diagram marking trust boundaries and where each finding sits:
+
+````markdown
+```mermaid
+flowchart LR
+  U[Internet user] -->|HTTPS| GW[API Gateway]
+  subgraph Trusted["Trust boundary: VPC"]
+    GW --> API[search-service]
+    API -->|SQL — F01| DB[(users DB)]
+  end
+  API -->|presigned URL| S3[(uploads bucket — F04)]
+```
+````
+
+---
+
+## Attack Chains (if applicable)
+
+When two or more findings combine into a worse outcome than either alone, document the chain once here and link to each finding:
+
+```markdown
+## Attack Chains
+
+### Chain A — Anonymous to admin account takeover
+1. [F03 (62) — Username enumeration on /login](#62--username-enumeration-on-login) reveals valid admin emails.
+2. [F01 (95) — NoSQL operator injection on /login](#95--nosql-operator-injection-on-login) bypasses the password check for that email.
+3. [F05 (58) — Missing re-authentication on /settings/email](#58--missing-re-authentication-on-settingsemail) lets the attacker change the recovery email.
+
+**Combined impact**: persistent admin takeover. **Break the chain at**: F01 (single fix removes the chain).
+```
+
+Chains do not change individual scores. They identify the **cheapest link to break**, which goes first in the roadmap.
+
+---
+
+## Remediation Roadmap (mandatory)
+
+Assign each primary finding to a bucket with the bucket rule below, then order **within each bucket** by **Score ÷ Effort weight** (S = 1, M = 2, L = 4), descending; ties by score, then `id`. Chain-breaking fixes go first in their bucket.
+
+```markdown
+## Remediation Roadmap
+
+| When | ID | Fix | Score | Effort |
+|------|----|-----|-------|--------|
+| **This week** | F01 | Parameterize search query + LIMIT | 90 | S |
+| **This week** | F02 | Ownership check + field allowlist on PATCH /users/:id | 88 | S |
+| **This sprint** | F04 | Block public access, rotate exposed keys | 72 | M |
+| **This quarter** | F06 | Migrate secrets to a secrets manager | 58 | L |
+```
+
+Bucket rule: Critical (≥ 90) → **This week** regardless of effort; High (70–89) → **This week** if S, else **This sprint**; Medium (51–69) → **This sprint** if S, else **This quarter**. Warnings are not in the roadmap.
+
+---
+
 ## Mitigated Findings Section (mandatory when mitigated entries exist)
 
-When the existing `vulnerabilities.csv` contains entries with `Status: Mitigated`, the SAR must include a **Mitigated Findings** section between Findings and Dependency & Supply Chain Analysis. This section provides visibility into the project's remediation progress.
-
-### When to include
-
-- Read `vulnerabilities.csv` before generating the SAR.
-- If **any** row has `Status: Mitigated`, include the section.
-- If **no** rows are mitigated, omit the section entirely.
-
-### Presentation format
-
-Each mitigated finding appears as a compact subsection:
+When the registry contains entries with `status: "Mitigated"`, the SAR includes a **Mitigated Findings** section after the Remediation Roadmap.
 
 ```markdown
 ## Mitigated Findings
 
-> 3 previously reported findings have been mitigated since their initial detection.
+> 1 previously reported finding has been mitigated since its initial detection.
 
 ### [MITIGATED] — F01 SQL Injection in /api/users endpoint (was: 92 Critical)
 - **Detection Date**: 2026-01-15
 - **Mitigation Date**: 2026-02-20
-- **Original SAR**: [15-01-2026_SQLI-API-USERS_EN.md](./15-01-2026_SQLI-API-USERS_EN.md)
-
-### [MITIGATED] — W02 Inline validation without formal structure (was: 38 Low)
-- **Detection Date**: 2026-01-15
-- **Mitigation Date**: 2026-03-01
-- **Original SAR**: [15-01-2026_SQLI-API-USERS_EN.md](./15-01-2026_SQLI-API-USERS_EN.md)
+- **Original SAR**: [2026-01-15_SQLI-API-USERS_EN.md](./2026-01-15_SQLI-API-USERS_EN.md)
 ```
 
-### Rules
+Rules:
 
-1. **Source of truth is `vulnerabilities.csv`** — the agent reads the CSV to determine which findings are mitigated. It does not infer mitigation from code analysis.
-2. **Include ID, Title, original Score, and Label** — these come directly from the CSV row.
-3. **Link to the original SAR** — if the original SAR file is still present in the output directory, link to it.
-4. **Order by Mitigation Date descending** — most recently mitigated first.
-5. **Summary count** — start the section with a count: "N previously reported findings have been mitigated since their initial detection."
-6. **No re-analysis** — mitigated findings are not re-scored or re-evaluated. They are displayed as a historical summary only.
+1. **Source of truth is the findings registry** — mitigation is never inferred from code analysis.
+2. Include `id`, `title`, `score`, and `label` from the registry entry.
+3. Link to the original SAR if it is still present in the output directory.
+4. Order by `mitigationDate` descending (entries with `mitigationDate: null` last, by `id`).
+5. Start with the count sentence.
+6. No re-analysis — mitigated findings are not re-scored.
 
 ---
 
-## Security Posture Dashboard (mandatory)
+## Registry Snapshot (mandatory)
 
-Every SAR must include a **Security Posture Dashboard** section immediately after Dependency & Supply Chain Analysis and before Risk Matrix (matching the Required Document Structure template above). This section provides quantitative metrics that serve as measurable OKRs for the assessed system.
+Every report carries the registry state at the time of the assessment, so the report alone shows what is open, who owns it, and what was mitigated — even in public mode, where the registry itself is not versioned. List **every** registry entry (open and mitigated), in registry sort order:
 
-### Required metrics
+```markdown
+## Registry Snapshot
 
-Calculate and present the following metrics based on the assessment results:
+> Snapshot of `.memory/sar/findings.json` at 2026-03-12. `status`, `assignee`, and `mitigationDate` are team-managed and copied as-is.
 
-| Metric | Formula | Example |
-|--------|---------|--------|
-| **Assessment Coverage** | (Endpoints/components analyzed ÷ total endpoints/components discovered) × 100 | 87% (48/55 endpoints analyzed) |
-| **Secure Surface** | (Endpoints with no findings > 50 ÷ total endpoints analyzed) × 100 | 62% (30/48 endpoints secure) |
-| **Critical Exposure** | (Endpoints with findings ≥ 90 ÷ total endpoints analyzed) × 100 | 8% (4/48 critical) |
-| **High Exposure** | (Endpoints with findings 70–89 ÷ total endpoints analyzed) × 100 | 12% (6/48 high) |
-| **Medium Exposure** | (Endpoints with findings 50–69 ÷ total endpoints analyzed) × 100 | 17% (8/48 medium) |
-| **Auth Coverage** | (Endpoints with authentication enforced ÷ total endpoints analyzed) × 100 | 91% (44/48 authenticated) |
-| **Input Validation Coverage** | (Endpoints with input validation ÷ endpoints that accept user input) × 100 | 73% (32/44 validated) |
-| **Parameterized Query Rate** | (DB queries using parameterized/prepared statements ÷ total DB queries found) × 100 | 85% (34/40 parameterized) |
-| **Secrets Hygiene** | (Secrets managed via secrets manager ÷ total secrets discovered) × 100 | 58% (7/12 managed) |
-| **Encryption Coverage** | (Data stores with encryption at rest ÷ total data stores) × 100 | 75% (3/4 encrypted) |
-| **Compliance Alignment** | (Standards with zero critical gaps ÷ total applicable standards) × 100 | 65% (13/20 aligned) |
-| **Mean Finding Score** | Sum of all finding scores ÷ number of findings (primary only, > 50) | 74.3 |
-| **Remediation Priority Index** | (Critical + High findings ÷ total primary findings) × 100 | 56% (10/18 urgent) |
-| **CWE/MITRE Top 25 Coverage** | (CWE Top 25 categories with zero findings ÷ 25) × 100 | 88% (22/25 clean) |
-| **OWASP Top 10 Alignment** | (OWASP Top 10 categories with zero critical gaps ÷ 10) × 100 | 70% (7/10 aligned) |
+| ID | Title | Score | Status | Assignee | Mitigation Date |
+|----|-------|-------|--------|----------|-----------------|
+| F01 | SQL Injection on public user search | 90 | Pending | — | — |
+| F02 | Mass assignment on PATCH /users/:id | 88 | In QA | j.doe | — |
+| W01 | Missing rate limiting on public API | 45 | Pending | — | — |
+```
 
-### Conditional metrics
+Empty values are written as `—`. The snapshot never changes a registry value.
 
-Include these when the assessment scope covers the relevant area:
+---
 
-| Metric | When to include | Formula |
-|--------|----------------|--------|
-| **Cloud Storage Secure Rate** | Cloud storage in scope | (Buckets/containers with proper ACL + encryption ÷ total) × 100 |
-| **CORS Policy Compliance** | APIs with CORS | (Endpoints with restrictive CORS ÷ endpoints with CORS enabled) × 100 |
-| **Rate Limiting Coverage** | Public APIs | (Public endpoints with rate limiting ÷ total public endpoints) × 100 |
-| **Logging & Monitoring Rate** | Observability in scope | (Endpoints with security event logging ÷ total endpoints) × 100 |
-| **RBAC Enforcement Rate** | Role-based access in scope | (Endpoints with role checks ÷ endpoints requiring role checks) × 100 |
-| **Dependency Vulnerability Rate** | Dependency audit in scope | (Dependencies with known CVEs ÷ total dependencies) × 100 |
-| **Version Pinning Rate** | Dependency audit in scope | (Dependencies pinned to exact version ÷ total dependencies) × 100 |
-| **Skills/Plugins Security Rate** | Integrated skills in scope | (Skills/plugins passing all checks ÷ total skills/plugins) × 100 |
+## CWE Top 25 Coverage Matrix — grouping rule
 
-### Presentation format
+List every Top 25 entry, but rows that cannot apply to the target may be **grouped** into one row with a reason, e.g. `| CWE-79, CWE-352, CWE-434 | N/A — no web UI or upload handler in scope |` or `| CWE-787, CWE-416, CWE-125, CWE-476 | N/A — memory-safe languages only |`. Applicable rows stay individual with their finding IDs or `0 findings`.
 
-Present the dashboard as a single summary table at the top of the section, followed by a severity distribution breakdown:
+---
+
+## Security Posture Dashboard (mandatory — measured metrics only)
+
+The dashboard reports **only what was actually counted**. A metric whose denominator was not enumerated during the assessment is written as `N/A — not measured`. Never estimate, extrapolate, or round up a denominator.
+
+| Metric | Formula | Measured when |
+|--------|---------|---------------|
+| **Assessment Coverage** | Components/endpoints analyzed ÷ discovered | Always (Step 1 enumerates entry points, or components for targets without a network surface) |
+| **Secure Surface** | Endpoints with no finding > 50 ÷ endpoints analyzed | Always |
+| **Auth Coverage** | Endpoints with authentication enforced ÷ endpoints analyzed | Each endpoint's auth was traced |
+| **Input Validation Coverage** | Endpoints with schema/DTO validation ÷ endpoints accepting input | Each input-accepting endpoint was inspected |
+| **Parameterized Query Rate** | Parameterized queries ÷ queries found | All query call sites were enumerated |
+| **Secrets Hygiene** | Secrets in a manager ÷ secrets discovered | A secret scan was performed |
+| **Dependency Vulnerability Rate** | Dependencies with known CVEs ÷ total dependencies | Lock file was audited |
+| **Severity Distribution** | Count per label (Critical / High / Medium / Warning) | Always |
+
+Present as one table plus the severity distribution:
 
 ```markdown
 ## Security Posture Dashboard
@@ -266,28 +467,42 @@ Present the dashboard as a single summary table at the top of the section, follo
 |--------|-------|--------|
 | Assessment Coverage | 87% (48/55) | ✅ |
 | Secure Surface | 62% (30/48) | ⚠️ |
-| Critical Exposure | 8% (4/48) | 🟥 |
-| ... | ... | ... |
+| Auth Coverage | 91% (44/48) | ✅ |
+| Input Validation Coverage | 73% (32/44) | ⚠️ |
+| Parameterized Query Rate | N/A — not measured | — |
+| Secrets Hygiene | 0% (0/12) | 🟥 |
+| Dependency Vulnerability Rate | 4% (9/212) | ✅ |
 
-### Severity Distribution
-
-| Severity | Count | % of Findings | % of Surface |
-|----------|-------|---------------|-------------|
-| Critical (90–100) | 4 | 22% | 8% |
-| High (70–89) | 6 | 33% | 12% |
-| Medium (50–69) | 8 | 44% | 17% |
-| Warning (≤50) | 5 | — | 10% |
-| **Secure (no findings)** | **30** | **—** | **62%** |
+| Severity | Count |
+|----------|-------|
+| Critical (90–100) | 2 |
+| High (70–89) | 1 |
+| Medium (51–69) | 3 |
+| Warning (≤ 50) | 4 |
 ```
 
-### Rating thresholds
+Rating: ✅ ≥ 80% · ⚠️ 50–79% · 🟥 < 50% (inverted for rates where lower is better, e.g., Dependency Vulnerability Rate: ✅ ≤ 10% · ⚠️ 11–30% · 🟥 > 30%). Every value shows percentage **and** raw count, e.g., `62% (30/48)`.
 
-| Rating | Symbol | Condition |
-|--------|--------|----------|
-| Good | ✅ | Metric ≥ 80% (or ≤ 10% for exposure metrics) |
-| Needs improvement | ⚠️ | Metric 50–79% (or 11–30% for exposure) |
-| Critical | 🟥 | Metric < 50% (or > 30% for exposure) |
+---
 
-> **Rule**: All percentages must show both the percentage and the raw count in parentheses (e.g., `62% (30/48)`). Raw counts without percentages or percentages without raw counts are incomplete.
->
-> **Scope rule**: Metrics must reflect only the assessed surface. If certain areas were outside the assessment scope (e.g., only 2 domain frameworks loaded), mark unassessed metrics as `N/A — outside assessment scope` rather than omitting them or inflating denominators with unverified data.
+## Optional SARIF 2.1.0 Export (only when the user asks)
+
+When the user asks for SARIF (e.g., for GitHub Code Scanning), write one additional file to the output directory:
+
+```text
+[YYYY-MM-DD]_[SHORT-TITLE].sarif.json
+```
+
+It is a **report artifact** — static JSON data, not executable — and contains the same findings as the Markdown report. Minimum mapping:
+
+| SARIF field | Source |
+|-------------|--------|
+| `runs[0].tool.driver.name` | `sar-cybersecurity` |
+| `runs[0].tool.driver.rules[].id` | CWE ID (e.g., `CWE-89`) |
+| `results[].ruleId` | CWE ID |
+| `results[].level` | `error` (≥ 70) · `warning` (51–69) · `note` (≤ 50) |
+| `results[].message.text` | Finding title + registry ID |
+| `results[].locations[].physicalLocation` | Affected file + line |
+| `results[].properties` | `{ "score": 90, "confidence": "Confirmed", "cvssV4": "CVSS:4.0/…", "registryId": "F01" }` |
+
+The agent writes the file only; it never uploads it or calls any external API.

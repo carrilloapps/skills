@@ -1,0 +1,3 @@
+# ceremonies
+
+Fixture template.

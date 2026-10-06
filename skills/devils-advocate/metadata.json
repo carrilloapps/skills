@@ -1,9 +1,19 @@
 {
-  "version": "2.9.2",
+  "version": "3.0.0",
   "author": "José Carrillo",
   "organization": "carrilloapps",
-  "abstract": "Mandatory adversarial analysis gate for 40+ AI coding agents. Intercepts every plan, proposal, and action before execution, delivers a full risk analysis across 12 domains, and blocks all operations until the user explicitly authorizes them.",
-  "keywords": ["adversarial-analysis", "risk-gate", "code-review", "security", "ai-safety", "pre-mortem", "architecture"],
+  "abstract": "Adversarial pre-execution gate for 70+ AI coding agents. Scales critique depth to the real risk of each action, requires evidence and a concrete fix for every risk, returns a corrected plan, and waits for explicit user approval before acting.",
+  "keywords": [
+    "adversarial-analysis",
+    "risk-gate",
+    "code-review",
+    "security",
+    "ai-safety",
+    "pre-mortem",
+    "architecture",
+    "risk-tiers",
+    "natural-language-gate"
+  ],
   "references": [
     "https://github.com/carrilloapps/skills",
     "https://skills.sh/carrilloapps/skills/devils-advocate",

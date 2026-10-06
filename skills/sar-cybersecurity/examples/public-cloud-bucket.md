@@ -19,42 +19,69 @@ A cloud storage bucket is configured with public read access and contains user u
 
 1. **IaC scan**: Infrastructure-as-code definition configures the bucket with public-read ACL and no public-access-block resource.
 2. **Policy analysis**: Bucket policy grants object-read access to a wildcard principal on all objects — any unauthenticated user can download any file.
-3. **Bucket contents**: Contains three prefixes:
-   - `uploads/` — user-uploaded documents (IDs, contracts, personal files)
-   - `backups/` — daily database dumps with customer PII
-   - `logs/` — application logs containing authentication tokens and API keys in error traces
+3. **What the code writes to the bucket** (derived from code and IaC — the agent never lists or downloads live objects):
+   - `uploads/` — `src/uploads/upload.handler.ts:22` stores user-uploaded documents (IDs, contracts, personal files)
+   - `backups/` — `ops/backup-cronjob.yaml:14` runs `pg_dump` of the customer database daily into this prefix
+   - `logs/` — `src/common/logger.ts:31` ships error traces to this prefix, and the error handler at `src/common/error.filter.ts:18` logs full request headers (including `Authorization` and `x-api-key`)
 4. **Encryption**: No server-side encryption configuration — data stored unencrypted.
 5. **Access logging**: No access logging configured — no audit trail of who accessed what.
 6. **Frontend exposure**: Bucket name hardcoded in `src/config/storage.ts` and visible in client-side code.
 
 ## SAR Finding
 
-### [97] — Public S3 Bucket Containing PII, Database Backups, and Application Secrets
+### [100] — Public S3 Bucket Containing PII, Database Backups, and Application Secrets
 
-- **Description**: Production cloud storage bucket is publicly readable via ACL and bucket policy (principal set to wildcard). The bucket contains user-uploaded personal documents, database backups with customer PII, and application logs with authentication tokens and API keys. No encryption at rest, no access logging.
-- **Affected Component(s)**: `terraform/s3.tf`, bucket policy, `src/config/storage.ts`
-- **Evidence**: Backup prefix accessible without authentication (HTTP 200). Policy allows any unauthenticated user to read all objects. ACL permits public read. No encryption. No access logging.
-- **Standards Violated**: OWASP Top 10 (A01:2021 Broken Access Control, A02:2021 Cryptographic Failures), GDPR Art. 32 (data protection), PCI-DSS Req. 3 & 7 (if payment data in backups), ISO 27001 A.8, A.10 (asset management, cryptography), NIST SP 800-53 AC-3, SC-28, AU-2, SOC 2 CC6.1, CC6.7, CSA STAR CCM DSI-04
-- **MITRE ATT&CK**: T1530 (Data from Cloud Storage Object), T1552.005 (Cloud Instance Metadata API — if credentials in logs)
-- **Score**: **97** (Critical) — public access, PII confirmed, database backups accessible, secrets in logs, no encryption, no audit trail.
-- **Suggested Mitigation Actions**:
-  1. **Emergency (within hours)**:
-     - Enable public-access-block at the account level
-     - Remove wildcard principal from bucket policy
-     - Set ACL to private
-  2. **Immediate (within 24h)**:
-     - Enable server-side encryption on the bucket
-     - Rotate all signing keys and API keys found in log files
-     - Rotate database credentials (visible in backup contents)
-  3. **Short-term**:
-     - Enable access logging and cloud audit trail data events
-     - Enable versioning and delete protection
-     - Move database backups to a separate, private bucket with cross-account access only
-     - Remove bucket name from frontend code — use pre-signed URLs generated server-side
-  4. **Medium-term**:
-     - Implement malware scanning on uploads
-     - Add data loss prevention scanning for PII in uploaded documents
-     - Set up automated alerts for public bucket configuration changes
+| Field | Value |
+|-------|-------|
+| Registry ID | F01 (new) |
+| Score | 100 (Critical) |
+| Confidence | Probable — gap: the deployed bucket's live policy and object contents were not verified (static analysis of IaC and code only; no live requests) |
+| Impact classification | Data exfiltration (with lateral access via leaked credentials) |
+| CVSS v4.0 | `CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:N/VA:N/SC:H/SI:H/SA:N` |
+| CWE | CWE-284 (Improper Access Control), CWE-312 (Cleartext Storage of Sensitive Information), CWE-532 (Sensitive Information in Log File) |
+| MITRE ATT&CK | T1530 (Data from Cloud Storage), T1552.001 (Credentials in Files) |
+| Effort | S (< 1 day) for access block + rotation; L for the follow-up redesign |
+| Affected | `terraform/s3.tf`, bucket policy, `src/config/storage.ts` |
+
+**Description** — The IaC makes the production bucket publicly readable (ACL + wildcard-principal policy). The code writes user ID documents, daily database dumps with customer PII, and logs containing auth tokens and API keys into it. No encryption, no access logging — exposure cannot be ruled out retroactively. If the deployed state matches the IaC, the data is public today.
+
+**Evidence / Trace** — see Assessment Trace above.
+
+**Attack Scenario**
+
+1. Anyone reads the bucket name from the frontend bundle.
+2. They list or guess object keys and download the latest database dump without credentials.
+3. API keys in `logs/` give them access to other systems (lateral movement). No log records any of it.
+
+**Score Justification**
+`Base 80 +10 (full enumeration + lateral access, D2 capped at +10) +10 (credentials) = 100 (cap: none) → Final 100`
+
+- Re-checked per the 100 rule: zero barriers, mass impact, credentials + PII, no detection — every factor is backed by IaC or code evidence.
+- Confidence Probable does not cap the score; the gap (live state) is listed in Out of Scope & Limitations and the team confirms it with the first verification step below.
+
+**Standards Violated** — OWASP Top 10:2025 (A01 Broken Access Control, A02 Security Misconfiguration, A04 Cryptographic Failures), GDPR Art. 32 & 33 (breach assessment), PCI DSS v4.0.1 Req. 3 & 7 (if payment data in backups), ISO/IEC 27001:2022 A.8.12, A.5.23 & A.8.24, NIST SP 800-53 AC-3, SC-28, AU-2, SOC 2 CC6.1, CC6.7, CSA STAR CCM DSI-04
+
+**Fix** (IaC, documentation only — the team applies it):
+
+```diff
+  resource "aws_s3_bucket" "app" { bucket = "app-prod" }
+- resource "aws_s3_bucket_acl" "app" { bucket = aws_s3_bucket.app.id  acl = "public-read" }
++ resource "aws_s3_bucket_public_access_block" "app" {
++   bucket                  = aws_s3_bucket.app.id
++   block_public_acls       = true
++   block_public_policy     = true
++   ignore_public_acls      = true
++   restrict_public_buckets = true
++ }
+```
+
+Same day, outside the diff: rotate every key found in `logs/` and the database credentials visible in backups; start a GDPR Art. 33 breach assessment (72-hour clock). Follow-up: SSE-KMS encryption, access logging, backups in a separate private account, pre-signed URLs from the backend.
+
+**How to Verify the Fix** (run by the team, not by the agent)
+
+- Before the fix, the team confirms the live state matches the IaC (this closes the Confidence gap); after the fix, an anonymous `GET` on a known `backups/` object returns 403.
+- The cloud provider's public-access-block report shows all four flags `true` for the bucket and account.
+- Every rotated key fails authentication when tested by the team.
 
 ## Key Principles Demonstrated
 

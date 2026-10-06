@@ -1,0 +1,26 @@
+check-spec — specs/fail
+1. error spec.md [missing-section] missing section: Behavioral contract
+2. error spec.md [missing-section] missing section: Success criteria
+3. error spec.md [missing-section] missing section: Constraints
+4. error spec.md [missing-section] missing section: Open questions
+5. error spec.md [fr-missing] no Functional requirements table with FR-### rows
+6. error spec.md:15 [scenario-steps] scenario without When, Then step(s)
+7. error spec.md:15 [scenario-fr] scenario without an @FR-### tag
+8. warning spec.md:15 [scenario-priority] scenario without a priority tag (@P1, @P2 or @P3)
+9. warning spec.md:15 [scenario-origin] scenario without Origin:/Origen: line
+10. error spec.md:4 [tbd] TBD left in the spec
+11. error spec.md:7 [checkbox] checkbox list item; use numbered or lettered items with a state
+12. error spec.md:8 [checkbox] checkbox list item; use numbered or lettered items with a state
+13. error design.md [phase2-heading] missing '## Architecture & Design' section
+14. warning design.md [design-element] design element not found: Architectural style
+15. warning design.md [design-element] design element not found: Bounded context
+16. warning design.md [design-element] design element not found: Patterns
+17. warning design.md [design-element] design element not found: State model
+18. warning design.md [design-element] design element not found: Composition points
+19. warning design.md [design-element] design element not found: Public surface
+20. warning design.md [design-element] design element not found: Anti-violations
+21. error design.md:3 [checkbox] checkbox list item; use numbered or lettered items with a state
+22. warning requirements-checklist.md [checklist-missing] requirements-checklist.md missing (required before Phase 2 under --strict)
+23. error verification.md [phase4-table] no results table with a Result/Resultado column
+24. error verification.md [phase4-verdict] no Verdict/Veredicto line with a check, warning or cross mark
+Result: 14 error(s), 10 warning(s) — FAIL

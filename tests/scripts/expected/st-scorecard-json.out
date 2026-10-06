@@ -1,0 +1,1 @@
+{"root":"agile-project","findings":[],"errors":0,"warnings":0,"strict":false,"gate":"open","scorecard":{"process":4,"capabilities":3,"autonomy":4,"metrics":4,"transcripts":3,"score":18,"max":20,"percent":90},"gaps":["Chat","Warehouse / semantic layer","Doc / memory graph"],"exit":0}

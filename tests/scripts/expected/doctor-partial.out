@@ -1,0 +1,12 @@
+doctor — structure/partial
+1. Phase 0 gate: closed (24 error(s), 2 warning(s))
+2. Readiness: 30% (6/20) — process L1, capabilities L1, autonomy L1, metrics L0, transcripts L3
+3. Hygiene (audit-agile): 2 finding(s)
+4. Docker lab: unavailable — Docker daemon not reachable
+5. Capability gaps: none
+Next actions:
+a. Complete plans/agile/ with the team: run scripts/check-structure --root structure/partial
+b. Fill and confirm the plans/agile/ files of: process, capabilities, autonomy, metrics (target L3)
+c. Fix the hygiene findings: run scripts/audit-agile --root structure/partial
+d. Docker lab unavailable (Docker daemon not reachable): start Docker or use the CLI routes in frameworks/capabilities.md
+Result: ATTENTION

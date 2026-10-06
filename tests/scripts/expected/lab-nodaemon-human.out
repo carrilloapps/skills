@@ -1,0 +1,18 @@
+Lab probe — windows/amd64 · Docker: Docker daemon not reachable
+Resources: RAM available 4000 MB (budget 2976 MB) · CPUs 4 · disk free 20000 MB · vm.max_map_count unknown
+
+Suggested: none fits right now.
+
+Skipped:
+a. t-secrets (test-skill) — Docker unavailable: Docker daemon not reachable — CLI route: gitleaks dir . --redact
+b. t-sast (test-skill) — Docker unavailable: Docker daemon not reachable
+c. t-sca (test-skill) — Docker unavailable: Docker daemon not reachable — stdout "scanner" with a back\slash
+d. t-ci (test-skill) — Docker unavailable: Docker daemon not reachable
+e. t-iac (test-skill) — no matching files in the project
+f. t-db (test-skill) — Docker unavailable: Docker daemon not reachable
+g. t-go (test-skill) — no matching files in the project
+h. t-tie-a (test-skill) — Docker unavailable: Docker daemon not reachable
+i. t-tie-b (test-skill) — Docker unavailable: Docker daemon not reachable
+j. t-cpu (test-skill) — requires cpus>=64 (current 4)
+k. t-sonar (test-skill) — requires max_map_count>=524288 (unknown on this machine)
+l. t-dojo (test-skill) — Docker unavailable: Docker daemon not reachable

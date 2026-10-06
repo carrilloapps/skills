@@ -1,0 +1,17 @@
+{
+  "minTokens": 50,
+  "reporters": [
+    "json"
+  ],
+  "output": "/out/jscpd",
+  "ignore": [
+    "**/node_modules/**",
+    "**/.memory/**",
+    "**/dist/**",
+    "**/build/**",
+    "**/vendor/**",
+    "**/integrations/*/hooks/**/classifier.mjs",
+    "**/integrations/opencode/**/classifier.mjs",
+    "**/skills/*/scripts/lab-probe.*"
+  ]
+}

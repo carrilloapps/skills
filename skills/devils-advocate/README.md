@@ -1,304 +1,174 @@
 # 🔴 Devil's Advocate
 
-> **The mandatory adversarial analysis gate for 40+ AI coding agents — runs first, before any action.**
+> **An adversarial pre-execution gate for 70+ AI coding agents — short, evidence-based critiques that change the plan.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-red.svg)](../../LICENSE)
-[![Version](https://img.shields.io/badge/version-2.9.2-blue.svg)](../../CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-3.0.0-blue.svg)](../../CHANGELOG.md)
 [![skill.sh](https://img.shields.io/badge/skill.sh-devils--advocate-black.svg)](https://skills.sh/carrilloapps/skills/devils-advocate)
 [![GitHub](https://img.shields.io/badge/GitHub-carrilloapps-181717.svg?logo=github)](https://github.com/carrilloapps/skills)
 [![X / Twitter](https://img.shields.io/badge/@carrilloapps-000000.svg?logo=x)](https://x.com/carrilloapps)
 
 ---
 
-Devil's Advocate is an [agent skill](https://skills.sh) compatible with **40+ AI coding agents** — including GitHub Copilot, Claude Code, Cursor, Windsurf, Cline, Codex, Gemini CLI, OpenCode, Roo Code, and more — that intercepts every plan, proposal, and action before execution and delivers a full adversarial risk analysis, blocking all operations until you explicitly authorize them.
+Devil's Advocate is an [agent skill](https://skills.sh) compatible with **70+ AI coding agents** — including GitHub Copilot, Claude Code, Cursor, Windsurf, Cline, Codex, Gemini CLI, OpenCode, Roo Code, and more — that critiques every plan before execution — briefly for small changes, in depth for risky ones — and waits for your explicit approval before acting.
 
 It is not a linter. It is not a checklist. It is an adversarial analyst that:
 
-- **Runs consistently first** — before any MCP tool, agent, skill, or file operation
-- **Challenges every assumption** — finds what the plan missed, not what it got right
-- **Fires alerts mid-sweep** — doesn't wait until the end to surface a Critical finding
+- **Scales to the risk** — one line for a typo, a short critique for a feature, a hard stop for a production delete
+- **Proves every risk** — each finding cites the file, line, or scenario behind it, and comes with a specific fix
+- **Hands you a better plan** — ends with the corrected plan you can approve in one word
 - **Preserves your authority** — having permissions is not the same as having authorization
 
 ---
 
 ## Quick Install
 
-> **Before installing**: Review the source at [github.com/carrilloapps/skills](https://github.com/carrilloapps/skills) and verify the latest audit results at [skills.sh/audits](https://skills.sh/audits). The install command below fetches and executes code from a remote repository — review before running in production or sensitive environments.
+> **Before installing**: review the source at [github.com/carrilloapps/skills](https://github.com/carrilloapps/skills) and the latest audit results at [skills.sh/audits](https://skills.sh/audits).
 
 ```bash
-npx skills add carrilloapps/skills@devils-advocate
+npx skills add carrilloapps/skills@devils-advocate                          # agents detected in this project
+npx skills add carrilloapps/skills@devils-advocate -a antigravity -a cursor # specific agents
+npx skills add carrilloapps/skills@devils-advocate -a '*'                   # every supported agent
+npx skills add carrilloapps/skills@devils-advocate -g                       # global (all projects)
 ```
 
-### All install options
+Update with `npx skills update`; remove with `npx skills remove devils-advocate`.
 
-| Command | Effect |
-|---------|--------|
-| `npx skills add carrilloapps/skills@devils-advocate` | Install to all detected agents in current project |
-| `npx skills add carrilloapps/skills@devils-advocate -g` | Install globally (available in every project) |
-| `npx skills add carrilloapps/skills@devils-advocate -a github-copilot` | Install to a specific agent only |
-| `npx skills add carrilloapps/skills@devils-advocate -a claude-code -a cursor` | Install to multiple specific agents |
-| `npx skills add carrilloapps/skills@devils-advocate --all` | Install to all agents, skip confirmations |
-| `npx skills add carrilloapps/skills@devils-advocate -g -y` | Global install, non-interactive (CI-friendly) |
-
-Target a specific agent:
-
-```bash
-npx skills add carrilloapps/skills@devils-advocate -a github-copilot
-npx skills add carrilloapps/skills@devils-advocate -a claude-code
-npx skills add carrilloapps/skills@devils-advocate -a cursor
-npx skills add carrilloapps/skills@devils-advocate -a windsurf
-```
-
-### Keeping it up to date
-
-```bash
-# Check if a newer version is available
-npx skills check
-
-# Update to the latest version
-npx skills update
-```
-
-> See [skills.sh/carrilloapps/skills/devils-advocate](https://skills.sh/carrilloapps/skills/devils-advocate) for the canonical install command and latest release.
-
-### Where files are installed
-
-| Scope | Path |
-|-------|------|
-| Project (default) | `./<agent>/skills/devils-advocate/SKILL.md` |
-| Global (`-g`) | `~/<agent>/skills/devils-advocate/SKILL.md` |
-
-By default the CLI creates a **symlink** from each agent directory to a single canonical copy — one source of truth, easy to update. Use `--copy` if your environment does not support symlinks.
-
-### CLI Reference — all commands
-
-| Command | Description |
-|---------|-------------|
-| `npx skills add carrilloapps/skills@devils-advocate` | Install to all detected agents (current project) |
-| `npx skills add carrilloapps/skills@devils-advocate -g` | Install globally (all projects) |
-| `npx skills add carrilloapps/skills@devils-advocate -a <agent>` | Install to a specific agent |
-| `npx skills add carrilloapps/skills@devils-advocate --all` | Install to all agents, skip prompts |
-| `npx skills add carrilloapps/skills@devils-advocate -g -y` | Global + non-interactive (CI-friendly) |
-| `npx skills add carrilloapps/skills@devils-advocate --copy` | Copy files instead of symlink |
-| `npx skills list` | List all installed skills in current project |
-| `npx skills list -g` | List globally installed skills |
-| `npx skills find devils-advocate` | Search the skills.sh directory |
-| `npx skills check` | Check if a newer version is available |
-| `npx skills update` | Update all installed skills to latest |
-| `npx skills remove devils-advocate` | Remove the skill from current project |
-| `npx skills remove devils-advocate -g` | Remove from global scope |
-| `npx skills remove devils-advocate -a <agent>` | Remove from a specific agent only |
-
----
-
-## Compatible Agents
-
-Works with every agent supported by the [skills.sh](https://skills.sh) ecosystem:
-
-| Agent | `--agent` flag |
-|-------|---------------|
-| GitHub Copilot | `github-copilot` |
-| Claude Code | `claude-code` |
-| Cursor | `cursor` |
-| Windsurf | `windsurf` |
-| Cline | `cline` |
-| OpenAI Codex | `codex` |
-| Gemini CLI | `gemini-cli` |
-| OpenCode | `opencode` |
-| Roo Code | `roo` |
-| Goose | `goose` |
-| Continue | `continue` |
-| Amp / Kimi CLI / Replit | `amp` |
-| Antigravity | `antigravity` |
-| Augment | `augment` |
-| Droid | `droid` |
-| Kilo Code | `kilo` |
-| Kiro CLI | `kiro-cli` |
-| OpenHands | `openhands` |
-| Trae / Trae CN | `trae` |
-| Zencoder | `zencoder` |
-| + 20 more | `npx skills add --list` |
-
-> **Kiro CLI note**: After installing, manually add the skill to your agent's `resources` in `.kiro/agents/<agent>.json`:
-> ```json
-> { "resources": ["skill://.kiro/skills/**/SKILL.md"] }
-> ```
+Works with **70+ agents** — Claude Code, Antigravity (IDE and `agy` CLI), GitHub Copilot, Cursor, Codex, Gemini CLI, Windsurf / Devin Desktop, Cline, Roo Code, OpenCode, Kiro, and more. Per-agent `-a` ids, project and global paths, always-on instruction files, manual install, and optional guards: **[`docs/INSTALL.md`](../../docs/INSTALL.md)**.
 
 ---
 
 ## What It Does
 
-When you describe a plan, propose a change, or request any action, Devil's Advocate:
+Devil's Advocate scales its depth to the real risk of each action, so the critique stays short enough to read and specific enough to act on:
 
-```
-1. INTERCEPTS  — "Running Devil's Advocate before proceeding..."
-                  Does NOT execute the action yet.
-       │
-       ▼
-2. ANALYSES    — Loads relevant risk frameworks.
-                  Fires ⚡ Immediate Report on first High/Critical finding.
-                  Activates 🛑 Handbrake on any Critical finding.
-       │
-       ▼
-3. REPORTS     — Full adversarial analysis: strengths, weaknesses,
-                  assumptions challenged, edge cases, failure modes.
-       │
-       ▼
-4. GATES       — Waits for your explicit decision before proceeding.
-```
+| Tier | When | Output |
+|------|------|--------|
+| **0 — Pass** | Read-only work, trivial reversible edits | Nothing, or one line |
+| **1 — Quick check** | Contained, reversible changes | 3–8 lines: verdict + top risks with fixes + one-line gate |
+| **2 — Full critique** | Production, data, auth, payments, PII, public APIs, git history, architecture/vendor decisions | Short report: verdict, ≤ 5 evidence-backed risks, better option, corrected plan, gate |
+| **3 — Critical stop** | A 🔴 Critical risk whose severity depends on facts only you have | 2–4 targeted questions first, then the report |
 
-### The Gate (always at the end)
+Every risk must cite **evidence** (file and line, a quote from the plan, a concrete scenario) and carry a **specific fix**. Generic advice, filler sections, copied templates, and invented confidence percentages are explicitly banned.
 
-```
-🔴 Devil's Advocate complete.
+The report ends with **"What I'll do if you approve"** — the original plan corrected with the fixes — so you approve a better plan, not just a list of complaints.
 
-Before I proceed, please confirm:
-  - [ ] I have reviewed all Critical and High issues above
-  - [ ] I accept the risks marked as accepted (or they are mitigated)
-  - [ ] I want to proceed with the approved action
+### Example (Tier 1)
 
+> 🟡 **DA — 10-min in-memory cache on /api/products** · Verdict: Go with changes
+>
+> 1. 🟠 **Per-user prices would leak between users** — `getProducts()` applies `customer.discountTier` (`src/products/service.ts:48`); a shared cache key would serve one customer's prices to another. *Fix:* key the cache by `discountTier`.
+> 2. 🟡 **Stale after admin edits** — *Fix:* invalidate in `updateProduct()`.
+> Reply ✅ Proceed · 🔁 Revise · ❌ Cancel · `continue` — or reply in your own words.
+
+### The Gate
+
+```text
 Reply with:
-  ✅ Proceed   — continue with the approved action as planned
+  ✅ Proceed   — run the corrected plan ("What I'll do if you approve")
   🔁 Revise    — describe the change and I will re-analyse
   ❌ Cancel    — stop, do not implement
   `continue`   — proceed without addressing remaining issues (risks remain active and unmitigated)
+Or reply in your own words, in any language.
 ```
 
-Nothing executes without your explicit `✅ Proceed`.
+You don't need the exact labels: "dale", "procede", "continúa", "go ahead" approve the corrected plan; "pero sin X" revises; "no" cancels; partial approvals by number ("dale con 1 y 3", "quita la 2") apply only those items. A bare "ok" or "sí" is acknowledgement, not approval, and gets a one-line confirmation question. A question is never approval, even if it contains an action verb. Only the bare word `continue` runs the original plan with its open risks. The verdict is derived from a fixed table, there is one gate per plan, and revisions only re-check what changed.
+
+Nothing with side effects runs until you reply. Git writes always require explicit approval, regardless of session permissions.
 
 ### Bypass Behavior
 
-If a user says "just do it", "skip analysis", or "proceed anyway", Devil's Advocate respects the user's authority to override and executes — but prepends a visible warning:
-
-```
-⚠️ Proceeding without Devil's Advocate review.
-Risks not assessed. User's authority to bypass is preserved —
-this warning is visible in the conversation history so risks remain visible.
-```
+If you say "just do it" or "skip the analysis", Devil's Advocate respects your authority and executes, prefixed with: `⚠️ Proceeding without Devil's Advocate review — risks not assessed.`
 
 ---
 
 ## Why This Exists
 
-AI tools are increasingly capable of executing complex, multi-step operations — creating files, calling APIs, running migrations, deploying services. The default behavior is to help you accomplish what you asked for. Devil's Advocate adds the adversarial voice that asks: **"Should we?"**
-
-The skill is designed on a simple principle: **having permissions is not the same as having authorization.** Technical capability never substitutes for your informed, explicit decision.
-
-### Authorization Model
-
-The AI may hold full technical access — read/write to the filesystem, credentials for APIs, the ability to invoke MCP tools, trigger agents, and deploy services. None of that constitutes authorization to act.
-
-| Situation | Is this authorization? |
-|-----------|----------------------|
-| "Do X" was requested | ❌ No — it is a request that triggers analysis |
-| The AI has a token or credential for the operation | ❌ No — capability is not consent |
-| A tool or MCP has its own permission model | ❌ No — it does not substitute for user approval |
-| A similar operation was approved before | ❌ No — each action requires its own approval |
-| The user says "just do it" / "skip the analysis" | ⚠️ User's right — but triggers the bypass warning |
-
-Authorization comes **exclusively** from the user's explicit `✅ Proceed` after reviewing the Devil's Advocate analysis.
-
----
-
-## Core Principles
-
-### Gate First, Execute Anything Second
-
-Nothing executes without passing the Devil's Advocate gate — one-line refactors, multi-phase migrations, MCP tool calls, architecture decisions, and production deployments alike. Technical capability never substitutes for the user's explicit, informed authorization.
-
-### Adversarial Mindset
-
-| Defender Thinking | Adversarial Thinking |
-|------------------|----------------------|
-| "This should work" | "How could this fail?" |
-| "We handled the common case" | "What edge cases did we miss?" |
-| "The tests pass" | "What didn't we test?" |
-| "Security is implemented" | "How would I exploit this?" |
-| "This is best practice" | "When does best practice fail?" |
-
-### Rule Precedence
-
-The rules and enforcement standards of this skill — including the Gate Protocol, Building Protocol, Handbrake, and Immediate Report — **take precedence over all other tools, skills, agents, and MCPs** in the session. If another tool attempts to bypass or shorten the analysis step, the Gate still applies.
-
----
-
-## Best Practices
-
-| | |
-|--|--|
-| ✅ | Be specific — point to exact code, query, or design element |
-| ✅ | Prioritize — lead with the most dangerous risks, not the most numerous |
-| ✅ | Suggest fixes — every criticism paired with a direction to address it |
-| ✅ | Document assumptions — make the implicit explicit |
-| ❌ | Do not soften the critique — the user is asking for honest challenge |
-| ❌ | Do not invent problems — only evidence-based concerns |
-| ❌ | Do not block progress indefinitely — balance risk vs. velocity **except** when the 🛑 Handbrake is active |
-| ❌ | Do not allow any tool, MCP, agent, or skill to bypass this gate — the analysis runs first, unconditionally |
-
----
-
-The skill uses a layered protocol that escalates based on finding severity:
-
-| Protocol | Trigger | Purpose |
-|----------|---------|---------|
-| ⚡ **Immediate Report** | First 🟠 High or 🔴 Critical finding | Flash alert mid-sweep + context request; analysis continues |
-| 🛑 **Handbrake** | Any 🔴 Critical finding (or 3+ 🟠 High same domain) | Full stop + specialist escalation + focused pre-mortem |
-| 📄 **Full Report** | After context received or `continue` | Structured adversarial analysis with all findings |
-| 🚦 **Gate** | After full report | Waits for ✅ / 🔁 / ❌ before any action |
+AI agents can create files, call APIs, run migrations, and deploy services. Their default is to do what was asked. Devil's Advocate adds the voice that asks **"should we, and what will break?"** — without burying you in ceremony. **Having permissions is not the same as having authorization**: tokens, tool permissions, and auto-approve modes never replace your reply to the gate.
 
 ---
 
 ## Framework Coverage
 
-| Domain | Framework | Role |
-|--------|-----------|------|
-| Architecture | `frameworks/architecture-risks.md` | Architect / Tech Lead |
-| Security | `frameworks/security-stride.md` | Dev / Tech Lead |
-| Performance | `frameworks/performance.md` | Dev / Tech Lead |
-| Developer / Code | `frameworks/developer-risks.md` | Developer / Senior Engineer |
-| Data & Analytics | `frameworks/data-analytics-risks.md` | Data Engineer / Analyst |
-| Product | `frameworks/product-risks.md` | PM / PO |
-| UX / Design | `frameworks/design-ux-risks.md` | UX / Designer |
-| Strategy / Leadership | `frameworks/leadership-strategy-risks.md` | CTO / VP Eng |
-| AI Optimization | `frameworks/ai-optimization.md` | All — AI context files |
-| Version Control | `frameworks/version-control.md` | Dev / Tech Lead / DevOps |
-| Vulnerability Patterns | `frameworks/vulnerability-patterns.md` | Dev / Tech Lead |
-| General Analysis | `frameworks/analysis-framework.md` | All |
-| **Building Protocol** | `frameworks/building-protocol.md` | Always active with code |
-| **Output Format** | `frameworks/output-format.md` | All reports |
-| **Handbrake Protocol** | `frameworks/handbrake-protocol.md` | Auto on 🔴 Critical |
-| **Immediate Report** | `frameworks/immediate-report.md` | Auto on 🟠 High / 🔴 Critical |
-| **Pre-mortem** | `frameworks/premortem.md` | Auto on 🔴 Critical (Handbrake Step 6) |
-| **Handbrake Checklist** | `frameworks/handbrake-checklist.md` | Rapid Handbrake activation decision sweep |
+Frameworks are thinking aids loaded only when they sharpen the analysis (usually 0 for Tier 1, 1–2 for Tier 2). Their templates never appear in the output — only their conclusions.
 
-**Context budget**: Load all frameworks relevant to the plan's scope in a single analysis pass — no artificial cap. Relevance-based selection only: load the frameworks that directly apply to what is being analyzed. Most plans need 2–4; loading all 12 is reserved for full-system reviews spanning every domain simultaneously. Protocol files (`output-format.md`, `handbrake-protocol.md`, `immediate-report.md`, `premortem.md`, `handbrake-checklist.md`) are free and always loadable.
+| Domain | Framework |
+|--------|-----------|
+| General | `frameworks/analysis-framework.md` |
+| Security | `frameworks/security-stride.md`, `frameworks/vulnerability-patterns.md` |
+| Performance | `frameworks/performance.md` |
+| Architecture | `frameworks/architecture-risks.md` |
+| Data & Analytics | `frameworks/data-analytics-risks.md` |
+| Developer / Code | `frameworks/developer-risks.md` |
+| Version Control | `frameworks/version-control.md` |
+| Product | `frameworks/product-risks.md` |
+| UX / Design | `frameworks/design-ux-risks.md` |
+| Strategy / Leadership | `frameworks/leadership-strategy-risks.md` |
+| AI context files | `frameworks/ai-optimization.md` |
+| **Output format** (good vs. bad) | `frameworks/output-format.md` |
+| **Critical stop** question banks | `frameworks/handbrake-protocol.md` |
+| **Pre-mortem** | `frameworks/premortem.md` |
+| **Building Protocol** (code) | `frameworks/building-protocol.md` |
+| **Optional capabilities** | `frameworks/capabilities.md` |
+| **Docker lab** (quality evidence) | `frameworks/docker-lab.md` |
+
+### Optional capabilities
+
+When reading the code is not enough to prove a plan's blast radius, Devil's Advocate may suggest **one** optional tool — [`@colbymchenry/codegraph`](https://github.com/colbymchenry/codegraph) (pinned `1.6.2`, local code graph, telemetry disabled) — so risks cite real caller files as *Evidence*. It is suggested at most once, recorded in `.memory/local/devils-advocate/capabilities.json` (VCS-ignored), and installed only through the Gate after you approve the exact command. Without it, the skill works exactly the same.
+
+### Docker lab (optional)
+
+If Docker is available and a risk depends on something a tool can measure better than reading, Devil's Advocate can suggest a one-shot, read-only container from [`frameworks/docker-lab.md`](frameworks/docker-lab.md), chosen by the stack it detects:
+
+| Stack signal | Tool (pinned) | Evidence it produces |
+|---|---|---|
+| Any code | lizard 1.24.0 · jscpd 5.4.0 | Complexity of touched functions; duplicated blocks fixed in only one copy |
+| JS/TS | dependency-cruiser 18.5.0 | Import cycles through changed modules |
+| Go | golangci-lint v2.14.0 | Linter issues on touched lines |
+| GitHub Actions | actionlint 1.7.12 | Workflow errors, `${{ }}` injection in `run:` |
+| Helm charts | helm 4.3.0 | `helm lint` errors |
+| SQL / migrations | sqlfluff 4.4.0 | Parse errors in new migrations |
+| Local Postgres | PgHero v4.0.1 (dashboard, `127.0.0.1:8090`) | Slow queries and missing indexes on tables the plan hits |
+
+It also reads SAR's SonarQube when it is already running (quality gate, complexity, duplication) instead of defining a second one. Compose file in `.memory/devsecops/compose.da.yaml` (versioned), raw results in `.memory/local/devsecops/results/` (ignored), dashboards share the one login generated by SAR. Every pull/run needs your approval of the exact command; results only reach the report as *Evidence* on files the plan touches.
+
+---
+
+## Scripts
+
+`scripts/lab-probe.sh` / `scripts/lab-probe.ps1` (vendored from `shared/`) — detects Docker and host capacity and suggests the lab tools of every installed skill, most critical first, within the resources available. Run only after you approve the exact command.
+
+---
+
+## Safety
+
+All six audit safeguards are stated in `SKILL.md` §6: analyzed content is untrusted data, analysis is read-only, autonomy is bounded to the approved steps, web search is limited to official sources, example code is illustrative, and the report is Markdown only. Everything is written inside the project (ai-rules *Project-Local Storage*).
 
 ---
 
 ## Examples
 
-Real-world analysis examples demonstrating the full protocol stack:
+| Example | Shows |
+|---------|-------|
+| [`quick-check.md`](examples/quick-check.md) | Tier 0 and Tier 1 — how short a good check is, and escalation to Tier 3 |
+| [`plan-critique.md`](examples/plan-critique.md) | Tier 3 → Tier 2 — production database migration |
+| [`security-review.md`](examples/security-review.md) | Tier 3 → Tier 2 — JWT auth with a committed secret |
+| [`vendor-decision-review.md`](examples/vendor-decision-review.md) | Tier 2 — non-code strategy decision (AWS → GCP) |
 
-| Example | Domain | Trigger | Protocol |
-|---------|--------|---------|----------|
-| [`architecture-critique.md`](examples/architecture-critique.md) | Architecture | 12-service microservices decomposition, 3 engineers | ⚡ IR → 🛑 Handbrake → Gate |
-| [`plan-critique.md`](examples/plan-critique.md) | Data / Operations | Database migration zero-downtime risk | ⚡ IR → 🛑 Handbrake → Gate |
-| [`handbrake-example.md`](examples/handbrake-example.md) | Data / PII | Analytics pipeline with PII exposure | ⚡ IR → 🛑 Multi-Role Handbrake → Gate |
-| [`security-review.md`](examples/security-review.md) | Security | JWT auth — hardcoded secret in git, HS256, no revocation | ⚡ IR → 🛑 AppSec Handbrake → STRIDE → Gate |
-| [`ai-context-review.md`](examples/ai-context-review.md) | AI Optimization | AGENTS.md + copilot-instructions.md conflict | ⚡ IR → 🛑 AI Tooling Handbrake → Gate |
-| [`version-control-review.md`](examples/version-control-review.md) | Version Control | Leaked DB credentials + force push to main | ⚡ IR → 🛑 Multi-Role Handbrake → remediation plan → Gate |
-| [`product-feature-review.md`](examples/product-feature-review.md) | Product / Legal | Subscription cancellation dark pattern (FTC + GDPR) | ⚡ IR → 🛑 Legal Handbrake → Gate |
-| [`data-pipeline-review.md`](examples/data-pipeline-review.md) | Data / Legal | PII migration to BigQuery without masking (GDPR Art. 25) | ⚡ IR → 🛑 Data Handbrake → Gate |
-| [`cicd-pipeline-review.md`](examples/cicd-pipeline-review.md) | Security / Version Control | GitHub Actions — hardcoded secrets, write-all token, mutable Actions | ⚡ IR → 🛑 Handbrake → corrected YAML → Gate |
-| [`vendor-decision-review.md`](examples/vendor-decision-review.md) | Strategy | Full AWS → GCP migration in 12 weeks — Type 1 decision | ⚡ IR → 🛑 CTO Handbrake → Gate |
-| [`ux-checkout-review.md`](examples/ux-checkout-review.md) | UX / Legal | Subscription checkout dark patterns (FTC negative option rule) | ⚡ IR → Full Report → Gate |
-| [`performance-review.md`](examples/performance-review.md) | Performance / Code | N+1 query on cart API hot path — DB pool exhaustion risk | ⚡ IR → Full Report with corrected implementation → Gate |
+---
+
+## Migrating from 2.x
+
+- ⚡ Immediate Report and the separate Handbrake round are merged into a single **Critical stop** (Tier 3). `immediate-report.md` and `handbrake-checklist.md` were removed.
+- The 14-section report template is replaced by a compact report; empty sections are omitted instead of filled.
+- Trivial and read-only actions no longer trigger a gate (Tier 0). Git writes still always do.
+- Gate labels (`✅ Proceed`, `🔁 Revise`, `❌ Cancel`, `continue`) remain, but replies are read by intent. `✅ Proceed` now runs the corrected plan; `continue` has one meaning everywhere: run the original plan with its open risks. In a Tier 3 stop, "skip the questions" produces the worst-case report.
 
 ---
 
 ## Building Protocol
 
-When code is generated or reviewed, the **Building Protocol** activates unconditionally:
+The **Building Protocol** applies to code the approved plan writes. Existing code is reported, never rewritten without your approval, and style issues never displace correctness or security risks:
 
 | Rule | Requirement |
 |------|-------------|
@@ -349,14 +219,14 @@ Devil's Advocate activates automatically — no invocation required — when it 
 
 | Checklist | Purpose |
 |-----------|---------|
-| [`checklists/risk-checklist.md`](checklists/risk-checklist.md) | 8-category structured risk sweep — percentage-based scoring |
+| [`checklists/risk-checklist.md`](checklists/risk-checklist.md) | 8-category internal risk sweep — no score; each evidenced item becomes a candidate risk |
 | [`checklists/questioning-checklist.md`](checklists/questioning-checklist.md) | 15-dimension interrogation — correctness, security, performance, reliability, maintainability, operability, cost, product, UX, strategy, architecture, data, developer, building protocol, AI optimization |
 
 ---
 
 ## Integration with Postmortem Writing
 
-```
+```text
 Devil's Advocate (before) → Incident → Postmortem (after) → Lessons → Devil's Advocate (next)
      (Prevent)                              (Learn)          (Apply)       (Prevent better)
 ```

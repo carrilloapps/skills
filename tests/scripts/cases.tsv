@@ -1,0 +1,127 @@
+# Parity cases: every implementation (bash, pwsh, powershell.exe) must match expected/<name>.out (+ .tree) and the exit code.
+# name	mode	impl	seed	args	exit
+lab-full	repo	lab-probe	-	--root project-node --fake-resources-file res-full.json --json	0
+lab-full-human	repo	lab-probe	-	--root project-node --fake-resources-file res-full.json	0
+lab-dash	repo	lab-probe	-	--root project-node --fake-resources-file res-full.json --include-dashboards --json	0
+lab-nodaemon	repo	lab-probe	-	--root project-node --fake-resources-file res-nodaemon.json --json	4
+lab-nodaemon-human	repo	lab-probe	-	--root project-node --fake-resources-file res-nodaemon.json	4
+lab-small	repo	lab-probe	-	--root project-node --fake-resources-file res-small.json --include-dashboards --json	0
+lab-budget	repo	lab-probe	-	--root project-node --fake-resources-file res-full.json --budget-ram 300 --json	0
+lab-unknown	repo	lab-probe	-	--root project-node --fake-resources-file res-unknown.json --include-dashboards	0
+lab-extra	repo	lab-probe	-	--root project-empty --catalog project-node/skills/test-skill/frameworks/lab-catalog.tsv --catalog catalog-extra.tsv --fake-resources-file res-full.json --json	0
+lab-bad	repo	lab-probe	-	--root project-node --catalog catalog-bad.tsv --fake-resources-file res-full.json --json	3
+lab-nocat	repo	lab-probe	-	--root project-empty --fake-resources-file res-full.json	3
+spec-pass	repo	check-spec	-	specs/pass --strict --json --root structure/complete	0
+spec-pass-human	repo	check-spec	-	specs/pass --root structure/complete	0
+spec-fail	repo	check-spec	-	specs/fail --json --root structure/complete	1
+spec-fail-human	repo	check-spec	-	specs/fail --root structure/complete	1
+spec-warn	repo	check-spec	-	specs/warn --root structure/complete	0
+spec-warn-strict	repo	check-spec	-	specs/warn --strict --json --root structure/complete	2
+spec-missing	repo	check-spec	-	specs/nope	3
+tr-vtt	transcript	transcript-normalize	-	input/meeting.vtt --out out	0
+tr-srt	transcript	transcript-normalize	-	input/call.srt	0
+tr-plain	transcript	transcript-normalize	-	input/notes.txt --out out/notes	0
+tr-escape	transcript	transcript-normalize	-	input/notes.txt --out ../escape	3
+init-dry	init	init	-	--dry-run	0
+init-fresh	init	init	-		0
+init-seeded	init	init	init-seed		0
+init-again	init2	init	-		0
+spec-gherkin	repo	check-spec	-	specs/gherkin-pass --strict --json --root structure/complete	0
+spec-gherkin-human	repo	check-spec	-	specs/gherkin-pass --root structure/complete	0
+spec-noscen	repo	check-spec	-	specs/no-scenarios --root structure/complete	1
+lab-ignore	repo	lab-probe	-	--root project-ignore --catalog project-node/skills/test-skill/frameworks/lab-catalog.tsv --fake-resources-file res-full.json	0
+spec-placeholders	repo	check-spec	-	specs/placeholders --json --root structure/complete	1
+spec-placeholders-human	repo	check-spec	-	specs/placeholders --root structure/complete	1
+st-empty	repo	check-structure	-	--root project-empty	1
+st-init	repo	check-structure	-	--root structure/init-only --json	1
+st-init-human	repo	check-structure	-	--root structure/init-only	1
+st-partial	repo	check-structure	-	--root structure/partial	1
+st-complete	repo	check-structure	-	--root structure/complete --strict --json	0
+st-complete-human	repo	check-structure	-	--root structure/complete	0
+st-unconfirmed	repo	check-structure	-	--root structure/unconfirmed	0
+st-unconfirmed-strict	repo	check-structure	-	--root structure/unconfirmed --strict --json	2
+st-noroot	repo	check-structure	-	--root nope	3
+spec-gate	repo	check-spec	-	specs/pass	1
+spec-gate-json	repo	check-spec	-	specs/pass --root structure/partial --json	1
+spec-tickets	repo	check-spec	-	agile-project/specs/good --root agile-project --tickets	1
+spec-tickets-json	repo	check-spec	-	agile-project/specs/good --root agile-project --tickets --json	1
+spec-gherkin-rules	repo	check-spec	-	agile-project/specs/broken --root agile-project --json	1
+spec-good-strict	repo	check-spec	-	agile-project/specs/good --root agile-project --strict	0
+spec-all	repo	check-spec	-	--all --root agile-project	1
+spec-all-json	repo	check-spec	-	--all --root agile-project --json	1
+spec-all-empty	repo	check-spec	-	--all --root structure/complete	0
+spec-all-gate	repo	check-spec	-	--all --root structure/partial	1
+spec-all-dir	repo	check-spec	-	specs/pass --all	3
+st-scorecard	repo	check-structure	-	--root agile-project --scorecard	0
+st-scorecard-json	repo	check-structure	-	--root agile-project --scorecard --json	0
+st-scorecard-partial	repo	check-structure	-	--root structure/partial --scorecard --json	1
+st-scorecard-empty	repo	check-structure	-	--root project-empty --scorecard	1
+audit	repo	audit-agile	-	--root agile-project --today 2026-10-05 --templates agile-templates	1
+audit-json	repo	audit-agile	-	--root agile-project --today 2026-10-05 --templates agile-templates --json	1
+audit-clean	repo	audit-agile	-	--root structure/complete --today 2026-10-05 --templates init-templates	0
+audit-bad-today	repo	audit-agile	-	--root agile-project --today 2026/10/05	3
+audit-no-templates	repo	audit-agile	-	--root agile-project --templates nope	3
+doctor	repo	doctor	-	--root agile-project --today 2026-10-05 --templates agile-templates --fake-resources-file res-full.json	1
+doctor-json	repo	doctor	-	--root agile-project --today 2026-10-05 --templates agile-templates --fake-resources-file res-full.json --json	1
+doctor-partial	repo	doctor	-	--root structure/partial --today 2026-10-05 --templates agile-templates --fake-resources-file res-nodaemon.json	1
+doctor-healthy	repo	doctor	-	--root structure/complete --today 2026-10-05 --templates init-templates --fake-resources-file res-full.json --json	0
+doctor-docker-selected	repo	doctor	-	--root project-node --today 2026-10-05 --templates agile-templates --fake-resources-file res-full.json --json	1
+spec2-good	repo	check-spec	-	aa-spec2/good --strict --json --root structure/complete	0
+spec2-good-human	repo	check-spec	-	aa-spec2/good --root structure/complete	0
+spec2-bad	repo	check-spec	-	aa-spec2/bad --root structure/complete	1
+spec2-bad-json	repo	check-spec	-	aa-spec2/bad --json --root structure/complete	1
+spec2-nocheck	repo	check-spec	-	aa-spec2/nocheck --root structure/complete	0
+spec2-nocheck-strict	repo	check-spec	-	aa-spec2/nocheck --strict --root structure/complete	2
+preset-kanban	init	init	-	--preset kanban	0
+preset-regulated-dry	init	init	-	--preset regulated --dry-run	0
+preset-unknown	init	init	-	--preset nope	3
+preset-constitution-bad	repo	check-structure	-	--root aa-preset/bad-constitution	1
+aa-help	repo	aa	-	help	0
+aa-noargs	repo	aa	-		3
+aa-unknown	repo	aa	-	nope	3
+aa-structure	repo	aa	-	structure --root structure/complete	0
+aa-verify	repo	aa	-	verify good --root agile-project --strict	0
+aa-verify-badslug	repo	aa	-	verify Bad --root agile-project	3
+aa-clarify-good	repo	aa	-	clarify good --root aa-entry/proj	0
+aa-clarify-bad	repo	aa	-	clarify bad --root aa-entry/proj	1
+aa-specify-gate	skill	aa	-	specify demo	1
+aa-specify	skill	aa	structure/complete	specify demo	0
+aa-specify-exists	skill	aa	aa-entry/proj	specify good	0
+aa-plan-blocked	skill	aa	aa-entry/proj	plan bad	1
+aa-plan	skill	aa	aa-entry/proj	plan ready	0
+aa-tasks-blocked	skill	aa	aa-entry/proj	tasks ready	1
+aa-tasks	skill	aa	aa-entry/proj	tasks designed	0
+aa-converge	skill	aa	aa-entry/proj	converge good	1
+aa-converge-noslug	repo	aa	-	converge	3
+aa-init	skill	aa	-	init --preset kanban --dry-run	0
+aa-import	repo	aa	-	import-speckit --root aa-import/target --from aa-import/speckit	0
+import-dry	repo	import-speckit	-	--root aa-import/target --from aa-import/speckit	0
+import-write	skill	import-speckit	aa-import	--root target --from speckit --write	0
+import-none	repo	import-speckit	-	--root aa-import/target --from structure/complete	3
+trace-pass	repo	trace	-	--root aa-trace/pass --skip-structure	0
+trace-pass-json	repo	trace	-	--root aa-trace/pass --skip-structure --json	0
+trace-fail	repo	trace	-	--root aa-trace/fail --skip-structure	1
+trace-fail-json	repo	trace	-	--root aa-trace/fail --skip-structure --json	1
+trace-spec	repo	trace	-	specs/checkout --root aa-trace/fail --skip-structure --strict --json	1
+trace-warn-strict	repo	trace	-	--root aa-trace/warn --skip-structure --strict	2
+trace-tests-dir	repo	trace	-	--root aa-trace/warn --skip-structure --tests-dir qa --json	0
+trace-gate	repo	trace	-	--root project-empty	1
+trace-noroot	repo	trace	-	--root nope	3
+trace-nospec	repo	trace	-	--root aa-trace/pass --spec specs/nope --skip-structure	3
+analyze-clean	repo	analyze	-	--root aa-analyze/clean --skip-structure --strict	0
+analyze-issues	repo	analyze	-	--root aa-analyze/issues --skip-structure	1
+analyze-issues-json	repo	analyze	-	--root aa-analyze/issues --skip-structure --json	1
+analyze-spec	repo	analyze	-	specs/search --root aa-analyze/issues --skip-structure --strict	1
+analyze-medium	repo	analyze	-	--root aa-analyze/medium --skip-structure	0
+analyze-medium-strict	repo	analyze	-	--root aa-analyze/medium --skip-structure --strict --json	2
+analyze-gate	repo	analyze	-	--root project-empty --json	1
+analyze-nospec	repo	analyze	-	--root aa-analyze/issues --spec specs/nope --skip-structure	3
+baseline-check	repo	baseline	-	--check --root aa-baseline/proj --skip-structure --today 2026-10-05	0
+baseline-stale-strict	repo	baseline	-	--check --root aa-baseline/proj --file plans/agile/baseline-stale.txt --skip-structure --today 2026-10-05 --strict	2
+baseline-new-json	repo	baseline	-	--check --root aa-baseline/proj --file plans/agile/baseline-old.txt --skip-structure --today 2026-10-05 --json	1
+baseline-spec	repo	baseline	-	--check specs/export --root aa-baseline/proj --file plans/agile/baseline-old.txt --skip-structure --today 2026-10-05	1
+baseline-dry	repo	baseline	-	--write --dry-run --root aa-baseline/proj --skip-structure --today 2026-10-05	0
+baseline-dry-json	repo	baseline	-	--write --dry-run --root aa-baseline/proj --skip-structure --today 2026-10-05 --json	0
+baseline-missing	repo	baseline	-	--check --root aa-baseline/proj --file nope.txt --skip-structure	3
+baseline-nomode	repo	baseline	-	--root aa-baseline/proj	3
+baseline-gate	repo	baseline	-	--check --root project-empty	1

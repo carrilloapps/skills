@@ -1,0 +1,8 @@
+audit-agile — agile-project (today 2026-10-05)
+1. plans/decisions/2026-01-01-old-review.md:7 [review-overdue] decision review date 2026-02-01 has passed (today 2026-10-05)
+2. plans/agile/methodology.md [template-drift] section 'Release policy' from the skill template is missing
+3. plans/agile/team.md [template-drift] section 'Roles' from the skill template is missing
+4. plans/initiatives/good/overview.md:8 [broken-link] broken link: tickets/03-missing.md
+5. plans/sprints/2026-S01/ [sprint-report] sprint ended 2026-01-16 without report.md
+6. plans/initiatives/broken/overview.md [done-unverified] initiative is Done but specs/broken/verification.md is missing
+Result: 6 finding(s) — ATTENTION

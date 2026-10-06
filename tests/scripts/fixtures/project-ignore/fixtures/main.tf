@@ -1,0 +1,1 @@
+resource "x" "y" {}

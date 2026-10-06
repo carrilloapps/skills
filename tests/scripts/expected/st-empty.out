@@ -1,0 +1,21 @@
+check-structure — project-empty
+1. error plans/agile/ [missing-dir] missing directory (run scripts/init)
+2. error plans/sprints/ [missing-dir] missing directory (run scripts/init)
+3. error plans/initiatives/ [missing-dir] missing directory (run scripts/init)
+4. error plans/decisions/ [missing-dir] missing directory (run scripts/init)
+5. error plans/drafts/ [missing-dir] missing directory (run scripts/init)
+6. error specs/ [missing-dir] missing directory (run scripts/init)
+7. error plans/agile/metrics/events.jsonl [missing-file] missing file (run scripts/init)
+8. error .memory/.gitignore [missing-file] missing file (run scripts/init)
+9. error plans/agile/methodology.md [missing-file] missing file (run scripts/init, then complete it with the team)
+10. error plans/agile/definition-of-ready.md [missing-file] missing file (run scripts/init, then complete it with the team)
+11. error plans/agile/definition-of-done.md [missing-file] missing file (run scripts/init, then complete it with the team)
+12. error plans/agile/ceremonies.md [missing-file] missing file (run scripts/init, then complete it with the team)
+13. error plans/agile/team.md [missing-file] missing file (run scripts/init, then complete it with the team)
+14. error plans/agile/capabilities.md [missing-file] missing file (run scripts/init, then complete it with the team)
+15. error plans/agile/kpi-directives.md [missing-file] missing file (run scripts/init, then complete it with the team)
+16. error plans/agile/language.md [missing-file] missing file (run scripts/init, then complete it with the team)
+17. error plans/agile/autonomy.md [missing-file] missing file (run scripts/init, then complete it with the team)
+18. error plans/agile/constitution.md [missing-file] missing file (run scripts/init, then complete it with the team)
+Result: 18 error(s), 0 warning(s) — FAIL
+Phase 0 gate: closed. Do not create specs, plans, drafts, sprint artifacts, tickets or decision records; complete the items above with the team first.

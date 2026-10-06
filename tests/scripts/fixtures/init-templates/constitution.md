@@ -1,0 +1,3 @@
+# constitution
+
+Fixture template.

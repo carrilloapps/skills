@@ -1,0 +1,11 @@
+aa converge — specs/good
+Missing:
+1. FR-002 has no scenario (trace: uncovered-requirement)
+2. vague word fast in FR-001 (analyze: ambiguous-term)
+Partial:
+3. FR-001 verified without evidence (trace: no-evidence)
+Contradictory:
+4. "invoice" conflicts with "bill" (analyze: terminology-drift)
+Unrequested:
+5. test references FR-099 (trace: orphan-test)
+Next: add 5 task(s) under '## Phase N: Convergence' in specs/good/tasks.md (one per gap, mapped to its FR-###), then run: aa converge good

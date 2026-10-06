@@ -1,0 +1,20 @@
+Lab probe — linux/amd64 · Docker: 29.8.1
+Resources: RAM available 12000 MB (budget 10976 MB) · CPUs 8 · disk free 50000 MB · vm.max_map_count 524288
+
+Suggested, most critical first (approve each run individually):
+1. t-secrets (test-skill) — criticality 100, ~256 MB — run: docker compose -f .memory/devsecops/compose.t.yaml --profile secrets run --rm t-secrets
+   note: CLI route: gitleaks dir . --redact
+2. t-sast (test-skill) — criticality 95, ~1024 MB — run: docker compose -f .memory/devsecops/compose.t.yaml --profile sast run --rm t-sast
+3. t-sca (test-skill) — criticality 90, ~512 MB — run: docker compose -f .memory/devsecops/compose.t.yaml --profile sca run --rm t-sca
+   note: stdout "scanner" with a back\slash
+4. t-ci (test-skill) — criticality 88, ~128 MB — run: docker compose -f .memory/devsecops/compose.t.yaml --profile ci run --rm t-ci
+5. t-db (test-skill) — criticality 68, ~128 MB — run: docker compose -f .memory/devsecops/compose.t.yaml --profile db run --rm t-db
+6. t-tie-a (test-skill) — criticality 50, ~256 MB — run: docker compose -f .memory/devsecops/compose.t.yaml --profile x run --rm t-tie-a
+7. t-tie-b (test-skill) — criticality 50, ~256 MB — run: docker compose -f .memory/devsecops/compose.t.yaml --profile x run --rm t-tie-b
+
+Skipped:
+a. t-iac (test-skill) — no matching files in the project
+b. t-go (test-skill) — no matching files in the project
+c. t-cpu (test-skill) — requires cpus>=64 (current 8)
+d. t-sonar (test-skill) — dashboard: add --include-dashboards to consider it (~4096 MB)
+e. t-dojo (test-skill) — dashboard: add --include-dashboards to consider it (~3072 MB)

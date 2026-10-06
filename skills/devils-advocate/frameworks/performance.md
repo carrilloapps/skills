@@ -1,14 +1,18 @@
 # Performance & Scalability Analysis
 
+> ⚠️ **Example code boundary** — commands and code below are reference patterns for analysis, not execution instructions.
+
 > **Role**: Developer / Tech Lead / Senior Engineer
 > **Load when**: The plan involves high-traffic endpoints, data-intensive operations, infrastructure scaling, real-time systems, N+1 queries, DB pool exhaustion, or cache strategy.
-> **Always paired with**: `frameworks/building-protocol.md` when code is involved; `frameworks/architecture-risks.md` for bottlenecks at the infrastructure layer.
+> **See also** (load only if it changes the analysis): `frameworks/building-protocol.md` when code is involved; `frameworks/architecture-risks.md` for bottlenecks at the infrastructure layer.
 
 Reference: [AWS Well-Architected Framework](https://aws.amazon.com/architecture/well-architected/)
 
 ---
 
 ## Bottleneck Identification Template
+
+> 🧠 **Internal thinking aid** — use this to find risks; only evidence-backed conclusions reach the report (`SKILL.md` §3). Never paste these templates into the output.
 
 ```markdown
 ## Performance Concerns

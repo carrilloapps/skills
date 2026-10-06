@@ -1,0 +1,75 @@
+# .memory/devsecops/config/semgrep/nosql.yml — starter rules (validate with: semgrep --validate --config <file>)
+rules:
+  - id: sar-nosql-operator-injection-js
+    languages: [javascript, typescript]
+    severity: ERROR
+    message: >-
+      Request data reaches a MongoDB/Mongoose query filter. An object such as {"$ne": null} or
+      {"$regex": ".*"} changes the query (operator injection, CWE-943). Cast each field to the
+      expected primitive or sanitize the filter (mongoose.sanitizeFilter, express-mongo-sanitize).
+    metadata: { cwe: "CWE-943", category: security, confidence: MEDIUM, source: sar-cybersecurity }
+    mode: taint
+    pattern-sources:
+      - pattern-either:
+          - pattern: $REQ.body
+          - pattern: $REQ.query
+          - pattern: $REQ.params
+    pattern-sanitizers:
+      - pattern-either:
+          - pattern: String(...)
+          - pattern: Number(...)
+          - pattern: parseInt(...)
+          - pattern: $X.toString()
+          - pattern: mongoose.sanitizeFilter(...)
+    pattern-sinks:
+      - patterns:
+          - pattern: $M.$OP($FILTER, ...)
+          - metavariable-regex:
+              metavariable: $OP
+              regex: ^(find|findOne|findOneAndUpdate|findOneAndDelete|findOneAndReplace|updateOne|updateMany|deleteOne|deleteMany|replaceOne|countDocuments|exists)$
+          - focus-metavariable: $FILTER
+
+  - id: sar-nosql-where-injection-js
+    languages: [javascript, typescript]
+    severity: ERROR
+    message: >-
+      Request data reaches a MongoDB $where clause, which executes JavaScript on the server
+      (CWE-943). Remove $where and express the condition with query operators.
+    metadata: { cwe: "CWE-943", category: security, confidence: MEDIUM, source: sar-cybersecurity }
+    mode: taint
+    pattern-sources:
+      - pattern-either:
+          - pattern: $REQ.body
+          - pattern: $REQ.query
+          - pattern: $REQ.params
+    pattern-sinks:
+      - patterns:
+          - pattern-inside: |
+              {..., $where: $W, ...}
+          - focus-metavariable: $W
+
+  - id: sar-nosql-operator-injection-pymongo
+    languages: [python]
+    severity: ERROR
+    message: >-
+      Request data reaches a PyMongo query filter. A dict such as {"$ne": None} changes the query
+      (operator injection, CWE-943). Validate the payload against a schema and cast each field.
+    metadata: { cwe: "CWE-943", category: security, confidence: MEDIUM, source: sar-cybersecurity }
+    mode: taint
+    pattern-sources:
+      - pattern-either:
+          - pattern: flask.request.get_json(...)
+          - pattern: flask.request.json
+          - pattern: flask.request.args
+          - pattern: flask.request.form
+    pattern-sanitizers:
+      - pattern-either:
+          - pattern: str(...)
+          - pattern: int(...)
+    pattern-sinks:
+      - patterns:
+          - pattern: $C.$OP($FILTER, ...)
+          - metavariable-regex:
+              metavariable: $OP
+              regex: ^(find|find_one|find_one_and_update|find_one_and_delete|update_one|update_many|delete_one|delete_many|replace_one|count_documents)$
+          - focus-metavariable: $FILTER

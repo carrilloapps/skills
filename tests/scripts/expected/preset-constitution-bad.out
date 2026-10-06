@@ -1,0 +1,6 @@
+check-structure — aa-preset/bad-constitution
+1. error plans/agile/constitution.md [content] no 'Version: X.Y.Z' line
+2. error plans/agile/constitution.md [content] no MUST article ('### Article N — <title> (MUST)')
+3. error plans/agile/constitution.md [content] no Amendments table (| Version | Date | Change | Rationale | Decided by |)
+Result: 3 error(s), 0 warning(s) — FAIL
+Phase 0 gate: closed. Do not create specs, plans, drafts, sprint artifacts, tickets or decision records; complete the items above with the team first.

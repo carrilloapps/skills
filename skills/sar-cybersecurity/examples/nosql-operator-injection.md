@@ -27,20 +27,55 @@ An authentication endpoint passes unvalidated user input directly to a database 
 
 ## SAR Finding
 
-### [92] — NoSQL Operator Injection via Direct Body Passthrough (15 Endpoints)
+### [95] — NoSQL Operator Injection via Direct Body Passthrough (15 Endpoints)
 
-- **Description**: `POST /login` and 14 additional endpoints pass user input directly to database query filters without sanitization. An attacker can inject query operator objects to bypass authentication, enumerate data, or extract the entire collection.
-- **Affected Component(s)**: `src/auth/auth.service.ts:34`, `src/auth/auth.controller.ts:12`, and 14 additional endpoints (see Appendix for full list)
-- **Evidence**: Operator object injected via request body field on public endpoint — database query returns first document in collection (admin account). No authentication barriers, no input validation at any layer.
-- **Standards Violated**: OWASP Top 10 (A03:2021 Injection), NIST SP 800-53 SI-10, CIS Controls 16.4, ISO 27001 A.14.2, GDPR Art. 32 (if PII exposed), SOC 2 CC6.6
-- **MITRE ATT&CK**: T1190 (Exploit Public-Facing Application), T1078 (Valid Accounts — via auth bypass)
-- **Score**: **92** (Critical) — public endpoint, no sanitization at any layer, full collection exfiltration possible, PII exposure confirmed (email, name, phone fields in user schema).
-- **Suggested Mitigation Actions**:
-  1. **Immediate**: Install and apply input sanitization middleware globally to strip query operators from user input
-  2. **Short-term**: Create DTOs for all endpoints with strict type enforcement on every field
-  3. **Medium-term**: Audit all 15 endpoints for explicit field validation; enforce type coercion on all query filter values
-  4. **Schema hardening**: Enable strict mode on all database schemas
-  5. **Testing**: Add integration tests with operator injection payloads to verify sanitization
+| Field | Value |
+|-------|-------|
+| Registry ID | F01 (new) |
+| Score | 95 (Critical) |
+| Confidence | Confirmed — traced `POST /login` body → service → `findOne` filter; no sanitizer or DTO at any layer |
+| Impact classification | Data exfiltration + integrity (account takeover) |
+| CVSS v4.0 | `CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:H/VA:N/SC:N/SI:N/SA:N` |
+| CWE | CWE-943 (Improper Neutralization of Special Elements in Data Query Logic), CWE-20 |
+| MITRE ATT&CK | T1190 (Exploit Public-Facing Application), T1078 (Valid Accounts) |
+| Effort | M (1–5 days — 15 endpoints) |
+| Affected | `src/auth/auth.service.ts:34`, `src/auth/auth.controller.ts:12`, + 14 endpoints (Appendix) |
+
+**Description** — `POST /login` and 14 other endpoints forward request body fields straight into database query filters. A client can send an operator object where a string is expected, bypass the credential check, and read or enumerate records.
+
+**Evidence / Trace** — see Assessment Trace above.
+
+**Attack Scenario**
+
+1. An anonymous user posts to `/login` with the username field set to an operator object (e.g., a "not equal to empty" operator) instead of a string.
+2. The filter matches the first document in the collection — typically the earliest-created admin account.
+3. The attacker is authenticated as that admin; repeating the technique on list endpoints enumerates the user collection (emails, names, phones).
+
+**Score Justification**
+`Base 80 +10 (full enumeration + privilege escalation, D2 capped at +10) +5 (PII) = 95 (cap: none) → Final 95`
+
+- Base 80: injection into a data store — classified by the **sink** (the `findOne` filter), not the consequence. The login bypass is carried by D2 (privilege escalation). *Authentication bypass (90)* applies only when the sink is the authentication logic itself (e.g., a JWT verifier accepting `alg: none`).
+- D1 0: public, no barriers.
+- D2 +10: collection enumeration (+5) and admin takeover (+5).
+- D3 +5: injection exposure rule — operator injection is confined to the collections these endpoints query (no `$where`, `$function`, or `$lookup` in the affected code), and the most sensitive of them, `users`, holds PII. Password hashes live in `credentials`, which no affected endpoint queries.
+
+**Standards Violated** — OWASP Top 10:2025 (A05 Injection, A07 Authentication Failures), NIST SP 800-53 SI-10, CIS Controls v8.1 16, ISO/IEC 27001:2022 A.8.28, GDPR Art. 32, SOC 2 CC6.6
+
+**Fix** — global sanitizer (one line, covers all 15 endpoints) plus a typed DTO on the login path:
+
+```diff
+  // main.ts
++ app.use(mongoSanitize()); // strips keys starting with '$' or containing '.'
+
+  // auth.controller.ts
+- async login(@Body() body: any) {
++ async login(@Body() body: LoginDto) { // @IsString() username; @IsString() password
+```
+
+**How to Verify the Fix**
+
+- Integration test: posting an operator object as `username` returns 400 (DTO) and never 200.
+- Integration test per affected endpoint (list in Appendix): operator payload returns 400 or an empty result.
 
 ## Key Principles Demonstrated
 

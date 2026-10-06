@@ -1,0 +1,8 @@
+check-spec — specs/placeholders
+1. error spec.md [fr-missing] no Functional requirements table with FR-### rows
+2. error spec.md:18 [scenario-fr] scenario without an @FR-### tag
+3. warning spec.md:18 [scenario-priority] scenario without a priority tag (@P1, @P2 or @P3)
+4. error spec.md:24 [scenario-fr] scenario without an @FR-### tag
+5. warning spec.md:24 [scenario-priority] scenario without a priority tag (@P1, @P2 or @P3)
+6. error spec.md:3 [placeholder] unfilled template placeholder(s): <team-name>, <Initiative title>
+Result: 4 error(s), 2 warning(s) — FAIL

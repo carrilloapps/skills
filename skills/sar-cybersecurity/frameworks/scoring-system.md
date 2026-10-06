@@ -2,159 +2,209 @@
 
 > *Protocol file — free to load, does not count toward context budget.*
 
-Score every finding from **100 (most critical) to 0 (no risk)**. Report only findings **above 50** as primary content. Items scoring 1–50 appear as **warnings** or **informational notes**.
+Score every finding from **100 (most critical) to 1**. Findings **above 50** are primary content (`F` IDs). Findings scoring **50 or below** are warnings (`W` IDs). These labels are the same in the report, the registry, the priority, and the roadmap.
 
-| Score | Label         | Action Required       |
-|-------|---------------|-----------------------|
-| 90–100 | Critical     | Immediate remediation |
-| 70–89  | High         | Urgent remediation    |
-| 50–69  | Medium       | Planned remediation   |
-| 25–49  | Low/Warning  | Monitor and log       |
-| 1–24   | Informational | Optional improvement |
-| 0      | None         | No action needed      |
+| Score | Label | Type | Priority | Action Required |
+|-------|-------|------|----------|-----------------|
+| 90–100 | Critical | Finding | P0 - Immediate | Immediate remediation |
+| 70–89  | High | Finding | P1 - Urgent | Urgent remediation |
+| 51–69  | Medium | Finding | P2 - Planned | Planned remediation |
+| 1–50   | Low | Warning | P3 - Scheduled | Monitor; fix when convenient |
+
+Something with no security impact is not a finding and is not scored.
+
+The 0–100 contextual score is the **authoritative priority** for the SAR, the registry, and the roadmap. The CVSS v4.0 vector (below) is included for interoperability with external tooling only — it never overrides the contextual score.
 
 ---
 
-## Scoring Principle: Honest Net Effective Risk
+## Scoring Principle: Deterministic, Auditable, Net Effective Risk
 
-Every score must reflect the **real-world exploitability and actual impact** of a finding — not its theoretical maximum severity. Two findings of the same vulnerability type (e.g., two SQL injections) **must** receive different scores if their exploitation prerequisites, impact scope, or data sensitivity differ.
+Every score reflects **real-world exploitability and actual impact** after tracing the full flow — not theoretical maximum severity. Two auditors applying this file to the same evidence must arrive at the **same number**. To guarantee that:
 
-A SQL injection behind authentication + API key + rate limiting that returns a single non-sensitive record is **not** the same as a public SQL injection that enumerates an entire user table with PII. Scoring them identically is a professional failure that destroys report credibility and generates unnecessary alarm or dangerous complacency.
+1. Every adjustment below is a **single fixed value** — no ranges, no judgment-based fine-tuning.
+2. Every finding shows its **arithmetic line**, and the arithmetic must add up exactly:
 
-> **Mandatory**: Every finding must include a `Score Justification` line that lists every factor (exploitation complexity, impact scope, data sensitivity) that influenced the final score. A score without justification is incomplete.
+```text
+Base 80 +5 (full enumeration) +5 (PII) = 90 (cap: none) → Final 90
+Base 80 −10 (auth) −10 (API key) −5 (rate limit) +5 (full enumeration) +5 (blind extraction) −5 (internal data) = 60 (cap: none) → Final 60
+Base 80 −10 (auth) +10 (write + escalation, D2 capped at +10) +8 (financial) = 88 (cap: none) → Final 88
+Base 65 −10 (auth) −5 (role) −5 (single record) −10 (public data) = 35 (floor: 51) → Final 51
+Base 60 = 60 (cap: availability-only 49) → Final 49
+```
+
+A score whose arithmetic line does not add up, or that uses a factor not listed in this file, is a scoring failure and must be corrected before the SAR is written.
+
+> Score ranges quoted in domain frameworks and examples (e.g., "typically 55–70") are **typical outcomes**, not inputs. The final score is always computed with the formula below.
 
 ---
 
 ## Confidentiality Primacy — Data Exfiltration Focus
 
-This skill operates as a **senior cybersecurity expert** whose primary domain is **confidentiality and integrity** — the protection of data against unauthorized access, disclosure, and modification. Availability concerns (service degradation, resource exhaustion, DoS) are legitimate security topics, but they are **not this skill's core mandate**.
-
-**Core rule**: Any vulnerability that enables **data exfiltration** — direct or indirect extraction of data that should not be accessible to the attacker — is scored significantly higher than a vulnerability of the same type whose only impact is service disruption.
+The SAR's primary domain is **confidentiality and integrity**. Any vulnerability that enables **data exfiltration** — direct or indirect extraction of data beyond the attacker's authorization — is scored normally. A vulnerability whose only impact is service disruption is capped.
 
 | Impact classification | SAR domain | Scoring treatment |
 |-----------------------|-----------|-------------------|
-| **Data exfiltration** — attacker extracts records, PII, credentials, secrets, or any data beyond their authorization | **Primary** — core SAR mandate | Score normally (50–100). This is what the SAR exists to find and penalize. |
-| **Data modification / integrity** — attacker alters records, escalates privileges, corrupts data | **Primary** — core SAR mandate | Score normally (50–100). Integrity violations enable further breaches. |
-| **Dual-vector** — same vulnerability enables both data exfiltration AND service disruption | **Primary** — score on the exfiltration vector | Score based on the data exfiltration component. Note the DoS vector as a secondary observation. |
-| **Availability-only** — sole impact is service degradation, CPU/memory exhaustion, or downtime with zero data exposure | **Secondary** — outside core mandate | **Cap at 49** (Warning). Document the finding, note that remediation is recommended, and delegate to performance, infrastructure, or observability tooling. |
-
-> **Why this matters**: A regex injection that lets an attacker send a wildcard-match-all pattern and enumerate an entire product catalog is a **data leak** — scored as a primary finding. The same regex injection where the only exploitable vector is a nested-quantifier pattern causing CPU exhaustion is an **availability problem** — capped at 49 and delegated. Same vulnerability type, fundamentally different security impact.
+| **Data exfiltration** — attacker extracts records, PII, credentials, secrets, or any data beyond their authorization | Primary | Score with the formula |
+| **Data modification / integrity** — attacker alters records, escalates privileges, corrupts data | Primary | Score with the formula |
+| **Dual-vector** — same vulnerability enables exfiltration AND service disruption | Primary | Score the exfiltration vector; note the DoS vector as secondary |
+| **Availability-only** — sole impact is degradation, CPU/memory exhaustion, or downtime with zero data exposure | Secondary | **Cap at 49** and delegate to performance/infrastructure tooling |
 
 ---
 
-## Gate Adjustments (apply first)
-| Vulnerability fully mitigated by upstream validation, guard, pipe, or middleware | **Downgrade to 25–49**, document the mitigating control explicitly |
-| Availability-only finding (no data exposure, no data modification) | **Cap at 49** (Warning max). Document and delegate to performance/infrastructure tooling |
+## The Formula
 
-If no gate applies, proceed to multi-factor scoring.
+```text
+Y     = Base + D1 (exploitation) + D2 (impact, capped at +10) + D3 (data sensitivity)
+Y     = clamp(Y, 0, 100)
+Floor = if reachable AND not fully mitigated AND not availability-only AND Confidence ≠ Possible → max(Y, 51)
+Final = apply gates and caps last (lowest applicable value wins)
+```
+
+### Step 1 — Base severity (pick exactly one class)
+
+**Classify by the sink, not the consequence.** The class is what the vulnerable code *does* (builds a query from input, deserializes input, skips an ownership check). What the attacker *gains* (admin access, full table, credentials) is carried by D2 and D3. Examples:
+
+- NoSQL operator injection on `/login` that logs the attacker in → **injection into a data store (80)**; the login bypass is D2 `privilege escalation (+5)`.
+- A JWT verifier that accepts `alg: none` → **authentication bypass (90)**: the sink is the authentication logic itself.
+- An `exec()` call fed by a query parameter → **command execution (90)**, even if the trace shows "only" file reads.
+
+If two classes still apply to the same sink, use the **higher base** and name the other in the justification (e.g., `Base 80 (broken access control; also mass assignment)`).
+
+| Vulnerability class | Base |
+|---------------------|------|
+| Remote code / command execution, unsafe deserialization, authentication bypass | **90** |
+| Injection into a data store (SQL, NoSQL operator, LDAP, ORM raw query) | **80** |
+| Broken access control (IDOR, mass assignment, missing authorization), SSRF | **80** |
+| Publicly readable storage, secrets committed in current HEAD | **80** |
+| Regex injection with data exposure, path traversal, stored XSS | **75** |
+| Security-control bypass or misclassification (a guard, validator, allowlist, or policy engine that lets a dangerous action through) | **75** |
+| Secret exposure to third-party code or containers (secrets readable by code the project does not control: dependencies, scanner images, plugins) | **70** |
+| Reflected XSS, CSRF on state-changing action, secrets present only in git history | **65** |
+| Missing encryption, weak cryptography, insecure defaults, supply-chain hygiene (no lock file, unpinned versions), over-privileged skill/plugin/MCP, availability-only patterns | **60** |
+| Vulnerable dependency with a published CVE | **min(round(CVSS base score × 10), 90)** — source rule below |
+
+A class not listed here uses the closest listed class — name the analogy in the justification (e.g., `Base 75 (analogous to path traversal)`).
+
+**CVE base score source** — use, in this order: (1) the NVD **Primary** CVSS base score, v4.0 if NVD lists one, else v3.1; (2) if NVD has no score, the GitHub Advisory (GHSA) CVSS base score; (3) otherwise the CNA score shown on the CVE record. Name the source and version in the arithmetic line, e.g., `Base 75 (CVE-2024-12345, NVD Primary CVSS 3.1: 7.5)`. Only use a CVE that was verified during this assessment (see [dependency-supply-chain.md](dependency-supply-chain.md)); never a score recalled from memory.
+
+### Step 2 — D1: Exploitation complexity (cumulative, all that apply)
+
+| Factor | Adjustment |
+|--------|-----------|
+| Requires valid authentication | **−10** |
+| Requires a specific role or privilege level | **−5** |
+| Requires an API key, token, or shared secret beyond auth | **−10** |
+| Requires chaining 2+ vulnerabilities | **−10** |
+| Requires an upstream compromise (malicious dependency, image, plugin, or action release) — supply-chain precondition | **−15** |
+| Rate limiting, WAF, or throttling in place on the path | **−5** |
+| Requires internal network access (not internet-facing) | **−15** |
+
+The upstream-compromise factor replaces chaining for that precondition — never apply both for the same step.
+
+### Step 3 — D2: Impact scope (cumulative, sum capped at +10)
+
+| Factor | Adjustment |
+|--------|-----------|
+| Single record exposure only | **−5** |
+| Paginated or limited collection exposure | **0** |
+| Full collection / table enumeration possible | **+5** |
+| Blind extraction possible (timing, boolean, out-of-band) | **+5** |
+| Cross-system, cross-database, or lateral access | **+5** |
+| Write, modify, or delete capability | **+5** |
+| Privilege escalation possible | **+5** |
+
+If the sum of the positive factors exceeds +10, use +10 and write `(D2 capped at +10)` in the arithmetic line.
+
+**Injection exposure rule** — when the attacker controls query *structure* (SQL string interpolation, NoSQL operator injection, raw ORM queries), the exposure is **everything the application's database role can read or write**, not just the columns or rows the original query selects (UNION, stacked, and blind techniques reach other tables). Therefore:
+
+- `Single record exposure only (−5)` never applies to such injections.
+- `Blind extraction possible (+5)` applies whenever no result is reflected but query structure is controlled.
+- D3 is the most sensitive data **reachable by that database role**. If the role's grants are not visible, assume the most sensitive data in the same database and set Confidence to **Probable** with the gap "database role grants not verified".
+
+### Step 4 — D3: Data sensitivity (exactly one — the most sensitive category exposed or reachable)
+
+| Data category | Adjustment |
+|---------------|-----------|
+| Public or non-sensitive data | **−10** |
+| Internal operational data (logs, metrics, non-PII metadata) | **−5** |
+| Commercial / proprietary non-personal data (catalog, pricing) | **0** |
+| Personal data — PII (names, emails, phones, addresses) | **+5** |
+| Financial data or health data (PHI) | **+8** |
+| Credentials, secrets, or authentication tokens | **+10** |
+
+### Step 5 — Gates and caps (applied last)
+
+| Condition | Result |
+|-----------|--------|
+| Unreachable — dead code, zero callers from any entry point | **Final = 35** (fixed) |
+| Unreachable — reachable only through a disabled path (feature flag off, config disabled) | **Final = 40** (fixed) |
+| Fully mitigated by a formal, centralized control (guard, schema, gateway authorizer, sanitization middleware) | **Final = 30** (fixed) — name the control |
+| Fully mitigated by an inline / ad-hoc control (effective but untested, not reusable) | **Final = 40** (fixed) — name the control |
+| Availability-only impact | **Final = min(Y, 49)** |
+| Confidence = Possible | **Final = min(Y, 49)** until confirmed |
+
+The primary-finding floor (51) never lifts a finding over a gate or cap.
+
+**Gates need evidence.** The unreachable, mitigated, and availability-only gates apply only when the gating condition itself is **Confirmed** or **Probable** (zero callers traced; the control traced on the path; no data path found). If the gating evidence is only **Possible**, the gate does not apply: compute the formula and let the Possible cap (49) apply. When the finding's Confidence differs from the gate's, state both (e.g., `Confidence: Confirmed (sink) · gate evidence: Probable`).
 
 ---
 
-## Multi-Factor Scoring (for reachable, unmitigated findings)
+## Confidence (mandatory per finding)
 
-After confirming reachability and absence of full mitigation, assign a **base severity** for the vulnerability type (50–100), then apply three adjustment dimensions to arrive at the **final score**.
+| Confidence | Meaning | Effect |
+|------------|---------|--------|
+| **Confirmed** | Traced end to end from entry point to impact with code/config evidence at every hop | None |
+| **Probable** | Trace has one identified gap (e.g., infrastructure config not visible, runtime value unknown) — **state the gap** | None, but the gap goes in Out of Scope & Limitations |
+| **Possible** | Pattern match only; reachability or impact not traced | **Cap at 49** until confirmed |
 
-### Dimension 1 — Exploitation Complexity (adjusts downward)
+Never report a pattern match as Confirmed.
 
-Evaluate what an attacker needs to successfully exploit the vulnerability:
+---
 
-| Factor | Adjustment | Rationale |
-|--------|-----------|-----------|
-| Requires valid authentication | −5 to −15 | Attacker must first obtain valid credentials |
-| Requires specific role or privilege level | −5 to −10 | Reduces the attacker pool significantly |
-| Requires API key, token, or shared secret (beyond auth) | −5 to −15 | Additional barrier; key is rotatable, limits exposure window |
-| Requires chained exploitation (2+ steps) | −5 to −15 | Each step reduces probability of successful exploitation |
-| Rate limiting, WAF, or request throttling in place | −5 to −10 | Partial barrier — slows exploitation, does not prevent it |
-| Requires internal network access (not internet-facing) | −10 to −20 | Eliminates external attack surface entirely |
+## CVSS v4.0 Vector (mandatory for primary findings)
 
-> **Cumulative floor**: Exploitation complexity adjustments cannot reduce a reachable, unmitigated finding below **51** (the primary finding threshold). If the total would push below 51, cap at 51 and document the reasoning. A score of exactly 50 or below falls into the Warning range (W-prefix in the vulnerabilities registry).
+Every primary finding (score > 50) includes a CVSS v4.0 **base vector string** describing the vulnerability as traced:
 
-### Dimension 2 — Impact Scope (adjusts upward or downward)
+```text
+CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N
+```
 
-Evaluate the blast radius upon successful exploitation. **Data exfiltration indicators elevate the score; availability-only impact does not.**
-
-| Factor | Adjustment | Rationale |
-|--------|-----------|----------|
-| Single record exposure only | −5 to −10 | Limited blast radius, contained damage |
-| Paginated or limited collection exposure | No adjustment | Default assumption for list endpoints |
-| Full collection or table enumeration possible | +5 to +10 | **Mass data exfiltration** — core SAR domain |
-| Blind data extraction possible (timing, boolean, out-of-band) | +5 to +10 | Exfiltration through indirect channels — still a data leak |
-| Cross-system, cross-database, or lateral access | +5 to +10 | Blast radius extends beyond the initial target |
-| Write, modify, or delete capability (not just read) | +5 to +10 | Integrity impact beyond confidentiality |
-| Privilege escalation possible | +5 to +10 | Enables further attacks, multiplies impact |
-| Impact is service disruption or resource exhaustion only | Use availability-only gate | **Not SAR's primary domain** — cap at 49 |
-
-### Dimension 3 — Data Sensitivity (adjusts upward or downward)
-
-Evaluate the classification of the data exposed or affected:
-
-| Data type | Adjustment | Rationale |
-|-----------|-----------|-----------|
-| Public or non-sensitive data | −10 to −15 | No confidentiality impact |
-| Internal operational data (logs, metrics, non-PII) | −5 | Limited sensitivity, no regulatory exposure |
-| Personal data — PII (names, emails, phones, addresses) | +5 | Regulatory exposure: GDPR, CCPA, LGPD |
-| Financial data (balances, transactions, card numbers) | +5 to +10 | PCI-DSS, fraud risk, direct financial harm |
-| Health data — PHI (medical records, diagnoses) | +5 to +10 | HIPAA, strict regulatory exposure |
-| Credentials, secrets, or authentication tokens | +10 to +15 | Enables cascading compromise across systems |
+- Metrics: `AV` (N/A/L/P), `AC` (L/H), `AT` (N/P), `PR` (N/L/H), `UI` (N/P/A), `VC/VI/VA` and `SC/SI/SA` (H/L/N).
+- The vector must agree with the trace (e.g., `PR:N` only if the trace confirms no authentication).
+- Do **not** report a numeric CVSS score unless it was computed with the official FIRST calculator — CVSS v4.0 scores come from a lookup table and cannot be estimated reliably. The vector alone is sufficient for interoperability.
+- Warnings (≤ 50) may write `CVSS: N/A — unreachable / mitigated` when the gate applies.
 
 ---
 
 ## Scoring Decision Flow
 
-```
+```text
 Finding identified
-       │
-       ▼
-Is the vulnerability reachable via any network-exposed surface?
-       │
-   NO ─┤── Cap score at 40 (Low/Warning max)
-       │
-   YES ▼
-Are existing controls FULLY mitigating the risk?
-       │
-   YES ┤── Downgrade to 25–49, document the mitigating control
-       │
-   NO  ▼
-Assign base severity (50–100) for the vulnerability type
-       │
-       ▼
-Apply Dimension 1: Exploitation Complexity (downward adjustments)
-       │
-       ▼
-Apply Dimension 2: Impact Scope (upward or downward)
-       │
-       ▼
-Apply Dimension 3: Data Sensitivity (upward or downward)
-       │
-       ▼
-Document Score Justification — list EVERY factor applied
-       │
-       ▼
-Map to applicable standards + MITRE ATT&CK
-       │
-       ▼
-Write actionable mitigation steps
+  → Classify impact (exfiltration / integrity / dual-vector / availability-only)
+  → Assign Confidence (Confirmed / Probable / Possible)
+  → Gate check: unreachable or fully mitigated? → fixed value, write arithmetic line, stop
+  → Base (Step 1) + D1 (Step 2) + D2 (Step 3, cap +10) + D3 (Step 4)
+  → Clamp 0–100 → floor 51 if eligible → caps (availability-only, Possible)
+  → Write arithmetic line + CVSS v4.0 vector + CWE ID(s)
 ```
 
 ---
 
 ## Comparative Scoring Reference
 
-The same vulnerability type can produce vastly different scores. This table demonstrates correct differentiated scoring:
+| Scenario | Arithmetic | Final |
+|----------|-----------|-------|
+| Public SQL injection, no LIMIT, dumps user table with PII | 80 +5 (enumeration) +5 (PII) | **90** |
+| SQL injection behind JWT + API key + rate limit, DB role limited to an internal reports table | 80 −10 −10 −5 +10 (enumeration + blind, D2 capped) −5 (internal) | **60** |
+| Public NoSQL operator injection on login, returns admin account, full collection (sink = data store) | 80 +10 (enumeration + escalation) +5 (PII) | **95** |
+| Public S3 bucket with PII, DB backups, and secrets in logs | 80 +10 (enumeration + lateral) +10 (credentials) | **100** |
+| Private bucket, IAM-protected, missing encryption at rest, PII | 60 −10 (authenticated cloud access) +5 (PII) | **55** |
+| Public regex injection, wildcard leaks full product catalog | 75 +5 (enumeration) +0 (commercial) | **80** |
+| Same regex pattern — only ReDoS vector, `.limit(1)` prevents exposure | 60 → availability-only cap | **49** |
+| Admin-only regex injection with catalog enumeration | 75 −10 (auth) −5 (role) +5 (enumeration) | **65** |
+| Mass assignment + IDOR on financial fields, authenticated | 80 −10 (auth) +10 (write + escalation) +8 (financial) | **88** |
 
-| Scenario | Type | Score | Key factors |
-|----------|------|-------|-------------|
-| Public endpoint, no auth, `SELECT *` dumps user table with PII | SQL Injection | **92** | No barriers, full enumeration, PII confirmed |
-| Authenticated endpoint + API key, returns single record, non-sensitive data | SQL Injection | **55** | Auth (−10), key (−10), single record (−7), public data (−10) |
-| Public endpoint, `$ne` operator bypass on login, returns admin user | NoSQL Injection | **92** | No barriers, auth bypass, credential exposure |
-| Internal endpoint, authenticated, field injection on non-sensitive search | NoSQL Injection | **52** | Internal (−15), auth (−10), limited data (−5), non-sensitive (−10) |
-| Public S3 bucket with PII, database backups, and secrets in logs | Cloud Storage | **97** | No barriers, mass data, PII + credentials |
-| Private S3 bucket — proper ACL, missing encryption only | Cloud Storage | **55** | Access controlled, encryption gap only, no exfiltration path |
-| Public search endpoint, `new RegExp(input)`, wildcard `.*` leaks full product catalog | Regex Injection | **72** | Public, data exfiltration confirmed (product data exposed via wildcard match) |
-| Same regex pattern — only ReDoS vector, `.limit(1)` prevents data exposure | ReDoS (availability-only) | **45** | Availability-only cap (49 max) — no data exposed. Delegate to performance tooling |
-| Internal admin-only endpoint, regex injection with data exposure | Regex Injection | **55** | Auth (−10), admin role (−5), but data exfiltration still present |
-
-> **Mandatory rule**: If two findings in the same SAR share a vulnerability type but differ in exploitation complexity, impact scope, or data sensitivity, they **must** have visibly different scores. Identical scores for materially different risk profiles indicate a scoring failure and must be corrected before the SAR is finalized.
+> **Differentiation rule**: Findings of the same type that differ in prerequisites, scope, or data must produce different arithmetic lines. Identical lines for materially different risk profiles mean a factor was missed.
 
 ---
 
@@ -162,9 +212,10 @@ The same vulnerability type can produce vastly different scores. This table demo
 
 | Boundary | Rule |
 |----------|------|
-| **Maximum**: 100 | Reserved exclusively for zero-barrier, mass-impact, credential- or PII-exposing findings with no detection, mitigation, or monitoring |
-| **Minimum for primary findings**: 51 | Below 51 = warning or informational only |
-| **Unreachable cap**: 40 | Hard cap — unreachable findings never exceed 40, regardless of theoretical severity |
-| **Availability-only cap**: 49 | Hard cap — findings with no data exposure or modification never exceed 49, regardless of service impact severity |
-| **Mitigated floor**: 25 | Fully mitigated findings score no lower than 25 (below 25 = informational, below 1 = no risk) |
-| **Final score**: always an integer | No decimal scores |
+| **Maximum**: 100 | Reachable only with zero barriers, mass impact, and credential or PII exposure — re-check every factor when you reach it |
+| **Primary threshold**: 51 | Reachable, unmitigated, non-availability, non-Possible findings never score below 51. A score of exactly 50 is a Warning (Low) |
+| **Unreachable**: 35 / 40 | Fixed values — never higher regardless of theoretical severity |
+| **Availability-only cap**: 49 | Hard cap |
+| **Possible cap**: 49 | Hard cap until the trace is completed |
+| **Mitigated**: 30 / 40 | Fixed values, the mitigating control must be named |
+| **Integer only** | No decimal scores |

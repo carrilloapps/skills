@@ -1,0 +1,303 @@
+== speckit/.specify/memory/constitution.md
+# Invoice Service Constitution
+
+## Core Principles
+
+### I. Library-First
+Every feature starts as a standalone library.
+
+**Version**: 1.0.0 | **Ratified**: 2026-01-10 | **Last Amended**: 2026-01-10
+
+== speckit/specs/001-invoice-export/checklists/requirements.md
+# Checklist
+- [ ] CHK001 ok
+
+== speckit/specs/001-invoice-export/contracts/export.yaml
+openapi: 3.1.0
+info:
+  title: Export
+
+== speckit/specs/001-invoice-export/data-model.md
+# Data Model
+
+## Invoice
+- number
+
+== speckit/specs/001-invoice-export/plan.md
+# Implementation Plan: Invoice CSV export
+
+## Summary
+Add a CSV exporter.
+
+## Technical Context
+**Language/Version**: Python 3.12
+
+```text
+## not a heading inside a fence
+```
+
+== speckit/specs/001-invoice-export/research.md
+# Research
+
+## Decision: stdlib csv
+
+== speckit/specs/001-invoice-export/spec.md
+# Feature Specification: Invoice CSV export
+
+**Feature Branch**: `001-invoice-export`
+**Created**: 2026-09-30
+**Status**: Draft
+
+## User Scenarios & Testing *(mandatory)*
+
+### User Story 1 - Export one month (Priority: P1)
+
+The analyst exports the invoices of a month.
+
+**Acceptance Scenarios**:
+
+1. **Given** 3 invoices exist for September, **When** the analyst exports September, **Then** the CSV has 3 rows
+2. **Given** no invoices exist, **When** the analyst exports September, **Then** the CSV has only the header
+
+### User Story 2 - Reject bad months (Priority: P2)
+
+1. **Given** any data, **When** the analyst exports "2026-13", **Then** the export is refused
+
+### Edge Cases
+
+- What happens when the month is in the future?
+
+## Requirements *(mandatory)*
+
+### Functional Requirements
+
+- **FR-001**: System MUST export invoices of one month as CSV
+- **FR-002**: System MUST reject invalid months with a message | code
+- **FR-003**: System MUST support [NEEDS CLARIFICATION: which separators?]
+
+### Key Entities
+
+- **Invoice**: number, date, total
+
+## Success Criteria *(mandatory)*
+
+### Measurable Outcomes
+
+- **SC-001**: Month-end export takes under 1 minute
+
+## Clarifications
+
+### Session 2026-09-30
+
+- Q: Include voided invoices? → A: No
+
+## Assumptions
+
+- Invoices carry an issue date
+
+== speckit/specs/001-invoice-export/tasks.md
+# Tasks: Invoice CSV export
+
+## Phase 1: Setup (Shared Infrastructure)
+
+- [x] T001 Create project structure per implementation plan
+- [ ] T002 [P] Configure linting
+
+## Phase 3: User Story 1 - Export one month (Priority: P1) 🎯 MVP
+
+- [ ] T010 [P] [US1] Contract test in tests/contract/test_export.py
+- [ ] T011 [US1] Implement exporter in src/export.py
+
+== speckit/specs/002-ready/spec.md
+# Feature Specification: Ready feature
+
+## Requirements *(mandatory)*
+
+- **FR-001**: System MUST be ready
+
+== target/plans/agile/constitution.md
+Proposed — imported from spec-kit `.specify/memory/constitution.md`, needs confirmation.
+
+# Invoice Service Constitution
+
+## Core Principles
+
+### I. Library-First
+Every feature starts as a standalone library.
+
+**Version**: 1.0.0 | **Ratified**: 2026-01-10 | **Last Amended**: 2026-01-10
+
+== target/specs/invoice-export/contracts/export.yaml
+openapi: 3.1.0
+info:
+  title: Export
+
+== target/specs/invoice-export/design.md
+# Design: Invoice CSV export
+
+Proposed — imported from spec-kit `specs/001-invoice-export/plan.md`, needs confirmation.
+
+## Architecture & Design
+
+### 1. Architectural style
+
+Proposed — fill from the imported notes below.
+
+### 2. Layers
+
+Proposed — fill from the imported notes below.
+
+### 3. Bounded context
+
+Proposed — fill from the imported notes below.
+
+### 4. Patterns to mirror
+
+Proposed — fill from the imported notes below.
+
+### 5. State model
+
+Proposed — fill from the imported notes below.
+
+### 6. Composition points
+
+Proposed — fill from the imported notes below.
+
+### 7. Public surface delta
+
+Proposed — fill from the imported notes below.
+
+### 8. Anti-violations
+
+Proposed — fill from the imported notes below.
+
+## Imported notes
+
+### From plan.md
+
+### Implementation Plan: Invoice CSV export
+
+#### Summary
+Add a CSV exporter.
+
+#### Technical Context
+**Language/Version**: Python 3.12
+
+```text
+## not a heading inside a fence
+```
+
+### From research.md
+
+### Research
+
+#### Decision: stdlib csv
+
+== target/specs/invoice-export/domain-model.md
+# Domain model: Invoice CSV export
+
+Proposed — imported from spec-kit `specs/001-invoice-export/data-model.md`, needs confirmation.
+
+### Data Model
+
+#### Invoice
+- number
+
+== target/specs/invoice-export/spec.md
+# Spec: Invoice CSV export
+
+Proposed — imported from spec-kit `specs/001-invoice-export/spec.md`, needs confirmation.
+
+## 1.1 Problem
+
+Proposed — imported, needs confirmation: state the problem, its value and the stakeholders (Spec Kit has no Problem section; see the user stories below).
+
+## Functional requirements
+
+| ID | Requirement | Priority |
+|----|-------------|----------|
+| FR-001 | System MUST export invoices of one month as CSV | - |
+| FR-002 | System MUST reject invalid months with a message / code | - |
+| FR-003 | System MUST support [NEEDS CLARIFICATION: which separators?] | - |
+
+## 1.2 Behavioral contract
+
+```gherkin
+# language: en
+Feature: Invoice CSV export
+
+  @P1
+  Scenario: US1 Export one month - 1
+    # Origin: imported from spec-kit specs/001-invoice-export/spec.md (User Story 1); Proposed, link @FR-### and confirm
+    Given 3 invoices exist for September
+    When the analyst exports September
+    Then the CSV has 3 rows
+
+  @P1
+  Scenario: US1 Export one month - 2
+    # Origin: imported from spec-kit specs/001-invoice-export/spec.md (User Story 1); Proposed, link @FR-### and confirm
+    Given no invoices exist
+    When the analyst exports September
+    Then the CSV has only the header
+
+  @P2
+  Scenario: US2 Reject bad months - 3
+    # Origin: imported from spec-kit specs/001-invoice-export/spec.md (User Story 2); Proposed, link @FR-### and confirm
+    Given any data
+    When the analyst exports "2026-13"
+    Then the export is refused
+```
+
+## 1.3 Out of scope
+
+Proposed — imported, needs confirmation: Spec Kit has no out-of-scope section; list the exclusions with the team.
+
+## 1.4 Success criteria
+
+| ID | Criterion | Scenario(s) |
+|----|-----------|-------------|
+| SC-001 | Month-end export takes under 1 minute | - |
+
+## 1.5 Constraints & assumptions
+
+1. Invoices carry an issue date (Proposed)
+
+## Clarifications
+
+### Session imported
+
+1. Q: Include voided invoices? → A: No — Proposed, imported; needs Confirmed by
+
+## Open questions
+
+| # | Question | For | Blocks sprint? |
+|---|----------|-----|----------------|
+| 1 | which separators? | team | Yes |
+
+## Imported notes
+
+Edge cases from Spec Kit (turn each into a scenario or an out-of-scope item):
+
+1. What happens when the month is in the future?
+
+== target/specs/invoice-export/tasks.md
+# Tasks: Invoice CSV export
+
+Proposed — imported from spec-kit `specs/001-invoice-export/tasks.md`, needs confirmation.
+
+## Phase 1: Setup (Shared Infrastructure)
+
+| ID | P | Req | Task | Depends | Est | Status |
+|----|---|-----|------|---------|-----|--------|
+| T001 | - | - | Create project structure per implementation plan | - | - | ✅ |
+| T002 | [P] | - | Configure linting | - | - | - |
+
+## Phase 3: User Story 1 - Export one month (Priority: P1) 🎯 MVP
+
+| ID | P | Req | Task | Depends | Est | Status |
+|----|---|-----|------|---------|-----|--------|
+| T010 | [P] | - | Contract test in tests/contract/test_export.py | - | - | - |
+| T011 | - | - | Implement exporter in src/export.py | - | - | - |
+
+== target/specs/ready/spec.md
+# Spec: already here

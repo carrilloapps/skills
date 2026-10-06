@@ -3,182 +3,122 @@
 > **Personal behavioral rules for AI tools — documentation discipline, secure practices, code quality, version control, and structured estimation across any project.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-red.svg)](../../LICENSE)
-[![Version](https://img.shields.io/badge/version-1.0.1-blue.svg)](../../CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.1.0-blue.svg)](../../CHANGELOG.md)
 [![skills.sh](https://img.shields.io/badge/skills.sh-ai--rules-black.svg)](https://skills.sh/carrilloapps/skills/ai-rules)
 [![GitHub](https://img.shields.io/badge/GitHub-carrilloapps-181717.svg?logo=github)](https://github.com/carrilloapps/skills)
 [![X / Twitter](https://img.shields.io/badge/@carrilloapps-000000.svg?logo=x)](https://x.com/carrilloapps)
 
 ---
 
-ai-rules is an [agent skill](https://skills.sh) compatible with **40+ AI coding agents** — including GitHub Copilot, Claude Code, Cursor, Windsurf, Cline, Codex, Gemini CLI, OpenCode, Roo Code, and more — that establishes a behavioral baseline for every AI session in your projects.
+ai-rules is an [agent skill](https://skills.sh) compatible with **70+ AI coding agents** — including GitHub Copilot, Claude Code, Cursor, Windsurf, Cline, Codex, Gemini CLI, OpenCode, Roo Code, and more — that establishes a behavioral baseline for every AI session in your projects.
 
 It is not a linter. It is not a checklist. It is a behavioral contract that:
 
-- **Initializes every session** — captures project and developer context before any work begins
-- **Enforces documentation discipline** — everything goes to `docs/`, accessible to every AI tool
+- **Never interrupts to set up** — reads project context when present, asks for one missing field only when a rule needs it, never asks for name or email
+- **Keeps everything inside the project** — `specs/`, `plans/`, `docs/`, `.memory/` in an ordered layout; never global agent directories (`~/.claude`, `~/.gemini`, …) without your explicit approval
 - **Defines the language layer** — `en_US` for all code identifiers, non-negotiable regardless of project or developer language
 - **Prevents duplicate work** — `docs/elementals.md` is the living index of all project elements, checked before creating anything
-- **Structures every recommendation** — Confidence %, effort by capacity mode, pivot potential, and explicit risk factors
+- **Structures every recommendation** — qualitative confidence with its reason, effort by capacity mode, pivot potential, and explicit risk factors
+- **Keeps agent-private state out of version control** — `.memory/local/` is ignored (Git/Jujutsu, Mercurial, Fossil, SVN instruction) while shared team state under `.memory/<skill>/` stays versioned
+- **Suggests optional tools, never installs on its own** — local-only documentation graph (`@carrilloapps/docgraph`) and multi-agent sync (`skill-rules`), pinned and one at a time with explicit approval
 
 ---
 
 ## Quick Install
 
-> **Before installing**: Review the source at [github.com/carrilloapps/skills](https://github.com/carrilloapps/skills) and verify the latest audit results at [skills.sh/audits](https://skills.sh/audits). The install command below fetches content from a remote repository — review before using in production or sensitive environments.
+> **Before installing**: review the source at [github.com/carrilloapps/skills](https://github.com/carrilloapps/skills) and the latest audit results at [skills.sh/audits](https://skills.sh/audits).
 
 ```bash
-npx skills add carrilloapps/skills@ai-rules
+npx skills add carrilloapps/skills@ai-rules                          # agents detected in this project
+npx skills add carrilloapps/skills@ai-rules -a antigravity -a cursor # specific agents
+npx skills add carrilloapps/skills@ai-rules -a '*'                   # every supported agent
+npx skills add carrilloapps/skills@ai-rules -g                       # global (all projects)
 ```
 
-### All install options
+Update with `npx skills update`; remove with `npx skills remove ai-rules`.
 
-| Command | Effect |
-|---------|--------|
-| `npx skills add carrilloapps/skills@ai-rules` | Install to all detected agents in current project |
-| `npx skills add carrilloapps/skills@ai-rules -g` | Install globally (available in every project) |
-| `npx skills add carrilloapps/skills@ai-rules -a github-copilot` | Install to a specific agent only |
-| `npx skills add carrilloapps/skills@ai-rules -a claude-code -a cursor` | Install to multiple specific agents |
-| `npx skills add carrilloapps/skills@ai-rules --all` | Install to all agents, skip confirmations |
-| `npx skills add carrilloapps/skills@ai-rules -g -y` | Global install, non-interactive (CI-friendly) |
-
-Target a specific agent:
-
-```bash
-npx skills add carrilloapps/skills@ai-rules -a github-copilot
-npx skills add carrilloapps/skills@ai-rules -a claude-code
-npx skills add carrilloapps/skills@ai-rules -a cursor
-npx skills add carrilloapps/skills@ai-rules -a windsurf
-```
-
-### Keeping it up to date
-
-```bash
-# Check if a newer version is available
-npx skills check
-
-# Update to the latest version
-npx skills update
-```
-
-> See [skills.sh/carrilloapps/skills/ai-rules](https://skills.sh/carrilloapps/skills/ai-rules) for the canonical install command and latest release.
-
-### Where files are installed
-
-| Scope | Path |
-|-------|------|
-| Project (default) | `./<agent>/skills/ai-rules/SKILL.md` |
-| Global (`-g`) | `~/<agent>/skills/ai-rules/SKILL.md` |
-
-By default the CLI creates a **symlink** from each agent directory to a single canonical copy — one source of truth, easy to update. Use `--copy` if your environment does not support symlinks.
-
-### CLI Reference — all commands
-
-| Command | Description |
-|---------|-------------|
-| `npx skills add carrilloapps/skills@ai-rules` | Install to all detected agents (current project) |
-| `npx skills add carrilloapps/skills@ai-rules -g` | Install globally (all projects) |
-| `npx skills add carrilloapps/skills@ai-rules -a <agent>` | Install to a specific agent |
-| `npx skills add carrilloapps/skills@ai-rules --all` | Install to all agents, skip prompts |
-| `npx skills add carrilloapps/skills@ai-rules -g -y` | Global + non-interactive (CI-friendly) |
-| `npx skills add carrilloapps/skills@ai-rules --copy` | Copy files instead of symlink |
-| `npx skills list` | List all installed skills in current project |
-| `npx skills list -g` | List globally installed skills |
-| `npx skills find ai-rules` | Search the skills.sh directory |
-| `npx skills check` | Check if a newer version is available |
-| `npx skills update` | Update all installed skills to latest |
-| `npx skills remove ai-rules` | Remove the skill from current project |
-| `npx skills remove ai-rules -g` | Remove from global scope |
-| `npx skills remove ai-rules -a <agent>` | Remove from a specific agent only |
-
----
-
-## Compatible Agents
-
-Works with every agent supported by the [skills.sh](https://skills.sh) ecosystem:
-
-| Agent | `--agent` flag |
-|-------|---------------|
-| GitHub Copilot | `github-copilot` |
-| Claude Code | `claude-code` |
-| Cursor | `cursor` |
-| Windsurf | `windsurf` |
-| Cline | `cline` |
-| OpenAI Codex | `codex` |
-| Gemini CLI | `gemini-cli` |
-| OpenCode | `opencode` |
-| Roo Code | `roo` |
-| Goose | `goose` |
-| Continue | `continue` |
-| Amp / Kimi CLI / Replit | `amp` |
-| Antigravity | `antigravity` |
-| Augment | `augment` |
-| Droid | `droid` |
-| Kilo Code | `kilo` |
-| Kiro CLI | `kiro-cli` |
-| OpenHands | `openhands` |
-| Trae / Trae CN | `trae` |
-| Zencoder | `zencoder` |
-| + 20 more | `npx skills add --list` |
+Works with **70+ agents** — Claude Code, Antigravity (IDE and `agy` CLI), GitHub Copilot, Cursor, Codex, Gemini CLI, Windsurf / Devin Desktop, Cline, Roo Code, OpenCode, Kiro, and more. Per-agent `-a` ids, project and global paths, always-on instruction files, manual install, and optional guards: **[`docs/INSTALL.md`](../../docs/INSTALL.md)**.
 
 ---
 
 ## What It Does
 
-At session start, and throughout the project lifecycle, ai-rules enforces a consistent behavioral contract across every AI agent working in your project.
+Throughout the project lifecycle, ai-rules enforces a consistent behavioral contract across every AI agent working in your project — without adding stop-and-wait rounds of its own.
 
-### Session Initialization
+### Lazy Project Context
 
-Before any work begins, the skill checks for `docs/project-context.md`. If it does not exist, it collects project and developer data — with explicit disclosure that the file may contain PII — then saves it for the session.
+There is no session-start questionnaire. Context files are read silently when present; a missing field is asked for only when a rule needs it, one field at a time, and never during read-only work. Name and email are never asked — authorship comes from the version control configuration.
 
 ```mermaid
 flowchart TD
-    A[Session start] --> B{docs/project-context.md\nexists?}
-    B -- No --> C[Disclose PII intent\nCollect project + developer data]
-    C --> D[Save to docs/project-context.md]
-    D --> E[Load for the session]
-    B -- Yes --> E
-    E --> F[Apply: attribution · language\npersonalization · context]
+    A[Task arrives] --> B{Does a rule need\na missing field?}
+    B -- No --> E[Work with what exists]
+    B -- Yes --> C{Inferable from\nmanifests / docs?}
+    C -- Yes --> D[Record it · say so in one line]
+    C -- No --> F[Ask for that field only]
+    D --> E
+    F --> E
 ```
 
 ### Behavioral Rules
 
 | Area | What it enforces |
 |------|-----------------|
-| **Security** | Never read secrets or tokens · never execute dangerous commands · never query a database without reviewing schema and indexes first |
-| **Documentation storage** | All session memory, references, and generated assets go into `docs/` — shared across Claude Code, Copilot, Gemini, OpenCode, and others |
-| **Documentation format** | Native Markdown · no emoji · Mermaid for diagrams · cross-references instead of duplication |
+| **Security** | Never reproduce, log, or transmit secrets (redact when reporting) · never execute dangerous commands · check schema and indexes and bound result sets before any query |
+| **Documentation storage** | Team-facing docs go into `docs/` (versioned); agent-private state goes into `.memory/local/` (never versioned) |
+| **Documentation format** | Native Markdown · no decorative emoji (skill-defined report formats excepted) · Mermaid for diagrams · cross-references instead of duplication |
 | **Language — code layer** | ALL code identifiers in `en_US`, non-negotiable (variables, functions, classes, DB columns, endpoints, env vars, test names) |
-| **Language — docs layer** | Follows explicit user request, `docs/project-context.md` inference, or other skill directives |
-| **Code quality** | SOLID · KISS · DRY · `docs/elementals.md` checked before creating any element |
-| **Version control** | Conventional Commits · one logical change per commit · never force-push to protected branches · living `AGENTS.md` |
-| **Estimation** | Confidence % · effort by capacity mode · pivot potential · explicit risk factors for every architectural recommendation |
+| **Language — docs layer** | Explicit request → `docs/project-context.md` → existing docs → language of the user's message; never stops to ask |
+| **Code quality** | SOLID · KISS · DRY · `docs/elementals.md` checked before creating an element, updated only when elements are created, renamed, or removed |
+| **Version control** | Explicit approval before every VCS write · commit authorization state machine (`REQUESTED → … → RELEASED`, each transition approved; hotfixes end with a forward-port offer) · Conventional Commits · one logical change per commit · never force-push to protected branches · `AGENTS.md` suggested, created only on approval |
+| **Estimation** | Confidence (High/Medium/Low + reason) · effort by capacity mode · pivot potential · explicit risk factors for every architectural recommendation |
 
 ### Execution Priority
 
 | Layer | Role | When |
 |-------|------|------|
-| **ai-rules** (this skill) | Behavioral baseline — defines HOW to act | Session start, loads first |
-| **Devil's Advocate** | Execution gate — defines WHETHER to act | Before each action |
+| **ai-rules** (this skill) | Behavioral baseline — defines HOW to act | Always, as context (loads first) |
+| **Devil's Advocate** | Execution gate — defines WHETHER to act | Before each action, at the depth its risk tier requires |
 
-These layers do not conflict. ai-rules establishes the session context; Devil's Advocate governs individual actions within that context. In any conflict between an ai-rules rule and a Devil's Advocate finding, Devil's Advocate has analytical precedence.
+These layers do not conflict. ai-rules defines how work is done; Devil's Advocate governs whether each action happens. Risk findings from Devil's Advocate are never overridden by ai-rules. Conflicts with any other skill get a one-line note and the more specific rule wins — no extra stop.
 
 ---
 
-## Session Files
+## Project Files
 
-The skill manages two persistent files across sessions:
+| File | Contents | Versioned? |
+|------|----------|-----------|
+| `docs/project-context.md` | Project name, description, stage, stack, documentation language — no personal data | Yes |
+| `docs/elementals.md` | Index of project code elements | Yes |
+| `.memory/local/ai-rules/developer.md` | Current developer's role and preferences | **No** — agent-private |
+| `.memory/local/ai-rules/capabilities.json` | Which optional tools were suggested, declined, or installed | **No** — agent-private |
 
-### `docs/project-context.md`
+### `.memory/` — shared vs. private state
 
-Created once at session initialization. Contains project metadata (name, description, stage, stack) and developer identity (name, email, role, organization). Used for authorship attribution, documentation language detection, and agent personalization. May contain PII — add to `.gitignore` if appropriate.
+Shared team state lives in `.memory/<skill>/` and **is versioned**. Agent-private state lives in `.memory/local/` (plus `*.local.*` and `*.recovered.json`) and is kept out of version control with file writes only:
+
+| VCS | Rule applied |
+|-----|-------------|
+| Git / Jujutsu | `.memory/.gitignore` with `local/`, `*.local.*`, `*.recovered.json` (the project's own `.gitignore` is not edited) |
+| Mercurial | `^\.memory/local/`, `^\.memory/.*\.local\.`, `^\.memory/.*\.recovered\.json$` appended to `.hgignore` |
+| Fossil | `.memory/local/*`, `.memory/*.local.*`, `.memory/*.recovered.json` appended to `.fossil-settings/ignore-glob` |
+| Subversion | The user is told once to run `svn propset svn:ignore local .memory` |
+
+### Optional capabilities
+
+See [`frameworks/capabilities.md`](frameworks/capabilities.md): detection, pinned versions, per-agent MCP config, and the one-suggestion-per-tool protocol. Nothing is installed without the user's explicit approval of the exact command.
+
+**docgraph in agent mode** — docgraph searches locally (provider pinned to `local`, no remote sources, no API keys); the agent you are using reranks and summarizes the results with its own model, so it runs on your existing agent subscription. MCP sampling is not used (deprecated in the 2026-07-28 MCP spec); the upstream proposal is in [`integrations/docgraph-agent-mode.md`](../../integrations/docgraph-agent-mode.md).
+
+**Docker lab (optional)** — with Docker available, [`frameworks/docker-lab.md`](frameworks/docker-lab.md) runs documentation linters offline in one-shot, read-only containers: markdownlint-cli2 v0.23.3, Vale v3.24.0 (built-in style, no `vale sync`), and lychee 0.24.2 with `--offline` (online link checks only on request). Compose file in `.memory/devsecops/compose.docs.yaml`; results in `.memory/local/devsecops/results/`.
 
 ### `docs/elementals.md`
 
-The living index of all project elements. Updated after every action that adds, modifies, or removes any element. Checked before creating any component, function, constant, or type to prevent duplication.
+The living index of project code elements. Checked before creating any component, function, constant, or type to prevent duplication. Updated only when code elements are created, renamed, or removed — as part of the approved change, never during a read-only SAR assessment.
 
 ```markdown
 # Project Elementals
-> Source of truth for all AI tools. Updated after every change.
+> Source of truth for all AI tools. Updated when code elements change.
 > Project: [name] — Last updated: YYYY-MM-DD
 
 ## Components
@@ -204,7 +144,7 @@ Every architectural decision, library choice, migration, feature implementation,
 
 | Field | What it means |
 |-------|--------------|
-| **Confidence** (0–100%) | Based on available evidence, known constraints, and identified unknowns. States what would raise or lower this number. |
+| **Confidence** | `High` / `Medium` / `Low` plus its reason — what was verified and what would change it. No numeric percentages. |
 | **Effort** | Story points or clock hours by capacity mode (1 SP ≈ half a day of focused solo work at mid-level, before multiplier) |
 | **Pivot potential** | High — swap any time, low cost · Medium — rework of specific components · Low — architectural commitment, reversal expensive |
 | **Risk factors** | Specific, actionable conditions that could reduce confidence. Examples: "no test coverage on this module," "external API with no SLA," "single developer with domain knowledge." Vague risk factors are not actionable. |
@@ -221,14 +161,23 @@ Every architectural decision, library choice, migration, feature implementation,
 
 ## Skill Structure
 
-```
+```text
 skills/ai-rules/
-├── SKILL.md          # Core behavioral contract (always loaded in full)
-├── README.md         # This documentation
-└── metadata.json     # Skill metadata for skills.sh
+├── SKILL.md                 # Core behavioral contract (always loaded in full)
+├── README.md                # This documentation
+├── metadata.json            # Skill metadata for skills.sh
+├── frameworks/
+│   ├── capabilities.md      # Optional tools: docgraph (agent mode), skill-rules
+│   ├── docker-lab.md        # Docker lab: markdownlint-cli2, Vale, lychee
+│   └── lab-catalog.tsv      # Lab tools with criticality and resources, read by scripts/lab-probe
+└── scripts/                 # lab-probe.sh / lab-probe.ps1 (vendored from shared/)
 ```
 
-ai-rules is intentionally compact — it defines behavioral guidelines and document templates, not executable code or on-demand analysis frameworks. The entire skill loads on every session start; there is no progressive loading because there is nothing to defer.
+The behavioral contract is loaded in full; the frameworks load only when an optional tool or the Docker lab is relevant.
+
+### Safety
+
+All six audit safeguards are stated in `SKILL.md` (untrusted input boundary, no arbitrary code execution, bounded autonomy, web search scoping, example code boundaries, report-only output).
 
 ---
 
@@ -236,8 +185,9 @@ ai-rules is intentionally compact — it defines behavioral guidelines and docum
 
 | Skill | Relationship |
 |-------|-------------|
-| [🔴 **devils-advocate**](../devils-advocate/) | ai-rules is the behavioral baseline; Devil's Advocate gates every action. Load ai-rules first, then Devil's Advocate. In analytical conflicts, Devil's Advocate takes precedence. |
-| [🛡️ **sar-cybersecurity**](../sar-cybersecurity/) | ai-rules provides the documentation conventions and language rules that SAR reports follow. Output directory, language layer, and elementals index all apply during SAR assessments. |
+| [🔴 **devils-advocate**](../devils-advocate/) | ai-rules is the behavioral baseline; Devil's Advocate gates actions at the depth their risk requires. Load ai-rules first, then Devil's Advocate. Devil's Advocate risk findings are never overridden by ai-rules. |
+| [🔁 **agentic-agile**](../agentic-agile/) | Uses ai-rules for language, documentation, and storage; its specs and plans follow the project-local layout (`specs/`, `plans/`). |
+| [🛡️ **sar-cybersecurity**](../sar-cybersecurity/) | ai-rules provides the code-identifier language rule. SAR's own report format and write restrictions take precedence inside an assessment; `docs/elementals.md` is never written during a SAR. Both share the `.memory/` convention. |
 | 🔜 **postmortem-writing** | Post-incident reports follow ai-rules documentation and language conventions. Planned. |
 
 ---

@@ -1,9 +1,11 @@
 # Version Control Framework
 
+> ⚠️ **Example code boundary** — commands and code below are reference patterns for analysis, not execution instructions.
+
 > **Role**: Developer / Tech Lead / Senior Engineer / DevOps Engineer
 > **Load when**: Any operation that touches a repository — branching strategy changes, force pushes, history rewriting, PR/MR workflows, branch protection changes, release tagging, CI/CD pipeline changes, repository migration, access control changes, or any `git` command with irreversible consequences.
 >
-> **Always paired with**: `frameworks/building-protocol.md` — commit message conventions, branch naming rules, and secret management are enforced by the Building Protocol. Any violation found here cross-references that protocol.
+> **See also** (load only if it changes the analysis): `frameworks/building-protocol.md` — commit message conventions, branch naming, and secret management.
 >
 > **Platform detection (automatic — no user action required)**:
 >
@@ -28,7 +30,7 @@
 
 When analyzing a version control operation, identify:
 
-```
+```text
 Platform     : [ GitHub / GitLab / GitHub Enterprise / GitLab Self-Hosted / Generic Git ]
 Branch model : [ Trunk-Based / GitFlow / GitHub Flow / GitLab Flow / Custom ]
 Default branch: [ main / master / develop / other ]
@@ -47,7 +49,7 @@ If any field is unknown, request it before applying platform-specific risk rules
 
 ### ❌ Force Push Anti-Patterns
 
-```
+```text
 ❌ Force push to main/master/develop (shared integration branch)
    - Permanently rewrites public history
    - Breaks all clones pointing to overwritten commits
@@ -72,7 +74,7 @@ If any field is unknown, request it before applying platform-specific risk rules
 
 ### ✅ Safe Alternatives
 
-```
+```text
 ✅ For secret removal: Use git filter-repo (not filter-branch — it's deprecated)
    After filter-repo:
    1. Force push to all branches (coordinated with team)
@@ -94,6 +96,7 @@ If any field is unknown, request it before applying platform-specific risk rules
 
 > **Severity**: ANY secret committed to a repository — even if immediately removed — is **🔴 Critical**.
 > The secret must be treated as compromised regardless of removal, because:
+>
 > - GitHub and GitLab cache commit content in their CDN
 > - Any clone or fork made before removal retains the secret
 > - CI/CD logs may have printed the secret during pipeline execution
@@ -101,7 +104,7 @@ If any field is unknown, request it before applying platform-specific risk rules
 
 ### ❌ Secret Anti-Patterns
 
-```
+```text
 ❌ Hardcoded credentials in source files (API keys, passwords, tokens, private keys)
 ❌ Secrets committed in .env files (even if later .gitignored — history retains them)
 ❌ Secrets in CI/CD YAML files checked into the repo
@@ -113,7 +116,7 @@ If any field is unknown, request it before applying platform-specific risk rules
 
 ### ✅ Remediation Protocol
 
-```
+```text
 When a secret is confirmed in git history:
 1. IMMEDIATE: Rotate / revoke the secret NOW — do not wait for history cleanup
 2. AUDIT: Check CI/CD logs for any runs that printed the secret value
@@ -127,7 +130,7 @@ When a secret is confirmed in git history:
 
 ### 🔍 Secret Detection Tools
 
-```
+```text
 GitHub:  GitHub Advanced Security → Secret Scanning (auto-alerts on push)
          Dependabot → alerts for vulnerable dependencies
 GitLab:  GitLab Secret Detection (CI job in .gitlab-ci.yml)
@@ -142,7 +145,7 @@ Generic: git-secrets, truffleHog, detect-secrets (pre-commit hooks)
 
 ### ❌ Branching Anti-Patterns
 
-```
+```text
 ❌ Long-lived feature branches (> 2 weeks diverged from main)
    - Merge conflicts compound exponentially
    - Integration risk hidden until last minute
@@ -169,7 +172,7 @@ Generic: git-secrets, truffleHog, detect-secrets (pre-commit hooks)
 
 ### ✅ Branching Best Practices
 
-```
+```text
 Branch naming (Building Protocol — en_US, kebab-case, with prefix):
   feat/<ticket-id>-short-description   (new feature)
   fix/<ticket-id>-short-description    (bug fix)
@@ -197,7 +200,7 @@ Branch protection minimum requirements (main/master/develop):
 
 ### ❌ PR/MR Anti-Patterns
 
-```
+```text
 ❌ Self-merging PRs/MRs (no external review)
 ❌ Reviews approved without reading (rubber-stamp approvals)
 ❌ PRs larger than 400 lines diff — statistically proven to reduce review quality
@@ -212,14 +215,14 @@ Branch protection minimum requirements (main/master/develop):
 
 ```markdown
 Before merging:
-- [ ] All CI checks pass (tests, lint, security scan, build)
-- [ ] At least 1 approval from a qualified reviewer
-- [ ] All review comments resolved (or explicitly deferred with a tracked issue)
-- [ ] Branch is up to date with the target branch
-- [ ] No merge conflicts
-- [ ] CODEOWNERS approval received (if applicable)
-- [ ] Deployment freeze check: is this a safe time to merge?
-- [ ] If this is a hotfix: was the standard emergency process followed?
+1. All CI checks pass (tests, lint, security scan, build)
+2. At least 1 approval from a qualified reviewer
+3. All review comments resolved (or explicitly deferred with a tracked issue)
+4. Branch is up to date with the target branch
+5. No merge conflicts
+6. CODEOWNERS approval received (if applicable)
+7. Deployment freeze check: is this a safe time to merge?
+8. If this is a hotfix: was the standard emergency process followed?
 ```
 
 ---
@@ -230,7 +233,7 @@ Before merging:
 
 ### ❌ Commit Anti-Patterns
 
-```
+```text
 ❌ Vague messages: "fix", "changes", "WIP", "update", "asdf"
 ❌ Non-English commit messages in a shared/enterprise repo
 ❌ Commits that mix multiple unrelated concerns (harder to bisect, harder to revert)
@@ -241,7 +244,7 @@ Before merging:
 
 ### ✅ Conventional Commits (Building Protocol standard)
 
-```
+```text
 <type>(<scope>): <short description> [en_US, imperative, ≤72 chars]
 
 [optional body — explain WHY this change was made]
@@ -268,7 +271,7 @@ Before merging:
 
 ### ❌ Tag / Release Anti-Patterns
 
-```
+```text
 ❌ Mutable tags (tags that point to different commits over time)
    - Git tags CAN be force-moved — this is dangerous and unexpected
    - Most CI/CD systems cache by tag name; a moved tag will serve old artifacts
@@ -286,7 +289,7 @@ Before merging:
 
 ### ✅ Tag Best Practices
 
-```
+```text
 ✅ Immutable tags — never force-move a tag once published
 ✅ Semantic versioning: MAJOR.MINOR.PATCH
    MAJOR: breaking change
@@ -304,7 +307,7 @@ Before merging:
 
 ### ❌ Access Control Anti-Patterns
 
-```
+```text
 ❌ Personal Access Tokens (PATs) with full repo scope used for CI/CD
    - If the PAT owner leaves, CI/CD breaks
    - Full repo scope = read/write to all repos in the org
@@ -320,7 +323,7 @@ Before merging:
 
 ### ✅ Access Control Best Practices
 
-```
+```text
 GitHub:
   ✅ Use GitHub Apps over PATs for CI/CD integrations
      (scoped permissions, token rotation, audit log support)
@@ -346,7 +349,7 @@ GitLab:
 
 ### Branch Protection Rules
 
-```
+```text
 Minimum requirements for main/master:
   ✅ Require pull request reviews before merging
      - Required approving reviews: ≥ 1 (≥ 2 for production-facing changes)
@@ -369,7 +372,7 @@ Risk if not set:
 
 ### GitHub Actions Risks
 
-```
+```text
 ❌ GITHUB_TOKEN with write permissions used in workflows triggered by pull_request_target
    - Allows fork PRs to access write-scoped tokens → arbitrary code execution risk
 
@@ -394,7 +397,7 @@ Risk if not set:
 
 ### CODEOWNERS
 
-```
+```text
 ✅ CODEOWNERS ensures domain experts review relevant changes
 ❌ CODEOWNERS file not present → any reviewer can approve any change
 ❌ CODEOWNERS with stale team references (team disbanded, people left)
@@ -409,7 +412,7 @@ Location: .github/CODEOWNERS (GitHub) | root CODEOWNERS (also GitHub/GitLab)
 
 ### Protected Branches
 
-```
+```text
 GitLab Protected Branch minimum (main/master/develop):
   ✅ Allowed to merge: Developers + Maintainers (not Reporter or Guest)
   ✅ Allowed to push: No one (force merges through MR only) OR Maintainers only
@@ -422,7 +425,7 @@ Risk if not set: Same as GitHub — direct push to main bypasses all quality gat
 
 ### GitLab CI/CD Variable Risks
 
-```
+```text
 ❌ CI/CD variables not masked — secrets visible in job logs
 ❌ Variables not scoped to protected branches/tags — available to any branch
 ❌ Group-level CI/CD variables with production secrets accessible to all projects
@@ -436,7 +439,7 @@ Risk if not set: Same as GitHub — direct push to main bypasses all quality gat
 
 ### GitLab MR Workflow
 
-```
+```text
 ✅ Required approvals: ≥ 1 approval before merge
 ✅ Code owners approval: enabled for critical paths
 ✅ "Prevent approval by author": enabled — self-merge not allowed
@@ -448,7 +451,7 @@ Risk if not set: Same as GitHub — direct push to main bypasses all quality gat
 
 ### GitLab Runner Security
 
-```
+```text
 ❌ Shared runners used for pipelines that access production secrets
    ✅ Use project-specific or group runners for production deployments
 
@@ -478,13 +481,13 @@ Risk if not set: Same as GitHub — direct push to main bypasses all quality gat
 | Branch strategy complexity | ❌ Harder to reason about affected paths | ✅ Simpler per-service |
 ```
 
-> **Key risk**: Migrating from polyrepo to monorepo (or vice versa) is a **Type 1 irreversible decision** — triggers Strategic Handbrake review (CTO/VP Eng).
+> **Key risk**: Migrating from polyrepo to monorepo (or vice versa) is a **Type 1 irreversible decision** — Tier 2 minimum; Tier 3 if repository ownership or downstream consumers are unknown (CTO/VP Eng should answer).
 
 ---
 
 ## CI/CD Integration Risks (Version Control Perspective)
 
-```
+```text
 ❌ Pipeline triggered on every branch push (high cost, high noise)
    ✅ Scope triggers: main merges, PRs targeting main, release branches
 

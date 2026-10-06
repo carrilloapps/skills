@@ -1,182 +1,97 @@
-# Output Format
+# Output Format — Good vs. Bad
 
-Standard report structure for Devil's Advocate analysis. Load this file when producing the final analysis report. Use this structure directly — do NOT wrap the output in a code block.
+Reference for writing Devil's Advocate output. The canonical template lives in `SKILL.md` §3; this file shows what separates a useful report from a skimmed one.
 
-> **Protocol order** — apply these checks BEFORE writing a single line of the report below:
+> ⚠️ **Example only** — the scenarios below are fictional and illustrate format, not real systems.
+
+---
+
+## Length budget
+
+| Tier | Target length | Hard ceiling |
+|------|---------------|--------------|
+| 0 — Pass | 0–1 line | 1 line |
+| 1 — Quick check | 3–8 lines | 12 lines |
+| 2 — Full critique | 15–40 lines | ~60 lines |
+| 3 — Critical stop | 6–12 lines | 15 lines (the report comes after the answers) |
+
+If a report goes over the ceiling, the cause is almost always one of: too many risks (cut to 5), generic risks (delete them), or sections with nothing to say (omit them).
+
+---
+
+## The same plan, two reports
+
+**Plan:** "Add a `DELETE /api/users/:id` endpoint so admins can remove accounts."
+
+### ❌ Bad — looks complete, changes nothing
+
+> ## 📊 Executive Summary
 >
-> **PRECONDITION A — Immediate Report**: Did ⚡ Immediate Report already fire for this analysis?
-> If not, and a 🟠 High or 🔴 Critical was found mid-sweep, fire it NOW before continuing. Load `immediate-report.md`.
+> **Overall Risk Rating**: 🟠 High · **Analysis Confidence**: 🟢 High (85%)
 >
-> **PRECONDITION B — Handbrake**: Is there any 🔴 Critical finding in this analysis?
-> If YES → **STOP. Do NOT write the report below.** Activate the Handbrake. Load `handbrake-protocol.md`. Emit the Handbrake Output Block. Wait for specialist context. Only after context is received (or user types `continue`) may the report below be written.
+> ## ✅ Strengths
 >
-> **PRECONDITION C — Protocol order summary:**
-> 1. ⚡ **Immediate Report** — fires mid-sweep on first 🟠 High or 🔴 Critical
-> 2. 🛑 **Handbrake** — full stop on 🔴 Critical; waits for specialist context
-> 3. 📄 This **Full Report** — written only after preconditions A and B are satisfied
-> 4. 🚦 **Gate** — closes the report; awaits ✅ / 🔁 / ❌
+> 1. **RESTful design** — follows REST conventions
+>
+> ## ❌ Weaknesses
+>
+> 1. **Security** — Risk: endpoint could be misused. Mitigation: ensure proper authorization.
+> 2. **Testing** — Risk: bugs. Mitigation: add comprehensive tests.
+> 3. **Performance** — Risk: could be slow at scale. Mitigation: monitor performance.
+>
+> ## 🔒 STRIDE Summary
+>
+> - Spoofing: ✅ Mitigated · Tampering: ✅ Mitigated · Repudiation: Risk …
+>
+> ## ⚡ Performance Concerns
+>
+> - Bottleneck: N/A
+> *(…six more sections…)*
+
+Why it fails: no evidence, no specific fix, invented confidence, filler sections, and nothing the user can act on. Every line would fit any endpoint in any codebase.
+
+### ✅ Good — short, proven, actionable
+
+> ### 🟠 Devil's Advocate — admin user deletion endpoint
+>
+> **Verdict:** Go with changes — **Overall risk:** 🟠
+>
+> The endpoint as planned hard-deletes rows that 4 other tables reference, and the only guard checks *logged in*, not *admin*.
+>
+> **Risks**
+>
+> 1. 🔴 **Any logged-in user can delete any account** — the route would sit behind `requireAuth` only (`src/routes/users.ts:12`); there is no role check in that router.
+>    *Evidence:* `router.use(requireAuth)` with no `requireRole`. *Fix:* add `requireRole('admin')` on the route and a test that a non-admin gets 403.
+> 2. 🟠 **Orphaned data / FK failures** — `orders`, `invoices`, `sessions`, `audit_log` reference `users.id` (`migrations/0007_orders.sql:9`, …) with no `ON DELETE` rule; the delete will either fail or, if cascades are added naïvely, erase invoices you are legally required to keep.
+>    *Evidence:* schema above. *Fix:* soft delete (`deleted_at`) + anonymize PII fields; keep invoices.
+> 3. 🟡 **No audit trail** — admin actions are not logged today. *Fix:* write an `audit_log` row with actor, target, timestamp.
+>
+> **Unverified assumptions**
+>
+> - Invoices must be retained — check: your accounting/legal retention policy.
+>
+> **What I'll do if you approve**
+>
+> 1. `DELETE /api/users/:id` → soft delete + PII anonymization, admin-only
+> 2. 403 test for non-admins, 404 for unknown id
+> 3. Audit log entry per deletion
+>
+> Also considered, not material: rate limiting (admin-only route), bulk delete (not requested).
+>
+> Reply with: ✅ Proceed · 🔁 Revise · ❌ Cancel · `continue` — proceed without addressing remaining issues (risks remain active and unmitigated) — or reply in your own words.
+
+Why it works: three risks, each pinned to a file, each with a concrete fix, and an adjusted plan the user can approve in one word.
 
 ---
 
-# 🔴 Devil's Advocate Analysis: [Name]
+## Checklist before sending
 
-**Analyzed**: [Date]
-**Skill version**: [version — use the current version from SKILL.md frontmatter at time of analysis]
-**Scope**: [What was analyzed — component, plan, decision]
-
----
-
-## 📊 Executive Summary
-
-**Overall Risk Rating**: 🔴 Critical / 🟠 High / 🟡 Medium / 🟢 Low
-
-**Key Findings**:
-1. [Most critical issue]
-2. [Second critical issue]
-3. [High-risk issue]
-
-**Recommendation**: ✅ Approve with conditions / ⚠️ Needs fixes / ❌ Reject and redesign
-
-**Analysis Confidence**: 🟢 High (≥80% context verified) / 🟡 Medium (50–79%) / 🔴 Low (<50% — worst-case scores applied)
-
-> ⚠️ Findings marked **[Unverified Context]** below were scored at worst-case due to missing information. Provide the requested context to refine them.
-
----
-
-## 🛑 Handbrake & ⚡ Immediate Report Status
-
-> Include this section only when either protocol was activated. Omit if neither fired.
-
-| Protocol | Finding | Domain | Escalated to | Context received | Risk change |
-|----------|---------|--------|-------------|-----------------|-------------|
-| ⚡ Immediate | [Finding] | [Domain] | [Anyone] | ✅ Full / ⚠️ Partial / ❌ None | 🔽 Lowered / ➡️ Unchanged / 🔺 Raised |
-| 🛑 Handbrake | [Finding] | [Domain] | [Specialist role] | ✅ Full / ⚠️ Partial / ❌ None | 🔽 Lowered / ➡️ Unchanged / 🔺 Raised |
-
-**Re-analysis note**: [How the received context changed the risk assessment — which findings were downgraded, confirmed, or newly surfaced.]
-
----
-
-## ✅ Strengths (What Works Well)
-
-1. **[Strength]** — Why this is good and what it protects against
-2. **[Strength]** — Benefit to system or team
-
----
-
-## ❌ Weaknesses (What Could Fail)
-
-### 🔴 Critical Issues (Must fix before production)
-
-1. **[Issue]**
-   - **Risk**: What goes wrong
-   - **Impact**: Consequence (data loss / outage / security breach)
-   - **Likelihood**: High / Medium / Low
-   - **Mitigation**: How to fix
-
-### 🟠 High-Priority Issues (Should fix soon)
-
-1. **[Issue]**
-   - **Risk**: What goes wrong
-   - **Impact**: Consequence
-   - **Likelihood**: High / Medium / Low *(include when quantifiable)*
-   - **Mitigation**: How to fix
-
-### 🟡 Medium-Priority Issues (Technical debt)
-
-1. **[Issue]**
-   - **Risk**: Long-term consequence if ignored
-   - **Likelihood**: Medium / Low *(include when quantifiable)*
-   - **Mitigation**: How to address when time allows
-
----
-
-## ⚠️ Assumptions Challenged
-
-| Assumption | Challenge | Evidence | Risk if wrong |
-|---|---|---|---|
-| [What the plan assumes] | What if this is wrong? | ✅ Verified / ❌ Not verified | [Consequence] |
-
----
-
-## 🎯 Edge Cases & Failure Modes
-
-| Scenario | What Happens | Handled? | Risk | Fix |
-|----------|-------------|----------|------|-----|
-| [Edge case] | [Outcome] | ❌ No | High | [Solution] |
-| [Edge case] | [Outcome] | ⚠️ Partial | Medium | [Solution] |
-
----
-
-## 🔒 Security Concerns
-
-### STRIDE Summary
-- **Spoofing**: [Risk or ✅ Mitigated]
-- **Tampering**: [Risk or ✅ Mitigated]
-- **Repudiation**: [Risk or ✅ Mitigated]
-- **Information Disclosure**: [Risk or ✅ Mitigated]
-- **Denial of Service**: [Risk or ✅ Mitigated]
-- **Elevation of Privilege**: [Risk or ✅ Mitigated]
-
----
-
-## ⚡ Performance Concerns
-
-- **Bottleneck**: [Where and under what load]
-- **Scalability limit**: [What breaks first]
-- **Resource usage**: [Estimated memory / DB connections / IOPS]
-
----
-
-## 💡 Alternative Solutions
-
-1. **[Alternative A]**
-   - Better at: [What]
-   - Worse at: [What]
-   - Consider if: [Condition]
-
----
-
-## ✅ Recommendations
-
-### Must Do (Before Production)
-- [ ] [Critical fix with owner]
-- [ ] [Critical fix with owner]
-
-### Should Do (Next sprint)
-- [ ] [High-priority improvement]
-- [ ] [High-priority improvement]
-
-### Consider (Backlog)
-- [ ] [Medium-priority improvement]
-
----
-
-## 📋 Follow-Up Questions
-
-1. [Question that changes the risk level if answered]
-2. [Missing information needed to complete the analysis]
-3. [Assumption that must be validated before proceeding]
-
----
-
-## 🚦 Gate
-
-> **Mandatory closing block — include on every report, no exceptions.**
-
-```
----
-🔴 Devil's Advocate complete.
-
-**Before I proceed, please confirm:**
-
-- [ ] I have reviewed all Critical and High issues above
-- [ ] I accept the risks marked as accepted (or they are mitigated)
-- [ ] I want to proceed with the approved action
-
-Reply with:
-  ✅ Proceed   — continue with the approved action as planned
-  🔁 Revise    — describe the change and I will re-analyse
-  ❌ Cancel    — stop, do not implement
-  `continue`   — proceed without addressing remaining issues (risks remain active and unmitigated)
----
-```
+1. Depth matches the tier; under the length ceiling.
+2. First two lines tell the user the verdict and the one thing that matters most.
+3. Overall risk = highest severity found; the verdict follows the verdict table in `SKILL.md` §2.
+4. Every risk has *Evidence* and a specific *Fix*.
+5. No generic risk survived ("ensure", "consider", "monitor" without a concrete target).
+6. No empty sections, no template tables copied from frameworks, no invented percentages.
+7. "What I'll do if you approve" lists the corrected plan as concrete steps.
+8. Ends with the Gate; nothing was executed before the reply.
+9. On a re-run of an unchanged plan, the verdict and risks are identical to the previous run.

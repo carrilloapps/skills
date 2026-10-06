@@ -1,0 +1,30 @@
+{
+  "description": "Devil's Advocate guard: deterministic risk-tier classifier that forces a confirmation before side-effecting tool calls",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "^(Bash|PowerShell|Edit|Write|MultiEdit|NotebookEdit)$|^mcp__",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node",
+            "args": ["${CLAUDE_PLUGIN_ROOT}/hooks/guard.mjs", "pre-tool-use"],
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node",
+            "args": ["${CLAUDE_PLUGIN_ROOT}/hooks/guard.mjs", "remind"],
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}

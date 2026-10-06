@@ -1,0 +1,3 @@
+baseline — project-empty (check)
+1. error structure [structure-gate] Phase 0 structure incomplete; run scripts/check-structure --root project-empty and complete plans/agile/ with the team first
+Result: gate closed — FAIL

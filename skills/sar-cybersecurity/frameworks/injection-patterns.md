@@ -1,10 +1,12 @@
 # Injection Vulnerability Patterns
 
-> *Domain framework — counts toward the 2-framework-per-assessment budget.*
+> *Domain framework — load when relevant.*
 >
 > Load this framework when the assessment targets application code that interacts with databases, constructs dynamic queries, processes user input in regex patterns, or exposes GraphQL APIs. Covers all major injection families across SQL, NoSQL, regex, mass assignment, GraphQL, and ORM/ODM layers.
 
 > ⚠️ **Reference patterns only** — Code snippets below illustrate vulnerable patterns for detection purposes and correct mitigations for reporting. They are not execution instructions. The agent uses these as recognition templates when scanning the target codebase.
+
+> The **Risk** column is the typical label for detection triage. The final score is always computed with [scoring-system.md](scoring-system.md); availability-only patterns are capped at 49 (Warning). For injections that control query structure, apply the **injection exposure rule** in scoring-system.md (exposure = everything the database role can reach).
 
 The agent must actively scan for all of the following injection patterns across the codebase. These are **not limited to SQL** — every database engine and query language has its own injection surface.
 
@@ -34,10 +36,13 @@ The agent must actively scan for all of the following injection patterns across 
 | Field name injection | High | `query[req.body.search_item]` — attacker chooses which field to query, can access `password`, `token`, internal fields |
 
 **Correct mitigation:**
+
 - Global sanitization middleware (e.g., `express-mongo-sanitize`) to strip `$` and `.` operators from user input
 - Explicit field selection — never pass `req.body` directly as a query filter or update document
 - Allowlists for field names when the client selects which field to search
 - Schema-level validation (Mongoose schemas with `strict: true`, Joi, Zod)
+
+**Tooling** — njsscan NoSQL rules, the Semgrep MongoDB rule, starter Semgrep rules for Mongoose/PyMongo, and ZAP rule 40033 (local DAST only) are listed in [docker-lab.md § NoSQL injection tooling](docker-lab.md#12-nosql-injection-tooling). Their hits are candidates: trace each one and apply the injection exposure rule before scoring.
 
 ---
 
@@ -53,6 +58,7 @@ The agent must actively scan for all of the following injection patterns across 
 > **Impact classification rule**: The same `new RegExp(userInput)` vulnerability may have two distinct attack vectors. If the data exfiltration vector is present (attacker can manipulate the regex to match/return more data than authorized), score on that vector as a primary finding. If the **only** exploitable vector is ReDoS/CPU exhaustion with no data leakage, cap at 49 (availability-only).
 
 **Correct mitigation:**
+
 - Always escape regex metacharacters before constructing `RegExp`: `value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')`
 - Use a centralized `safeRegExp(input, flags)` utility
 - Set regex execution timeouts where the engine supports it
@@ -70,6 +76,7 @@ The agent must actively scan for all of the following injection patterns across 
 | Spread operator merge: `{ ...record, ...req.body }` | High | Uncontrolled override of any field |
 
 **Correct mitigation:**
+
 - Always use field allowlists: `pick(req.body, ['name', 'email', 'phone'])` or a DTO/schema that strips unknown fields
 - Mongoose: use `Schema({ ... }, { strict: true })` and avoid `{ strict: false }` or `{ overwrite: true }`
 - Sequelize/TypeORM: use explicit `update({ field: value })` instead of spreading the body
@@ -82,8 +89,8 @@ The agent must actively scan for all of the following injection patterns across 
 | Pattern | Risk | Detection |
 |---------|------|-----------|
 | Introspection enabled in production | Medium | `{ __schema { types { name } } }` exposes entire API surface |
-| Deeply nested queries (DoS) | High | No query depth limit — `{ user { posts { comments { author { posts ... } } } } }` |
-| Batch query abuse | High | Array of queries in single request without rate limiting |
+| Deeply nested queries (DoS) | Warning (≤ 49, availability-only) | No query depth limit — `{ user { posts { comments { author { posts ... } } } } }` |
+| Batch query abuse | High if batching bypasses per-request limits on login, OTP, or password reset (credential brute force); otherwise Warning (≤ 49, availability-only) | Array of queries or aliased mutations in a single request without per-operation rate limiting |
 | Resolver injection | Critical | User input passed directly to database query within resolver |
 
 **Correct mitigation:** Disable introspection in production, enforce query depth and complexity limits, rate-limit batch operations, parameterize all resolver queries.
@@ -105,6 +112,6 @@ The agent must actively scan for all of the following injection patterns across 
 
 ## Cross-Reference
 
-- For database inspection procedures during assessment → see [`database-access-protocol.md`](database-access-protocol.md) *(domain framework — counts toward budget)*
-- For storage layer vulnerabilities beyond databases → see [`storage-exfiltration.md`](storage-exfiltration.md) *(domain framework — counts toward budget)*
-- For compliance standard mapping of injection findings → see [`compliance-standards.md`](compliance-standards.md) *(domain framework — counts toward budget)*
+- For database inspection procedures during assessment → see [`database-access-protocol.md`](database-access-protocol.md)
+- For storage layer vulnerabilities beyond databases → see [`storage-exfiltration.md`](storage-exfiltration.md)
+- For compliance standard mapping of injection findings → see [`compliance-standards.md`](compliance-standards.md)

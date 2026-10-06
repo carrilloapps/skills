@@ -1,0 +1,9 @@
+{
+  // markdownlint-cli2 defaults for agent-maintained docs: structure rules on, pure style off.
+  "config": {
+    "MD013": false,                       // line length: prose and tables wrap in the viewer
+    "MD060": false,                       // table column style: noise on hand-written tables
+    "MD024": { "siblings_only": true }    // repeated headings are fine under different parents
+  },
+  "ignores": ["**/node_modules/**", ".memory/**"]
+}

@@ -1,0 +1,34 @@
+{
+  "version": "1.0.0",
+  "license": "MIT",
+  "author": "José Carrillo",
+  "organization": "carrilloapps",
+  "abstract": "Agentic agility for Scrum or Kanban teams with Spec-Driven Development: Phase 0 structure gate, versioned engineering constitution, requirement IDs (FR/SC) traced from Gherkin scenarios to tasks, tests, and evidence, attributed clarification, deterministic cross-artifact analysis, a converge loop for living specs, brownfield baselines, Spec Kit import, presets (scrum, kanban, regulated), transcripts turned into attributed work items, ceremonies, KPI close, and capability slots over MCP. Autonomy levels N0-N4, epistemic labels, anti-anchoring estimation, and multi-OS (.sh + .ps1) scripts with parity tests.",
+  "keywords": [
+    "agile",
+    "scrum",
+    "spec-driven-development",
+    "sdd",
+    "gherkin",
+    "agentic-agility",
+    "mcp",
+    "transcripts",
+    "sprint-planning",
+    "multi-os",
+    "structure-gate",
+    "kpi",
+    "postmortem",
+    "traceability",
+    "constitution",
+    "clarify",
+    "analyze",
+    "converge",
+    "brownfield",
+    "presets"
+  ],
+  "references": [
+    "https://github.com/carrilloapps/skills",
+    "https://skills.sh/carrilloapps/skills/agentic-agile",
+    "https://carrillo.app"
+  ]
+}

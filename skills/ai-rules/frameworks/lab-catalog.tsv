@@ -1,0 +1,6 @@
+# Lab catalog for scripts/lab-probe — one row per service in frameworks/docker-lab.md.
+# criticality 1-100 (higher first) · ram_mb/disk_mb are estimates · signals are comma-separated globs.
+id	skill	criticality	ram_mb	disk_mb	kind	profile	compose	signals	requires	notes
+docs-markdownlint	ai-rules	40	256	150	scanner	docs	.memory/devsecops/compose.docs.yaml	*.md		
+docs-vale	ai-rules	35	256	150	scanner	docs	.memory/devsecops/compose.docs.yaml	*.md		Built-in Vale style, offline
+docs-lychee	ai-rules	30	256	100	scanner	docs	.memory/devsecops/compose.docs.yaml	*.md		--offline by default; online link checks only on request

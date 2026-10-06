@@ -1,0 +1,5 @@
+# Managed by carrilloapps/skills — ignores agent-private paths only.
+# Shared team state under .memory/<skill>/ stays versioned.
+local/
+*.local.*
+*.recovered.json

@@ -1,0 +1,20 @@
+1. (dry-run) create plans/agile/methodology.md
+2. (dry-run) create plans/agile/definition-of-ready.md
+3. (dry-run) create plans/agile/definition-of-done.md
+4. (dry-run) create plans/agile/ceremonies.md
+5. (dry-run) create plans/agile/team.md
+6. (dry-run) create plans/agile/capabilities.md
+7. (dry-run) create plans/agile/kpi-directives.md
+8. (dry-run) create plans/agile/language.md
+9. (dry-run) create plans/agile/autonomy.md
+10. (dry-run) create plans/agile/constitution.md
+11. (dry-run) create plans/agile/hooks.md
+12. (dry-run) create plans/sprints/.gitkeep
+13. (dry-run) create plans/initiatives/.gitkeep
+14. (dry-run) create plans/decisions/.gitkeep
+15. (dry-run) create plans/drafts/.gitkeep
+16. (dry-run) create specs/.gitkeep
+17. (dry-run) create plans/agile/metrics/events.jsonl
+18. (dry-run) append 5 line(s) to .memory/.gitignore
+19. (dry-run) create .memory/local/agentic-agile/transcripts/
+Next: complete plans/agile/ with the team, then run scripts/check-structure (Phase 0 gate) before any spec, plan, draft, ticket or decision record.

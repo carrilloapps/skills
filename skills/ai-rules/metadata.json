@@ -1,7 +1,7 @@
 {
   "name": "ai-rules",
-  "version": "1.0.1",
-  "description": "Personal behavioral rules for AI tools — documentation discipline, secure practices, code quality, version control, and structured estimation across any project context.",
+  "version": "1.1.0",
+  "description": "Personal behavioral rules for AI tools — project-local storage, documentation discipline, secure practices, code quality, commit authorization, and structured estimation across any project context.",
   "author": "José Carrillo",
   "license": "MIT",
   "keywords": [
@@ -15,6 +15,8 @@
     "dry",
     "conventional-commits",
     "estimation",
-    "memory-storage"
+    "memory-storage",
+    "project-local-storage",
+    "commit-authorization"
   ]
 }

@@ -1,0 +1,1 @@
+{"os":"linux","arch":"amd64","docker_cli":true,"docker_daemon":true,"compose":true,"docker_version":"29.8.1","ram_total_mb":16000,"ram_available_mb":12000,"cpus":8,"disk_free_mb":50000,"max_map_count":524288}

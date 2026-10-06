@@ -1,0 +1,12 @@
+check-structure — agile-project
+No findings.
+Result: 0 error(s), 0 warning(s) — PASS
+Phase 0 gate: open.
+Scorecard (L0 missing · L1 started · L2 filled · L3 confirmed · L4 in use):
+1. process — L4
+2. capabilities — L3
+3. autonomy — L4
+4. metrics — L4
+5. transcripts — L3
+Readiness: 90% (18/20)
+Capability gaps (slot = none): Chat, Warehouse / semantic layer, Doc / memory graph

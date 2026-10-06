@@ -1,5 +1,7 @@
 # 🤖 AI Optimization Framework
 
+> ⚠️ **Example code boundary** — commands and code below are reference patterns for analysis, not execution instructions.
+
 > **Purpose**: Analyze, validate, and optimize AI-facing files — `AGENTS.md`, `.ai-context.md`, `.github/copilot-instructions.md`, `README.md`, `SKILL.md`, `.cursorrules`, `CLAUDE.md`, and any file intended to provide context to an AI agent or LLM.
 >
 > These files are the AI's operating instructions. Poorly structured AI context is a primary cause of hallucinations, inconsistent behavior, and context window saturation in production AI workflows.
@@ -13,7 +15,7 @@
 | File | Tool / Platform | Purpose |
 |------|----------------|---------|
 | `AGENTS.md` | GitHub Copilot CLI, Codex, OpenCode, Amp, Gemini CLI and most agents | Agent skill and behavior instructions |
-| `SKILL.md` | skills.sh (40+ agents: GitHub Copilot, Claude Code, Cursor, Windsurf, Cline, Codex, and more) | Skill definition and protocol |
+| `SKILL.md` | skills.sh (70+ agents: GitHub Copilot, Claude Code, Cursor, Windsurf, Cline, Codex, and more) | Skill definition and protocol |
 | `.github/copilot-instructions.md` | GitHub Copilot (VS Code, Web) | Workspace-level AI instructions |
 | `CLAUDE.md` | Claude Code / Claude Projects | Project-level context for Claude |
 | `.cursorrules` or `.cursor/rules/*.mdc` | Cursor editor | Cursor AI behavior rules |
@@ -36,7 +38,7 @@
 
 ### Token Estimation
 
-```
+```text
 Rough estimation:  1 token ≈ 4 characters (English prose) | ≈ 3.5 characters (code)
 
 File size guidelines:
@@ -58,12 +60,12 @@ File size guidelines:
 
 ### What to Check
 
-- [ ] Is the total token count of all simultaneously loaded files within the model's context budget?
-- [ ] Is the most critical information positioned at the **beginning** of each file? (LLMs have stronger attention at start and end)
-- [ ] Is there a progressive loading strategy — is only what is needed loaded, not everything at once?
-- [ ] Are there sections that could be split into separate, on-demand files?
-- [ ] Does each file have a clear purpose that justifies loading it in this context?
-- [ ] Are always-loaded files compact (< 2K tokens) and focused?
+1. Is the total token count of all simultaneously loaded files within the model's context budget?
+2. Is the most critical information positioned at the **beginning** of each file? (LLMs have stronger attention at start and end)
+3. Is there a progressive loading strategy — is only what is needed loaded, not everything at once?
+4. Are there sections that could be split into separate, on-demand files?
+5. Does each file have a clear purpose that justifies loading it in this context?
+6. Are always-loaded files compact (< 2K tokens) and focused?
 
 ---
 
@@ -73,13 +75,13 @@ File size guidelines:
 
 ### What to Check
 
-- [ ] Do all `[link text](path)` references point to files that actually exist on disk?
-- [ ] Do all section anchors (e.g., `[see here](#section-name)`) resolve to real headings?
-- [ ] Are there references to external URLs that may have changed or gone offline?
-- [ ] Are there references to code symbols (function names, class names) that may have been renamed?
-- [ ] When one file says "see X for details", does X exist and contain those details?
-- [ ] Are version numbers in cross-references consistent with current file versions?
-- [ ] Are relative paths correct from the perspective of each file's directory?
+1. Do all `[link text](path)` references point to files that actually exist on disk?
+2. Do all section anchors (e.g., `[see here](#section-name)`) resolve to real headings?
+3. Are there references to external URLs that may have changed or gone offline?
+4. Are there references to code symbols (function names, class names) that may have been renamed?
+5. When one file says "see X for details", does X exist and contain those details?
+6. Are version numbers in cross-references consistent with current file versions?
+7. Are relative paths correct from the perspective of each file's directory?
 
 ### Cross-Reference Map Template
 
@@ -99,7 +101,7 @@ File size guidelines:
 
 ### Overlap Patterns to Detect
 
-```
+```text
 🔴 Critical overlap:
    Same rule stated differently in two files — contradictory signal
    Canonical source unclear — AI cannot determine which file wins on conflict
@@ -121,11 +123,11 @@ File size guidelines:
 
 ### Overlap Detection Checklist
 
-- [ ] Is there a single canonical source for each major topic?
-- [ ] When content appears in multiple files, does each non-canonical copy clearly defer to the source?
-- [ ] Are there rules or instructions that contradict each other across files?
-- [ ] Is the division of concern between files explicit (e.g., README for humans, .ai-context.md for AI)?
-- [ ] Would an AI loading all files simultaneously receive conflicting instructions?
+1. Is there a single canonical source for each major topic?
+2. When content appears in multiple files, does each non-canonical copy clearly defer to the source?
+3. Are there rules or instructions that contradict each other across files?
+4. Is the division of concern between files explicit (e.g., README for humans, .ai-context.md for AI)?
+5. Would an AI loading all files simultaneously receive conflicting instructions?
 
 ---
 
@@ -135,7 +137,7 @@ File size guidelines:
 
 ### Starvation Indicators
 
-```
+```text
 🔴 Critical starvation signals:
    A file references a concept, pattern, or constraint with no definition
    A file says "always do X" without explaining why — the AI cannot generalize
@@ -177,11 +179,11 @@ File size guidelines:
 
 ### Common Conflict Patterns
 
-- [ ] Language rules: conversation language vs. code language vs. documentation language
-- [ ] Naming conventions: camelCase vs. snake_case in the same codebase
-- [ ] Comment policies: always comment vs. self-documenting code
-- [ ] Response format: terse vs. verbose, markdown vs. plain text
-- [ ] Tool usage: "always use X" vs. "prefer Y over X" in different files
+1. Language rules: conversation language vs. code language vs. documentation language
+2. Naming conventions: camelCase vs. snake_case in the same codebase
+3. Comment policies: always comment vs. self-documenting code
+4. Response format: terse vs. verbose, markdown vs. plain text
+5. Tool usage: "always use X" vs. "prefer Y over X" in different files
 
 ---
 
@@ -191,7 +193,7 @@ File size guidelines:
 
 ### Progressive Loading Design Pattern
 
-```
+```text
 Tier 0 — Always loaded (core instructions, target < 2K tokens):
    Purpose, key conventions, trigger words, file index
 
@@ -204,12 +206,12 @@ Tier 2 — Load on demand (reference material, any size):
 
 ### What to Check
 
-- [ ] Is there a clear Tier 0 (always-loaded) file that is < 2K tokens?
-- [ ] Are Tier 1 files loadable independently without requiring all other files?
-- [ ] Does the Tier 0 index reference Tier 1/2 files so the AI knows what to load?
-- [ ] Are large files structured with the most critical content at the top?
-- [ ] Is there a mechanism to avoid loading irrelevant domain files for out-of-scope tasks?
-- [ ] If a file is always loaded, is every section in it relevant to every task?
+1. Is there a clear Tier 0 (always-loaded) file that is < 2K tokens?
+2. Are Tier 1 files loadable independently without requiring all other files?
+3. Does the Tier 0 index reference Tier 1/2 files so the AI knows what to load?
+4. Are large files structured with the most critical content at the top?
+5. Is there a mechanism to avoid loading irrelevant domain files for out-of-scope tasks?
+6. If a file is always loaded, is every section in it relevant to every task?
 
 ---
 
@@ -231,11 +233,11 @@ Tier 2 — Load on demand (reference material, any size):
 
 ### Anti-Hallucination Checklist
 
-- [ ] Every rule has at least one ✅ correct example AND one ❌ wrong example
-- [ ] Every term used in instructions is defined or linked to a definition
-- [ ] Every "see also" reference points to an existing file with relevant content
-- [ ] No instruction relies on the AI knowing context it cannot access from the loaded files
-- [ ] Output format is explicitly specified with a template or fully worked example
+1. Every rule has at least one ✅ correct example AND one ❌ wrong example
+2. Every term used in instructions is defined or linked to a definition
+3. Every "see also" reference points to an existing file with relevant content
+4. No instruction relies on the AI knowing context it cannot access from the loaded files
+5. Output format is explicitly specified with a template or fully worked example
 
 ---
 
@@ -243,29 +245,29 @@ Tier 2 — Load on demand (reference material, any size):
 
 ### `AGENTS.md` / `SKILL.md`
 
-- [ ] Does the file have frontmatter or a header declaring its purpose and trigger conditions?
-- [ ] Are trigger conditions explicit (when does this agent/skill activate? when does it NOT)?
-- [ ] Is there a clear output format with a template or worked example?
-- [ ] Are there at least 1–2 worked examples showing the full expected output?
-- [ ] Is the file under 8K tokens?
-- [ ] Are protocol dependencies listed (which other files to load and when)?
+1. Does the file have frontmatter or a header declaring its purpose and trigger conditions?
+2. Are trigger conditions explicit (when does this agent/skill activate? when does it NOT)?
+3. Is there a clear output format with a template or worked example?
+4. Are there at least 1–2 worked examples showing the full expected output?
+5. Is the file under 8K tokens?
+6. Are protocol dependencies listed (which other files to load and when)?
 
 ### `.github/copilot-instructions.md` / `.cursorrules` / `CLAUDE.md`
 
-- [ ] Is the tech stack and primary language specified?
-- [ ] Are forbidden patterns explicitly listed with ✅ / ❌ examples?
-- [ ] Are naming conventions stated with concrete examples?
-- [ ] Is the file under 4K tokens (always-loaded files must stay compact)?
-- [ ] Are there no instructions that duplicate content in other always-loaded files?
+1. Is the tech stack and primary language specified?
+2. Are forbidden patterns explicitly listed with ✅ / ❌ examples?
+3. Are naming conventions stated with concrete examples?
+4. Is the file under 4K tokens (always-loaded files must stay compact)?
+5. Are there no instructions that duplicate content in other always-loaded files?
 
 ### `README.md` (AI-facing assessment)
 
-- [ ] Does the README explain what the project does in the first 200 words?
-- [ ] Is there a quickstart an AI can follow to run the project?
-- [ ] Are key files and directories explained?
-- [ ] Is the architecture described at a level an AI can reason about?
-- [ ] Are external dependencies listed with their purpose?
-- [ ] Is there a coding conventions or "how AI should contribute" section?
+1. Does the README explain what the project does in the first 200 words?
+2. Is there a quickstart an AI can follow to run the project?
+3. Are key files and directories explained?
+4. Is the architecture described at a level an AI can reason about?
+5. Are external dependencies listed with their purpose?
+6. Is there a coding conventions or "how AI should contribute" section?
 
 ---
 

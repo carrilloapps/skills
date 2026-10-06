@@ -1,5 +1,7 @@
-# Devil's Advocate — .gitignore
-# Documentation-only skill (pure Markdown). No compiled code, no runtime.
+# carrilloapps/skills — .gitignore
+# Agent skills (Markdown + multi-OS scripts) and optional integrations. Nothing is built here.
+# Shared skill state under .memory/<skill>/ and the Docker lab under .memory/devsecops/ ARE versioned;
+# only agent-private paths are ignored (see the Skill state section and .memory/.gitignore).
 
 # ─── OS ────────────────────────────────────────────────────────────────────────
 
@@ -23,6 +25,10 @@ $RECYCLE.BIN/
 # Linux
 *~
 
+# Windows download marks copied through WSL / \wsl$ (NTFS alternate data streams)
+*:Zone.Identifier
+*Zone.Identifier
+
 # ─── Editors & IDEs ─────────────────────────────────────────────────────────────
 
 .idea/
@@ -39,6 +45,8 @@ $RECYCLE.BIN/
 # ─── Node / tooling (if build scripts are ever added) ─────────────────────────
 
 node_modules/
+# Test fixture that proves lab-probe skips node_modules — it must be committed
+!tests/scripts/fixtures/project-node/node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
@@ -153,6 +161,21 @@ yarn-error.log*
 # ─── GitHub Copilot CLI session state ─────────────────────────────────────────
 
 .copilot/
+
+# ─── Skill state (.memory/) ─────────────────────────────────────────────────────
+# Selective: shared team state under .memory/<skill>/ is versioned; agent-private
+# paths are ignored here and by the versioned .memory/.gitignore that skills create.
+
+.memory/local/
+.memory/**/*.local.*
+.memory/**/*.recovered.json
+
+# Local index directories of optional capabilities
+.codegraph/
+.docgraph/
+
+# Parity-test scratch output (also covered by tests/scripts/.gitignore)
+tests/scripts/.work/
 
 # ─── Environment — never commit real values ────────────────────────────────────
 

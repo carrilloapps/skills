@@ -1,0 +1,3 @@
+# domain-model
+
+Fixture template.

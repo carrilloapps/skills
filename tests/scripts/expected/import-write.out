@@ -1,0 +1,11 @@
+Feature: specs/001-invoice-export → target/specs/invoice-export
+1. create target/specs/invoice-export/spec.md (from specs/001-invoice-export/spec.md)
+2. create target/specs/invoice-export/design.md (from specs/001-invoice-export/plan.md)
+3. create target/specs/invoice-export/domain-model.md (from specs/001-invoice-export/data-model.md)
+4. create target/specs/invoice-export/contracts/export.yaml (from specs/001-invoice-export/contracts/export.yaml)
+5. create target/specs/invoice-export/tasks.md (from specs/001-invoice-export/tasks.md)
+Feature: specs/002-ready → target/specs/ready
+6. skip target/specs/ready/spec.md (exists)
+7. create target/plans/agile/constitution.md (from .specify/memory/constitution.md)
+Imported content is Proposed: confirm it with the team (Confirmed by), link scenarios to FR-###, then run: aa verify <feature>
+Written: 7 action(s) applied (existing files skipped).

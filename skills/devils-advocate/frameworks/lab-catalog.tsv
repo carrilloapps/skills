@@ -1,0 +1,12 @@
+# Lab catalog for scripts/lab-probe — one row per service in frameworks/docker-lab.md.
+# criticality 1-100 (higher first) · ram_mb/disk_mb are estimates · signals are comma-separated globs ('*' = always).
+# SonarQube is defined by sar-cybersecurity's lab; the Devil's Advocate only reads it when it runs.
+id	skill	criticality	ram_mb	disk_mb	kind	profile	compose	signals	requires	notes
+da-actionlint	devils-advocate	88	128	50	scanner	ci	.memory/devsecops/compose.da.yaml	.github/workflows/*.yml,.github/workflows/*.yaml		Workflow syntax and ${{ }} injection in run: steps
+da-lizard	devils-advocate	70	256	200	scanner	complexity	.memory/devsecops/compose.da.yaml	*.js,*.jsx,*.ts,*.tsx,*.mjs,*.cjs,*.py,*.go,*.java,*.kt,*.rb,*.php,*.cs,*.c,*.cpp,*.rs,*.swift,*.scala,*.sh,*.ps1		
+da-jscpd	devils-advocate	65	512	250	scanner	duplication	.memory/devsecops/compose.da.yaml	*.js,*.jsx,*.ts,*.tsx,*.mjs,*.cjs,*.py,*.go,*.java,*.kt,*.rb,*.php,*.cs,*.c,*.cpp,*.rs,*.swift,*.scala,*.sh,*.ps1		
+da-depcruise	devils-advocate	60	512	250	scanner	architecture	.memory/devsecops/compose.da.yaml	package.json		JS/TS import cycles and layer rules
+da-golangci	devils-advocate	60	1536	1500	scanner	go	.memory/devsecops/compose.da.yaml	go.mod		
+da-sqlfluff	devils-advocate	50	512	400	scanner	sql	.memory/devsecops/compose.da.yaml	*.sql		
+da-helm	devils-advocate	45	128	100	scanner	helm	.memory/devsecops/compose.da.yaml	Chart.yaml		
+da-pghero	devils-advocate	12	512	300	dashboard	perf	.memory/devsecops/compose.da.yaml	*.sql		Local dev PostgreSQL only (read-only role in .memory/local/devsecops/pghero.env); http://127.0.0.1:8090

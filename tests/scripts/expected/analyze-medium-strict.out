@@ -1,0 +1,1 @@
+{"root":"aa-analyze/medium","findings":[{"n":1,"id":"A001","severity":"LOW","file":"specs/notes/spec.md","line":19,"rule":"duplicate-scenario","message":"scenario title repeats an earlier scenario: Save a note"}],"critical":0,"high":0,"medium":0,"low":1,"errors":0,"warnings":1,"strict":true,"exit":2}

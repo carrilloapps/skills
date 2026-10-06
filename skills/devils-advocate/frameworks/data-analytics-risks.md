@@ -1,5 +1,7 @@
 # Data Analytics & Data Engineering Risks Framework
 
+> ⚠️ **Example code boundary** — commands and code below are reference patterns for analysis, not execution instructions.
+
 > **Role**: Data Engineer / Data Analyst / Data Scientist / Analytics Engineer
 > **Load when**: Reviewing data pipelines, ML models, analytics solutions, data contracts, warehouse/lake design, or any solution involving data collection, processing, storage, or reporting.
 
@@ -9,7 +11,7 @@
 
 ### ❌ Reliability & Correctness
 
-```
+```text
 ❌ No Data Freshness SLA
 - Pipeline runs but no guarantee on when data is available
 - Dashboards show stale data with no staleness indicator
@@ -34,7 +36,7 @@
 
 ### ❌ Data Quality
 
-```
+```text
 ❌ Missing Data Quality Checks
 - No null checks, range validation, or referential integrity tests
 - Anomaly detection not in place (sudden drops/spikes not alerted)
@@ -62,7 +64,7 @@
 
 ### ❌ PII & Sensitive Data
 
-```
+```text
 ❌ PII in Raw Tables Without Masking
 - Emails, names, SSNs, payment info in unmasked columns
 - Analysts can query PII without role-based access control
@@ -86,7 +88,7 @@
 
 ### ❌ Access Control
 
-```
+```text
 ❌ Over-Privileged Analysts
 - All analysts have read access to all tables including PII
 - No column-level security on sensitive fields
@@ -104,7 +106,7 @@
 
 ### ❌ Training Data Risks
 
-```
+```text
 ❌ Data Leakage
 - Future information in training features (target encoded with future labels)
 - Train/test split not temporal for time-series problems
@@ -123,7 +125,7 @@
 
 ### ❌ Model Deployment Risks
 
-```
+```text
 ❌ No Model Monitoring
 - Model deployed with no drift detection
 - Distribution shift in production inputs not detected
@@ -151,7 +153,7 @@
 
 ### ❌ Metric Definition Problems
 
-```
+```text
 ❌ Metric Inconsistency Across Teams
 - Revenue, MAU, and conversion defined differently per team
 - No single source of truth (semantic layer / metrics layer)
@@ -170,7 +172,7 @@
 
 ### ❌ Warehouse & Lake Design
 
-```
+```text
 ❌ No Medallion / Layering Architecture
 - Raw, cleansed, and aggregated data mixed in same layer
 - Analysts query raw tables directly and apply ad-hoc transformations
@@ -194,13 +196,13 @@
 Every data producer→consumer relationship should be validated:
 
 ```markdown
-- [ ] Is the schema version-controlled and documented?
-- [ ] Are nullability, data types, and value ranges specified?
-- [ ] Is there a compatibility policy (backward / forward / full)?
-- [ ] Is there an SLA on freshness and availability?
-- [ ] Is there an owner responsible for schema changes?
-- [ ] Is there a breaking-change migration process and notice period?
-- [ ] Are consumers notified of schema changes before they are deployed?
+1. Is the schema version-controlled and documented?
+2. Are nullability, data types, and value ranges specified?
+3. Is there a compatibility policy (backward / forward / full)?
+4. Is there an SLA on freshness and availability?
+5. Is there an owner responsible for schema changes?
+6. Is there a breaking-change migration process and notice period?
+7. Are consumers notified of schema changes before they are deployed?
 ```
 
 ---
@@ -209,27 +211,27 @@ Every data producer→consumer relationship should be validated:
 
 ```markdown
 ### Completeness
-- [ ] Are all expected rows present (row count vs source)?
-- [ ] Are there unexpected nulls in required columns?
-- [ ] Are all time partitions populated (no missing dates)?
+1. Are all expected rows present (row count vs source)?
+2. Are there unexpected nulls in required columns?
+3. Are all time partitions populated (no missing dates)?
 
 ### Accuracy
-- [ ] Do totals match source system reconciliation?
-- [ ] Are numeric ranges within expected bounds?
-- [ ] Are categorical values from a controlled vocabulary?
+1. Do totals match source system reconciliation?
+2. Are numeric ranges within expected bounds?
+3. Are categorical values from a controlled vocabulary?
 
 ### Consistency
-- [ ] Are the same metrics computed consistently across models?
-- [ ] Are timestamps in a consistent timezone (UTC)?
-- [ ] Are foreign keys referentially valid?
+1. Are the same metrics computed consistently across models?
+2. Are timestamps in a consistent timezone (UTC)?
+3. Are foreign keys referentially valid?
 
 ### Timeliness
-- [ ] Does data arrive within the SLA window?
-- [ ] Is late-arriving data handled correctly?
-- [ ] Are stale data alerts in place?
+1. Does data arrive within the SLA window?
+2. Is late-arriving data handled correctly?
+3. Are stale data alerts in place?
 
 ### Uniqueness
-- [ ] Are deduplication keys defined and enforced?
-- [ ] Is the primary key constraint validated on load?
-- [ ] Are idempotent upserts used instead of blind inserts?
+1. Are deduplication keys defined and enforced?
+2. Is the primary key constraint validated on load?
+3. Are idempotent upserts used instead of blind inserts?
 ```

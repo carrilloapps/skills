@@ -1,5 +1,7 @@
 # Tech Leadership & Strategy Risks Framework
 
+> ⚠️ **Example code boundary** — commands and code below are reference patterns for analysis, not execution instructions.
+
 Load this file when analyzing technology strategy decisions, architectural direction, team structure, vendor choices, or build vs. buy decisions. Applicable roles: Tech Lead, Engineering Manager, CTO, VP Engineering.
 
 ---
@@ -20,7 +22,7 @@ This is one of the highest-leverage decisions a tech leader makes. It is almost 
 
 ### Common Failure Patterns
 
-```
+```text
 ❌ Building What You Should Buy
    - Rebuilding auth, payments, notifications, CMS, or observability from scratch
    - "We can build it better" without evidence, and without accounting for maintenance cost
@@ -42,7 +44,7 @@ This is one of the highest-leverage decisions a tech leader makes. It is almost 
 
 ## 2. Vendor & Dependency Risk
 
-```
+```text
 ❌ Vendor Viability
    - Vendor is early-stage (< Series B) and revenue-dependent on you as a customer
    - No escrow or source code access clause in the contract for business-critical software
@@ -67,7 +69,7 @@ This is one of the highest-leverage decisions a tech leader makes. It is almost 
 
 > "Organizations which design systems are constrained to produce designs which are copies of the communication structures of those organizations." — Melvin Conway
 
-```
+```text
 ❌ Team Structure Misaligned with Architecture
    - Architecture requires cross-team coordination for every feature deployment
    - No team owns the full user journey end-to-end (feature falls between team boundaries)
@@ -92,7 +94,7 @@ This is one of the highest-leverage decisions a tech leader makes. It is almost 
 
 Not all technical debt is equal. The risk is failing to distinguish between strategic debt (conscious tradeoff) and reckless debt (accidental or ignored).
 
-```
+```text
 ❌ Debt Accumulation Patterns
    - No tech debt budget in sprint capacity (0% allocated to refactoring)
    - Debt items tracked nowhere — invisible until they cause an incident
@@ -115,7 +117,7 @@ Not all technical debt is equal. The risk is failing to distinguish between stra
 
 ## 5. Roadmap & Capacity Risks
 
-```
+```text
 ❌ Estimation & Commitment
    - Commitments made without engineering input on feasibility or complexity
    - Roadmap built on best-case estimates with no slack for incidents, tech debt, or learning
@@ -138,7 +140,7 @@ Not all technical debt is equal. The risk is failing to distinguish between stra
 
 ## 6. Architecture Governance & Decision Risks
 
-```
+```text
 ❌ Decision-Making
    - Major architecture decisions made without documentation (ADR) or review
    - Decisions reversed repeatedly due to lack of written context (the "why" is lost)

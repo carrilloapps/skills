@@ -1,0 +1,20 @@
+1. create plans/agile/methodology.md (preset kanban)
+2. create plans/agile/definition-of-ready.md
+3. create plans/agile/definition-of-done.md
+4. create plans/agile/ceremonies.md
+5. create plans/agile/team.md
+6. create plans/agile/capabilities.md
+7. create plans/agile/kpi-directives.md
+8. create plans/agile/language.md
+9. create plans/agile/autonomy.md
+10. create plans/agile/constitution.md
+11. create plans/agile/hooks.md
+12. create plans/sprints/.gitkeep
+13. create plans/initiatives/.gitkeep
+14. create plans/decisions/.gitkeep
+15. create plans/drafts/.gitkeep
+16. create specs/.gitkeep
+17. create plans/agile/metrics/events.jsonl
+18. append 5 line(s) to .memory/.gitignore
+19. create .memory/local/agentic-agile/transcripts/
+Next: complete plans/agile/ with the team, then run scripts/check-structure (Phase 0 gate) before any spec, plan, draft, ticket or decision record.

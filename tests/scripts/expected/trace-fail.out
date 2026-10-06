@@ -1,0 +1,24 @@
+trace — aa-trace/fail
+
+specs/checkout
+| Req | Scenarios | Tasks | Tickets | Tests | Verify |
+|-----|-----------|-------|---------|-------|--------|
+| FR-001 | 2 | 1 | 1 | 1 | ❌ |
+| FR-002 | 0 | 0 | 0 | 0 | none |
+| FR-003 | 0 | 0 | 0 | 0 | none |
+| SC-001 | yes | - | - | - | - |
+| SC-002 | no | - | - | - | - |
+
+1. error specs/checkout/spec.md:33 [scenario-untagged] scenario without an @FR-### tag: Receipt email
+2. error specs/checkout/spec.md:24 [scenario-unknown-req] scenario tag @FR-009 is not a declared requirement: Pay with a saved card
+3. error specs/checkout/tasks.md:8 [task-unknown-req] task T002 references FR-010, which is not a declared requirement
+4. error specs/checkout/spec.md [fr-no-scenario] FR-002 has no scenario tagged @FR-002
+5. error specs/checkout/tasks.md [fr-no-task] FR-002 has no task in tasks.md
+6. error specs/checkout/verification.md [fr-no-verification] FR-002 has no row in verification.md
+7. warning specs/checkout/spec.md [fr-no-test] FR-002 is not referenced by any test file
+8. error specs/checkout/spec.md [fr-no-scenario] FR-003 has no scenario tagged @FR-003
+9. error specs/checkout/tasks.md [fr-no-task] FR-003 has no task in tasks.md
+10. error specs/checkout/verification.md [fr-no-verification] FR-003 has no row in verification.md
+11. warning specs/checkout/spec.md [fr-no-test] FR-003 is not referenced by any test file
+12. warning specs/checkout/spec.md [sc-no-scenario] SC-002 is not mapped to a scenario (Scenario(s) column or @SC-002 tag)
+Result: 9 error(s), 3 warning(s) — FAIL

@@ -1,0 +1,5 @@
+baseline — aa-baseline/proj (check)
+No new findings.
+Resolved (no longer reported; refresh with --write):
+1. check-spec|missing-section|specs/export/spec.md|missing section: Problem
+Result: 0 new, 1 resolved, 3 accepted — WARN

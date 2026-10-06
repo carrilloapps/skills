@@ -1,0 +1,25 @@
+{
+  "hooks": {
+    "pre_run_command": [
+      {
+        "command": "node .devin/hooks/devils-advocate/guard.mjs",
+        "powershell": "node .devin/hooks/devils-advocate/guard.mjs",
+        "show_output": true
+      }
+    ],
+    "pre_write_code": [
+      {
+        "command": "node .devin/hooks/devils-advocate/guard.mjs",
+        "powershell": "node .devin/hooks/devils-advocate/guard.mjs",
+        "show_output": true
+      }
+    ],
+    "pre_mcp_tool_use": [
+      {
+        "command": "node .devin/hooks/devils-advocate/guard.mjs",
+        "powershell": "node .devin/hooks/devils-advocate/guard.mjs",
+        "show_output": true
+      }
+    ]
+  }
+}

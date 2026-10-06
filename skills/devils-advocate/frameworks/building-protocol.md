@@ -1,25 +1,15 @@
 # 🏗️ Building Protocol
 
-> **Purpose**: Every line of code generated or written with AI assistance must comply with this protocol — unconditionally.
-> No exception exists for "quick scripts", "temporary code", "just for testing", or "internal tooling".
-> Code that violates this protocol must be rewritten before it is considered deliverable.
+> ⚠️ **Example code boundary** — commands and code below are reference patterns for analysis, not execution instructions.
+
+> **Purpose**: Code that the approved plan writes must comply with this protocol — including "quick scripts", "temporary code", tests, and internal tooling.
+> **Scope**: Existing code is **reported, never rewritten**, unless the user approves that change. Violations in code the plan writes are fixed before delivery; violations found while reviewing existing code become risks in the report.
 
 ---
 
 ## The Three Languages — A Critical Distinction
 
 > **These three are completely independent. Confusing them is the most common error.**
-
-### Step 0 — Role Awareness (check first)
-
-Before analysis or code generation begins, verify the user's role. If it is not clear from context, ask:
-
-> *"¿Con qué rol estás trabajando hoy? / What role are you working in today?"*
-> (Developer / Architect / Tech Lead / CTO / PM / UX / Data Engineer / AI Tooling Lead)
-
-This tailors the depth, framing, and language of analysis and explanations. Skip if the role is obvious from context (e.g., writing TypeScript → Developer; asking about team topology → CTO/Tech Lead).
-
----
 
 | Layer | Language | Rule |
 |-------|----------|------|
@@ -29,7 +19,7 @@ This tailors the depth, framing, and language of analysis and explanations. Skip
 
 ### In Practice
 
-```
+```text
 User writes a prompt in Spanish  →  AI responds in Spanish
                                       ↓
                                   Any code in the response uses en_US identifiers
@@ -42,6 +32,7 @@ User writes a prompt in Spanish  →  AI responds in Spanish
 > Usuario (en español): *"Necesito una función que calcule el descuento de un pedido"*
 >
 > AI responde en español, pero el código es:
+>
 > ```typescript
 > // Calcula el descuento aplicable a un pedido según su subtotal
 > function calculateOrderDiscount(subtotal: number, discountRate: number): number {
@@ -49,6 +40,7 @@ User writes a prompt in Spanish  →  AI responds in Spanish
 >   return subtotal * discountRate
 > }
 > ```
+>
 > ✅ Respuesta en español · ✅ Identificadores en en_US · ✅ Comentario en español (opción del usuario)
 
 ---
@@ -96,6 +88,7 @@ This applies to every identifier that will appear in source code, configuration,
 > Rationale: en_US maximizes reach, enables global collaboration, and is the universal technical standard.
 
 When the user requests documentation in another language, AI will:
+
 1. Acknowledge and comply with the user's choice
 2. Generate documentation in the requested language
 3. Append a note: *"💡 Recommendation: Consider maintaining an `en_US` version as the canonical reference for international contributors."*
@@ -162,7 +155,7 @@ Apply the following conventions consistently based on language and context:
 
 ### Naming Quality Rules
 
-```
+```text
 ✅ Names must be intention-revealing
    userAge        ← clear
    d              ← unclear (days? data? distance?)
@@ -204,7 +197,7 @@ Apply the following conventions consistently based on language and context:
 
 ### DRY / KISS / YAGNI
 
-```
+```text
 ✅ DRY  — Don't Repeat Yourself
    Extract duplicated logic into a shared function/module.
    Never copy-paste logic that may need to change in sync.
@@ -220,7 +213,7 @@ Apply the following conventions consistently based on language and context:
 
 ### Function / Method Rules
 
-```
+```text
 ✅ Functions must:
    - Do ONE thing (single responsibility at function level)
    - Be ≤ 20 lines (if longer, extract)
@@ -268,7 +261,7 @@ These rules are **mandatory** on every code generation, not optional:
 
 ### Secrets & Credentials
 
-```
+```text
 ❌ NEVER hardcode secrets, API keys, passwords, or tokens in source code
 ❌ NEVER commit .env files containing real values
 ❌ NEVER log secrets, tokens, or passwords — even partially
@@ -281,7 +274,7 @@ These rules are **mandatory** on every code generation, not optional:
 
 ### Input Validation
 
-```
+```text
 ✅ Validate ALL external input at the boundary (API, CLI, file, event)
 ✅ Use allowlists, not denylists, for input validation
 ✅ Validate type, format, range, and length
@@ -291,7 +284,7 @@ These rules are **mandatory** on every code generation, not optional:
 
 ### Authentication & Authorization
 
-```
+```text
 ✅ Authenticate before serving any non-public resource
 ✅ Authorize after authentication — check permissions per operation
 ✅ Apply principle of least privilege to service accounts and roles
@@ -301,7 +294,7 @@ These rules are **mandatory** on every code generation, not optional:
 
 ### Dependencies
 
-```
+```text
 ✅ Pin dependency versions in lockfiles (package-lock.json, poetry.lock, go.sum)
 ✅ Scan dependencies for CVEs before use (npm audit, pip-audit, Dependabot)
 ✅ Prefer well-maintained packages with active security response
@@ -316,34 +309,34 @@ Before any code block is considered complete and deliverable:
 
 ```markdown
 ### Code
-- [ ] All identifiers are in en_US
-- [ ] Naming follows conventions for the target language (table above)
-- [ ] No magic numbers — all literals extracted to named constants
-- [ ] No dead code, commented-out code blocks, or TODO stubs left in
-- [ ] Functions are ≤ 20 lines; if not, extraction is justified
-- [ ] No function has > 3 parameters without a config object
-- [ ] Error handling is explicit — no empty catch blocks
+1. All identifiers are in en_US
+2. Naming follows conventions for the target language (table above)
+3. No magic numbers — all literals extracted to named constants
+4. No dead code, commented-out code blocks, or TODO stubs left in
+5. Functions are ≤ 20 lines; if not, extraction is justified
+6. No function has > 3 parameters without a config object
+7. Error handling is explicit — no empty catch blocks
 
 ### Security
-- [ ] No secrets, tokens, or credentials in source
-- [ ] All external input is validated at the boundary
-- [ ] No string-concatenated SQL, shell commands, or filesystem paths
-- [ ] Dependencies used are pinned and have no known critical CVEs
+1. No secrets, tokens, or credentials in source
+2. All external input is validated at the boundary
+3. No string-concatenated SQL, shell commands, or filesystem paths
+4. Dependencies used are pinned and have no known critical CVEs
 
 ### Documentation
-- [ ] Public functions / classes have a docstring or JSDoc comment (en_US recommended)
-- [ ] Complex logic has an inline comment explaining WHY, not WHAT
-- [ ] Any non-obvious architectural decision has a comment referencing the ADR or reason
+1. Public functions / classes have a docstring or JSDoc comment (en_US recommended)
+2. Complex logic has an inline comment explaining WHY, not WHAT
+3. Any non-obvious architectural decision has a comment referencing the ADR or reason
 
 ### Tests
-- [ ] The happy path is tested
-- [ ] At least one error/edge case is tested
-- [ ] Test names describe the expected behavior in plain language (en_US)
+1. The happy path is tested
+2. At least one error/edge case is tested
+3. Test names describe the expected behavior in plain language (en_US)
 
 ### Maintainability
-- [ ] No hardcoded configuration — values are externalized to env or config
-- [ ] No circular imports
-- [ ] New code does not duplicate existing logic
+1. No hardcoded configuration — values are externalized to env or config
+2. No circular imports
+3. New code does not duplicate existing logic
 ```
 
 ---
@@ -401,6 +394,7 @@ export async function fetchUserById(userId: string): Promise<User> {
 ```
 
 **DoD satisfied:**
+
 - ✅ All identifiers in en_US (`fetchUserById`, `userId`, `MAX_USER_ID_LENGTH`, `USER_ID_FORMAT`)
 - ✅ No magic numbers (constants `MAX_USER_ID_LENGTH = 36`, `USER_ID_FORMAT`)
 - ✅ Input validated at boundary (null, length, format checks)
@@ -448,7 +442,7 @@ describe('fetchUserById', () => {
 
 The following patterns are prohibited in any AI-generated code:
 
-```
+```text
 ❌ Magic numbers
    if status == 3          ← What is 3?
    if status == OrderStatus.PROCESSING  ← ✅
@@ -496,14 +490,15 @@ When a Building Protocol violation is found during code review or analysis, use 
 | Violation | Severity | Rationale |
 |-----------|----------|-----------|
 | Hardcoded secret, token, or credential in source code | 🔴 Critical | Immediate security incident risk; may already be in git history |
-| Empty catch block in production code path (`catch (e) {}`) | 🔴 Critical | Silently swallows errors; causes invisible production failures |
+| Empty catch block (`catch (e) {}`) on a data, money, or security path | 🔴 Critical | Silently swallows failures where they cause data loss, wrong charges, or bypassed checks |
+| Empty catch block elsewhere in production code | 🟠 High | Hides errors; makes incidents hard to diagnose |
 | SQL string concatenation / unparameterized query | 🔴 Critical | SQL injection vector |
 | No input validation on public API / external boundary | 🔴 Critical | Injection, overflow, and type confusion attack surface |
-| Non-English identifiers in production code | 🟠 High | Breaks global collaboration, tooling searchability, and AI analysis accuracy |
-| Magic number used in business logic | 🟠 High | Incorrect value is invisible to reviewers; breaks future changes |
-| Boolean parameter that changes function behavior | 🟠 High | Caller has no way to know what `true` means without reading the implementation |
-| Function > 20 lines without justification | 🟠 High | Single responsibility violation; exponential testing complexity |
-| God object / function doing more than one thing | 🟠 High | Violates SOLID S; changes cascade unpredictably |
+| Non-English identifiers in production code | 🟡 Medium | Breaks global collaboration, tooling searchability, and AI analysis accuracy |
+| Magic number used in business logic | 🟡 Medium | Incorrect value is invisible to reviewers; breaks future changes |
+| Boolean parameter that changes function behavior | 🟢 Low | Caller has no way to know what `true` means without reading the implementation |
+| Function > 20 lines without justification | 🟢 Low | Single responsibility violation; harder to test |
+| God object / function doing more than one thing | 🟡 Medium | Violates SOLID S; changes cascade unpredictably |
 | `TODO` stub left in deliverable code | 🟡 Medium | Untracked work; silently becomes permanent |
 | Commented-out code blocks | 🟡 Medium | Dead code; confuses reviewers; version control preserves history |
 | Missing docstring/JSDoc on public function | 🟡 Medium | Integration friction; invisible contract |
@@ -511,7 +506,7 @@ When a Building Protocol violation is found during code review or analysis, use 
 | Magic number in test data (not business logic) | 🟢 Low | No runtime risk; minor readability issue |
 | Non-standard commit message format | 🟢 Low | Reduces changelog quality; does not affect functionality |
 
-> **Rule**: Any 🔴 Critical Building Protocol violation found during analysis triggers the **Immediate Report protocol** immediately. Any 🟠 High violation is included in the main report's High-Priority Issues section.
+> **Rule**: Violations are reported with the severity above, under the same 5-risk limit as every other risk. **Style violations (🟡/🟢) never displace correctness or security risks** — when the list is full, they go to *Also considered, not material*. A 🔴 violation moves to Tier 3 only if its severity depends on facts only the user has.
 
 ---
 
@@ -519,7 +514,7 @@ When a Building Protocol violation is found during code review or analysis, use 
 
 All commit messages must follow [Conventional Commits](https://www.conventionalcommits.org/):
 
-```
+```text
 <type>(<scope>): <short description in en_US, imperative mood>
 
 [optional body — explain WHY, not WHAT]
@@ -539,7 +534,7 @@ All commit messages must follow [Conventional Commits](https://www.conventionalc
 | `ci` | CI/CD pipeline changes |
 | `hotfix` | Critical production fix |
 
-```
+```text
 ✅ feat(auth): add JWT refresh token rotation
 ✅ fix(payment): prevent double charge on network retry
 ✅ refactor(user-service): extract email validation to shared utility
@@ -557,14 +552,16 @@ All commit messages must follow [Conventional Commits](https://www.conventionalc
 The Building Protocol activates **whenever code is generated or reviewed** — it is not a switch to turn on. It does not apply to pure analysis conversations where no code artifact is produced or examined.
 
 It applies to:
+
 - Every code snippet generated in chat
-- Every file created or modified by AI
+- Every file the approved plan creates or modifies (existing code outside the plan is reported, not rewritten)
 - Every script, migration, configuration, or infrastructure definition
 - Every test generated
 - Every example code in documentation
 
 When a user writes in a non-English language (e.g., Spanish) and requests code, AI will:
+
 1. **Respond in the user's language** — the explanation, analysis, and conversation are always in the user's language
-2. **Rewrite all identifiers to en_US** — variable names, function names, constants, file names, etc.
+2. **Write all new identifiers in en_US** — variable names, function names, constants, file names, etc.
 3. **Keep comments in the user's preferred language** — if the user writes in Spanish, inline comments may be in Spanish
 4. **State the rule once if not obvious**: *"Los identificadores del código están en en_US según el Building Protocol. Los comentarios pueden estar en el idioma que prefieras."*

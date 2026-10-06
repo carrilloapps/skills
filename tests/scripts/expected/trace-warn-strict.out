@@ -1,0 +1,12 @@
+trace — aa-trace/warn
+
+specs/search
+| Req | Scenarios | Tasks | Tickets | Tests | Verify |
+|-----|-----------|-------|---------|-------|--------|
+| FR-001 | 1 | - | - | 0 | - |
+| SC-001 | yes | - | - | - | - |
+| SC-002 | no | - | - | - | - |
+
+1. warning specs/search/spec.md [fr-no-test] FR-001 is not referenced by any test file
+2. warning specs/search/spec.md [sc-no-scenario] SC-002 is not mapped to a scenario (Scenario(s) column or @SC-002 tag)
+Result: 0 error(s), 2 warning(s) — WARN

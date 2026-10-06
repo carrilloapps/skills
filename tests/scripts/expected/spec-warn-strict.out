@@ -1,0 +1,1 @@
+{"initiative":"specs/warn","findings":[{"n":1,"severity":"warning","file":"spec.md","line":14,"rule":"scenario-origin","message":"scenario without Origin:/Origen: line"}],"errors":0,"warnings":1,"strict":true,"exit":2}

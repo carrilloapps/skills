@@ -7,7 +7,9 @@
 - [ ] 🔴 devils-advocate
 - [ ] 🛡️ sar-cybersecurity
 - [ ] 📋 ai-rules
-- [ ] 📦 Repository infrastructure (CI, templates, root docs)
+- [ ] 🔁 agentic-agile
+- [ ] 🧷 integrations (guards)
+- [ ] 📦 Repository infrastructure (CI, templates, root docs, shared scripts)
 
 ## Type of Change
 
@@ -29,40 +31,67 @@
 ## Quality Checklist
 
 ### All PRs
+
 - [ ] All ` ``` ` code fences are balanced (every opener has a closer)
-- [ ] No stale text: no `with implementation`, `14-dimension`, `carrilloapps/devils-advocate`, or other legacy phrasing
+- [ ] No stale text: no references to removed protocols (`immediate-report`, `handbrake-checklist`, "full adversarial analysis") or other legacy phrasing
 - [ ] All code identifiers in examples use `en_US`
 - [ ] `bash scripts/validate.sh` runs with 0 failures locally
+- [ ] `bash scripts/audit-skills.sh` reports 0 findings (if any `skills/` file changed)
 - [ ] Commit message follows Conventional Commits format
 
+### If adding or changing a script (`skills/*/scripts/`, `shared/scripts/`)
+
+- [ ] Both `.sh` and `.ps1` twins changed identically; `.ps1` code is ASCII
+- [ ] Parity cases/fixtures/goldens updated; `bash tests/scripts/run-parity.sh` passes
+- [ ] Shared scripts re-vendored with `bash shared/sync.sh`
+
+### If modifying agentic-agile
+
+- [ ] Templates use numbered gate items (no checkboxes, no `TBD`); structure templates still pass `check-structure` once filled
+- [ ] Examples carry `**Skill version**: X.Y.Z` and the "Example only" note
+- [ ] New frameworks/templates/examples/scripts indexed in `SKILL.md`
+
+### If modifying integrations
+
+- [ ] Rules changed only in `integrations/core/classifier.mjs`, then `node integrations/sync-core.mjs`
+- [ ] `node --test integrations/core/core.test.mjs integrations/*/test/*.test.mjs` passes
+
 ### If modifying devils-advocate — adding or modifying an example
-- [ ] Example ends with the exact Gate prompt (✅ Proceed / 🔁 Revise / ❌ Cancel / `continue`)
+
+- [ ] Example ends with the Gate (✅ Proceed / 🔁 Revise / ❌ Cancel / `continue` + "reply in your own words" note)
 - [ ] `continue` line reads: `proceed without addressing remaining issues (risks remain active and unmitigated)`
-- [ ] `**Skill version**: X.Y.Z` present and matches current `SKILL.md` version
-- [ ] Example added to the `SKILL.md` Index under `### 📂 examples/`
+- [ ] `**Skill version**: X.Y.Z` present and matches the current `SKILL.md` `metadata.version`
+- [ ] Example added to the *Examples* table in `SKILL.md` §5
 - [ ] Example covers a scenario not already covered by existing examples
 
 ### If modifying devils-advocate — adding a new framework
-- [ ] File added to `SKILL.md` Index under `### 📂 Domain Frameworks`
+
+- [ ] File added to the *Domain frameworks* table in `SKILL.md` §5
 - [ ] Framework does not duplicate an existing domain
 - [ ] Matching example added to `examples/`
-- [ ] Framework follows the header convention (Role, Load when, Always paired with)
+- [ ] Framework follows the header convention (Role, Load when, See also) and has an example code boundary note if it contains code
 
 ### If modifying sar-cybersecurity
-- [ ] Any new assessment pattern or edge case is consistent with existing scoring rules (`scoring-system.md`)
+
+- [ ] Any new assessment pattern or edge case is consistent with existing scoring rules (`scoring-system.md`) and every `Base N … = Y` line adds up
 - [ ] Output format changes reflected in `frameworks/output-format.md`
 - [ ] Version bumped in `SKILL.md` frontmatter if behavior changes
 - [ ] `README.md` badge updated to match new version
 
 ### If modifying ai-rules
+
 - [ ] New or changed rule does not conflict with Devil's Advocate protocols
 - [ ] Security safeguards section updated if scope of autonomy changes
+- [ ] No new stop-and-wait round; any `.memory/` write follows the selective convention (shared `.memory/<skill>/` versioned, `local/` ignored)
+- [ ] Install commands only in `frameworks/capabilities.md`, pinned, official sources, consent-gated
 - [ ] Version bumped in `SKILL.md` frontmatter if behavior changes
 - [ ] `README.md` badge updated to match new version
 
 ### If modifying any core SKILL.md or core protocol file
-> Core files: `SKILL.md` (any skill), `frameworks/handbrake-protocol.md`, `frameworks/immediate-report.md`, `frameworks/output-format.md` (DA), `frameworks/output-format.md` (SAR)
+>
+> Core files: `SKILL.md` (any skill), `frameworks/handbrake-protocol.md`, `frameworks/output-format.md` (DA), `frameworks/output-format.md` (SAR)
 > Activation files: `AGENTS.md`, `copilot-instructions.md`
+
 - [ ] Issue was opened and discussed before this PR
 - [ ] All cross-references are updated
 - [ ] Version bumped and cascaded to README badge, metadata.json, and (for DA) all examples

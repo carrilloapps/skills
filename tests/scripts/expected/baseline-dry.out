@@ -1,0 +1,5 @@
+baseline — aa-baseline/proj (write)
+1. analyze|ambiguous-term|specs/export/spec.md|FR-002 uses ambiguous term(s) without a measurable criterion: fast
+2. trace|fr-no-test|specs/export/spec.md|FR-001 is not referenced by any test file
+3. trace|fr-no-test|specs/export/spec.md|FR-002 is not referenced by any test file
+Result: would write 3 fingerprint(s) to plans/agile/baseline.txt (dry run)

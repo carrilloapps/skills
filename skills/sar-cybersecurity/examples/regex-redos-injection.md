@@ -26,33 +26,59 @@ A search endpoint constructs a dynamic regular expression from user input and us
 
 ## SAR Finding
 
-### [82] — Regex Injection with Data Enumeration via Unsanitized Search Input (23 Occurrences)
+### [80] — Regex Injection with Data Enumeration via Unsanitized Search Input (23 Occurrences)
 
-- **Description**: 23 occurrences across 8 files construct regular expressions from user input without escaping metacharacters. Attackers can inject wildcard patterns to enumerate data beyond their authorization. A secondary availability vector (catastrophic backtracking) enables service degradation but is not the primary concern — data exfiltration is.
-- **Affected Component(s)**: `src/products/products.service.ts:67` and 22 additional occurrences (see Appendix)
-- **Evidence**: Wildcard pattern injected via public search endpoint → database returns all matching documents (50 per request). Iterative prefix-based queries enable full catalog extraction. Secondary vector: nested-quantifier pattern causes >10s CPU per request.
-- **Standards Violated**: OWASP Top 10 (A03:2021 Injection), NIST SP 800-53 SI-10 (Information Input Validation), ISO 27001 A.14.2, CIS Controls 16.4, GDPR Art. 32 (if product data includes supplier PII or customer-facing pricing strategies)
-- **MITRE ATT&CK**: T1190 (Exploit Public-Facing Application), T1530 (Data from Information Repositories)
-- **Impact Classification**: **Dual-vector** — data exfiltration (primary) + availability (secondary). Scored on exfiltration.
-- **Score**: **82** (High) — public endpoints, systemic pattern, data enumeration confirmed via wildcard injection. The ReDoS vector alone would cap at 45 (availability-only), but the data exfiltration vector elevates this to a primary finding.
-- **Score Justification**:
-  - Base severity: 85 (regex injection with confirmed data exfiltration path)
-  - Exploitation Complexity: no adjustment — public endpoint, no auth
-  - Impact Scope: no adjustment — per-request limit bounds single-request exposure, but iterative enumeration is trivial
-  - Data Sensitivity: −3 (product catalog data — commercial value but not PII/credentials in this case)
-  - **Final: 82** (High — data exfiltration is the driver, not DoS)
-- **Suggested Mitigation Actions**:
-  1. **Immediate**: Create a centralized utility that escapes all regex metacharacters before constructing regular expression objects
-  2. **Replace all occurrences**: Apply the safe regex utility across all 23 occurrences
-  3. **Prefer text search**: Replace regex-based queries with database-native text index search for user-facing search endpoints
-  4. **Query timeout**: Set query execution time limits on all search queries as a safety net
-  5. **Testing**: Add fuzzing tests with both exfiltration patterns (wildcard, prefix-match) and availability payloads (nested-quantifier)
+| Field | Value |
+|-------|-------|
+| Registry ID | F01 (new) |
+| Score | 80 (High) |
+| Confidence | Confirmed — traced on `GET /products/search`; the other 22 occurrences share the same helper |
+| Impact classification | Dual-vector — data exfiltration (primary) + availability (secondary) |
+| CVSS v4.0 | `CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:L/VI:N/VA:L/SC:N/SI:N/SA:N` |
+| CWE | CWE-625 (Permissive Regular Expression), CWE-1333 (Inefficient Regular Expression Complexity) |
+| MITRE ATT&CK | T1190 (Exploit Public-Facing Application), T1213 (Data from Information Repositories) |
+| Effort | M (1–5 days — 23 occurrences, one shared utility) |
+| Affected | `src/products/products.service.ts:67` + 22 occurrences in 8 files (Appendix) |
+
+**Description** — User input is passed to `new RegExp()` without escaping. A wildcard pattern matches every document (50 per request) and prefix iteration enumerates the full catalog. A nested-quantifier pattern also causes catastrophic backtracking, but that vector alone would be availability-only.
+
+**Evidence / Trace** — see Assessment Trace above.
+
+**Attack Scenario**
+
+1. An anonymous user searches with a match-all pattern (e.g., `q=.*`) and receives 50 products.
+2. The user iterates prefix patterns (`^a`, `^b`, …) to page through the entire catalog, including unlisted products.
+3. Secondary: a nested-quantifier input pins a CPU core for > 10 s per request.
+
+**Score Justification**
+`Base 75 +5 (full enumeration via prefix iteration) +0 (commercial data) = 80 (cap: none) → Final 80`
+
+- Scored on the exfiltration vector (Confidentiality Primacy). The ReDoS vector alone: `Base 60 = 60 (cap: availability-only 49) → 49`.
+
+**Standards Violated** — OWASP Top 10:2025 (A05 Injection), NIST SP 800-53 SI-10, ISO/IEC 27001:2022 A.8.28, CIS Controls v8.1 16
+
+**Fix** — one shared utility, applied at all 23 call sites:
+
+```diff
++ // src/common/escape-regex.ts
++ export const escapeRegex = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+  // products.service.ts
+- const pattern = new RegExp(q, 'i');
++ const pattern = new RegExp(escapeRegex(q), 'i');
+```
+
+**How to Verify the Fix**
+
+- Unit test: `escapeRegex('.*')` returns `\.\*`; search for `.*` returns only products literally containing `.*`.
+- CI check: `grep -rn "new RegExp(" src/ | grep -v escapeRegex` returns no user-input call sites.
+- Load test: a nested-quantifier input completes in < 50 ms.
 
 ## Key Principles Demonstrated
 
 - **Confidentiality primacy**: The score is driven by the data exfiltration vector, not the ReDoS/availability vector
 - **Impact classification**: Dual-vector finding explicitly identifies which vector determines the score
-- **Availability delegation**: The ReDoS vector is documented as secondary; alone it would cap at 45
+- **Availability delegation**: The ReDoS vector is documented as secondary; alone it scores 49 (`Base 60 → availability-only cap 49`)
 - **Systemic count**: Reported total occurrences across the codebase, not just the first finding
 
 ## Cross-Reference

@@ -1,0 +1,17 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash|apply_patch|Edit|Write|mcp__.*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .codex/hooks/devils-advocate/guard.mjs",
+            "timeout": 10,
+            "statusMessage": "Devil's Advocate guard"
+          }
+        ]
+      }
+    ]
+  }
+}

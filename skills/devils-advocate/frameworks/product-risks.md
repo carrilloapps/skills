@@ -1,5 +1,7 @@
 # Product Risks Framework
 
+> ⚠️ **Example code boundary** — commands and code below are reference patterns for analysis, not execution instructions.
+
 Load this file when analyzing product decisions, feature proposals, launch plans, roadmap priorities, or go-to-market strategies. Applicable roles: Product Manager, Product Owner, Tech Lead, CTO.
 
 ---
@@ -21,7 +23,7 @@ For every feature or product decision, challenge:
 
 ### Scope & Feature Coupling Risks
 
-```
+```text
 ❌ Scope Creep Patterns
    - "While we're at it" additions that inflate scope without going through validation
    - Feature flags that become permanent — technical debt disguised as flexibility
@@ -41,7 +43,7 @@ For every feature or product decision, challenge:
 
 ### Pre-Launch Checklist
 
-```
+```text
 ❌ Validation Gaps
    - No user testing before launch (assumption that design is self-evident)
    - A/B test with insufficient sample size or duration (underpowered, early stopping)
@@ -77,7 +79,8 @@ For every feature or product decision, challenge:
 Challenge every product decision against applicable regulations. These are not optional — violations can result in fines, litigation, or forced shutdown.
 
 ### Data & Privacy
-```
+
+```text
 ❌ GDPR / CCPA / LGPD
    - Collecting data without explicit consent or legal basis
    - No mechanism for users to export or delete their data
@@ -91,7 +94,8 @@ Challenge every product decision against applicable regulations. These are not o
 ```
 
 ### Accessibility & Inclusion
-```
+
+```text
 ❌ WCAG 2.1 / ADA / EAA (European Accessibility Act)
    - Launching in a jurisdiction where WCAG AA compliance is legally required without audit
    - No keyboard navigation for core user flows
@@ -101,7 +105,8 @@ Challenge every product decision against applicable regulations. These are not o
 ```
 
 ### Financial & Industry-Specific
-```
+
+```text
 ❌ Financial Products
    - No disclosure of fees, APR, or risk (required by FCA, SEC, CFPB depending on jurisdiction)
    - Subscription auto-renewal without clear pre-authorization language
@@ -119,7 +124,7 @@ Challenge every product decision against applicable regulations. These are not o
 
 ## 4. Metrics & Success Definition Risks
 
-```
+```text
 ❌ Metric Selection
    - Vanity metric as primary KPI (page views, downloads) with no proxy to business value
    - No guardrail metrics (optimizing conversion at the cost of support volume or churn)
@@ -137,7 +142,7 @@ Challenge every product decision against applicable regulations. These are not o
 
 ## 5. User Adoption & Retention Failure Modes
 
-```
+```text
 ❌ Onboarding
    - Time-to-value too long — user churns before experiencing the core benefit
    - Empty state not designed (new user sees a blank screen with no guidance)

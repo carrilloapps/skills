@@ -1,0 +1,19 @@
+check-spec — aa-spec2/bad
+1. error spec.md:10 [fr-duplicate] duplicate requirement ID FR-001
+2. error spec.md:14 [scenario-fr] scenario tags unknown requirement FR-009
+3. error spec.md:20 [scenario-fr] scenario without an @FR-### tag
+4. warning spec.md:20 [scenario-priority] scenario without a priority tag (@P1, @P2 or @P3)
+5. warning spec.md:32 [sc-scenario] success criterion SC-001 maps to unknown scenario: Missing scenario name
+6. warning spec.md:33 [sc-scenario] success criterion SC-002 maps to no scenario
+7. error spec.md:40 [clarify-unconfirmed] clarification answer without Confirmed by:
+8. error spec.md:46 [blocking-question] blocking open question still open: Which bank format?; cannot enter Phase 2
+9. error tasks.md:7 [task-duplicate] duplicate task ID T001
+10. error tasks.md:10 [task-format] row is not a task (| T### | P | Req | Task | Depends | Est | Status |)
+11. error tasks.md:8 [task-req] task T002 references unknown requirement FR-007
+12. error tasks.md:8 [task-req] task T002 has an invalid requirement reference: X-1
+13. error tasks.md:8 [task-depends] task T002 depends on unknown task T009
+14. error tasks.md:8 [task-estimate] task T002 estimate '4' is not Fibonacci (1, 2, 3, 5, 8, 13) or -
+15. error tasks.md:9 [task-estimate] task T003 estimate '21' is not Fibonacci (1, 2, 3, 5, 8, 13) or -
+16. error tasks.md [task-cycle] dependency cycle among: T001, T003
+17. warning requirements-checklist.md [checklist-ref] only 33% of checklist items reference the spec (80% required)
+Result: 13 error(s), 4 warning(s) — FAIL

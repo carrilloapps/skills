@@ -1,0 +1,4 @@
+# Lab catalog for scripts/lab-probe.
+# agentic-agile ships no Docker tools: scanning, quality and docs linting come from the
+# sar-cybersecurity, devils-advocate and ai-rules catalogs, which lab-probe merges automatically.
+id	skill	criticality	ram_mb	disk_mb	kind	profile	compose	signals	requires	notes

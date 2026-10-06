@@ -1,0 +1,11 @@
+# .gitleaks.toml — default rules + never scan agent-private results
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Agent-private scan results and credentials (already redacted / local only)"
+paths = [
+  '''(^|/)\.memory/local/''',
+  # project-specific: git-ignored parity-test work directories
+  '''(^|/)tests/scripts/\.work/''',
+]

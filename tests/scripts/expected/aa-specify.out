@@ -1,0 +1,3 @@
+aa specify — specs/demo
+1. create specs/demo/spec.md
+Next: fill Phase 1 (FR-### table, Gherkin scenarios tagged @FR-### and @P1-@P3, open questions), then run: aa clarify demo

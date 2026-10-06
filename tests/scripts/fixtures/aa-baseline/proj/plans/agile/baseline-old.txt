@@ -1,0 +1,4 @@
+# agentic-agile baseline — accepted findings (tool|rule|file|message), one per line.
+# Regenerate with scripts/baseline --write; scripts/baseline --check fails only on findings not listed here.
+trace|fr-no-test|specs/export/spec.md|FR-001 is not referenced by any test file
+check-spec|missing-section|specs/export/spec.md|missing section: Problem

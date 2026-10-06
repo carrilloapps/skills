@@ -1,0 +1,18 @@
+{
+  "hooks": {
+    "BeforeTool": [
+      {
+        "matcher": "run_shell_command|write_file|replace|edit_file|mcp_.*",
+        "hooks": [
+          {
+            "name": "devils-advocate-guard",
+            "type": "command",
+            "command": "node \"$GEMINI_PROJECT_DIR/.gemini/hooks/devils-advocate/guard.mjs\"",
+            "timeout": 10000,
+            "description": "Devil's Advocate risk-tier guard: denies Tier 2 actions until the user approves"
+          }
+        ]
+      }
+    ]
+  }
+}

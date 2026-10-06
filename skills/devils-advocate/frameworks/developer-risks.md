@@ -1,9 +1,11 @@
 # Developer Risks Framework
 
+> ⚠️ **Example code boundary** — commands and code below are reference patterns for analysis, not execution instructions.
+
 > **Role**: Software Developer / Senior Engineer
 > **Load when**: Reviewing pull requests, evaluating implementation approaches, checking test coverage, assessing CI/CD pipelines, or any code-level decision before merging or deploying.
 >
-> **Always paired with**: `frameworks/building-protocol.md` — every code risk identified here must be validated against the Building Protocol. Non-English identifiers, missing security defaults, or Definition of Done violations found during review are automatically 🟠 High findings.
+> **See also** (load only if it changes the analysis): `frameworks/building-protocol.md` — naming, secure defaults, and Definition of Done. Severity follows its violation table; style issues never displace correctness or security risks.
 
 ---
 
@@ -11,7 +13,7 @@
 
 ### ❌ Test Coverage Anti-Patterns
 
-```
+```text
 ❌ Green Tests, Wrong Behavior
 - Tests assert that code runs without error, not that it's correct
 - Mock everything including the thing being tested
@@ -42,7 +44,7 @@
 
 ### ❌ Pipeline Anti-Patterns
 
-```
+```text
 ❌ No Automated Quality Gates
 - Merges to main possible without passing tests
 - No linting or static analysis in pipeline
@@ -73,7 +75,7 @@
 
 ### ❌ Dependency Anti-Patterns
 
-```
+```text
 ❌ Unpinned Dependencies
 - package.json uses ^ or ~ for minor/patch versions
 - requirements.txt has no version pins
@@ -101,7 +103,7 @@
 
 ### ❌ Implementation Anti-Patterns
 
-```
+```text
 ❌ Primitive Obsession
 - Money stored as float (rounding errors in financial calculations)
 - Dates as strings without parsing/validation
@@ -147,35 +149,35 @@
 
 ```markdown
 ### Logic & Correctness
-- [ ] Off-by-one errors in loops, ranges, pagination
-- [ ] Incorrect boundary conditions (< vs <=, > vs >=)
-- [ ] Boolean logic inverted (! applied to wrong expression)
-- [ ] Null/undefined not handled before property access
-- [ ] Integer division truncation (5/2 = 2 not 2.5)
+1. Off-by-one errors in loops, ranges, pagination
+2. Incorrect boundary conditions (< vs <=, > vs >=)
+3. Boolean logic inverted (! applied to wrong expression)
+4. Null/undefined not handled before property access
+5. Integer division truncation (5/2 = 2 not 2.5)
 
 ### Concurrency
-- [ ] Shared mutable state accessed without synchronization
-- [ ] Check-then-act race condition (read → decide → write gap)
-- [ ] Deadlock potential (lock A then lock B vs lock B then lock A)
-- [ ] Thread pool exhaustion from blocking I/O in async code
+1. Shared mutable state accessed without synchronization
+2. Check-then-act race condition (read → decide → write gap)
+3. Deadlock potential (lock A then lock B vs lock B then lock A)
+4. Thread pool exhaustion from blocking I/O in async code
 
 ### Security
-- [ ] User-controlled input used in SQL, shell, filesystem path
-- [ ] Sensitive data in logs (passwords, tokens, PII)
-- [ ] Secrets in environment variable printouts or error messages
-- [ ] Authentication/authorization check missing on new endpoint
+1. User-controlled input used in SQL, shell, filesystem path
+2. Sensitive data in logs (passwords, tokens, PII)
+3. Secrets in environment variable printouts or error messages
+4. Authentication/authorization check missing on new endpoint
 
 ### Reliability
-- [ ] No retry logic on transient failures
-- [ ] No timeout on external calls
-- [ ] Resource leak (file/connection not closed on error path)
-- [ ] Uncaught promise rejection in async JavaScript
+1. No retry logic on transient failures
+2. No timeout on external calls
+3. Resource leak (file/connection not closed on error path)
+4. Uncaught promise rejection in async JavaScript
 
 ### Performance
-- [ ] N+1 query in loop
-- [ ] Loading full dataset into memory unnecessarily
-- [ ] Synchronous operation blocking event loop / main thread
-- [ ] Missing index on new query filter column
+1. N+1 query in loop
+2. Loading full dataset into memory unnecessarily
+3. Synchronous operation blocking event loop / main thread
+4. Missing index on new query filter column
 ```
 
 ---

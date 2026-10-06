@@ -1,0 +1,294 @@
+== .memory/.gitignore
+# Managed by carrilloapps/skills — ignores agent-private paths only.
+# Shared team state under .memory/<skill>/ stays versioned.
+local/
+*.local.*
+*.recovered.json
+
+== plans/agile/autonomy.md
+# Autonomy
+
+> Filled by the team. Defaults are **Proposed** until the team confirms them. A deviation is recorded here with its reason — never decided per conversation.
+>
+> When the team confirms this file, add a line `Confirmed by: <role or name> — <YYYY-MM-DD>` right below this note.
+
+Confirmed by: Scrum master — 2026-10-01
+
+## Levels per task
+
+| Task | Level | Reason for deviation from default |
+|------|-------|-----------------------------------|
+| Transcribe and summarise sessions | N1 | |
+| Draft a work item from a conversation | N2 | |
+| Adversarial refinement | N2 | |
+| Create a defect from a thread | N3 | |
+| Sprint changelog | N3 | |
+| Detect blockers and notify | N3 | |
+| Order the backlog by impact | N2 | |
+| Estimate (after the vote) | N2 | |
+| Close or transition items | N0 | never delegated |
+| Commit the sprint | N0 | never delegated |
+
+## Adoption
+
+**Current phase**: 1 Capture since 2026-10-01
+
+| # | Precondition | Status | Owner (role) |
+|---|--------------|--------|--------------|
+| 1 | Transcription active in recurring ceremonies | met | |
+| 2 | Programmatic access to transcripts | met | |
+| 3 | Retention and classification policy | met | |
+| 4 | Recording consent announced | met | |
+| 5 | Pilot scope agreed | not met | |
+| 6 | Third-party capabilities authorized | not met | |
+| 7 | Baseline over two full cycles | not met | |
+
+== plans/agile/capabilities.md
+# Capabilities
+
+> Filled by the team. Which tool fills each capability slot, and which third-party capabilities are authorized. Never put secrets here.
+>
+> When the team confirms this file, add a line `Confirmed by: <role or name> — <YYYY-MM-DD>` right below this note.
+
+Confirmed by: Scrum master — 2026-10-01
+
+## Slots
+
+| Slot | Tool / MCP | Version | Config file (project-level) | Owning or enrichment |
+|------|------------|---------|-----------------------------|----------------------|
+| Tracker | GitHub Issues | | | owning |
+| Docs | Repository docs | | | owning |
+| Chat | none | | | enrichment |
+| Observability | not applicable | | | enrichment |
+| Transcript source | VTT files | | | owning (for drafts) |
+| Warehouse / semantic layer | none | | | enrichment |
+| Code graph | codegraph | | | enrichment |
+| Doc / memory graph | none | | | enrichment |
+
+## Authorized third-party capabilities (four questions)
+
+| Name | Provider | Version | Data reached | Write permissions | Processing & retention | Internal owner | Approved on | Approved by | Review on |
+|------|----------|---------|--------------|-------------------|------------------------|----------------|-------------|-------------|-----------|
+
+## Team capability catalogue
+
+| Capability | Have it? | Maturity | Procedure |
+|------------|----------|----------|-----------|
+| Conversation → work item | | | |
+| Adversarial refinement | | | |
+| Defect from a thread | | | |
+| Sprint summary | | | |
+| Estimation against history | | | |
+| Blocker detection | | | |
+| Changelog | | | |
+| Decision record | | | |
+
+== plans/agile/ceremonies.md
+# Ceremonies
+
+> Filled by the team. Durations below are **Proposed** defaults.
+>
+> When the team confirms this file, add a line `Confirmed by: <role or name> — <YYYY-MM-DD>` right below this note.
+
+Confirmed by: Scrum master — 2026-10-01
+
+| Ceremony | When | Duration | Facilitator (role) | Recorded? | Agent output |
+|----------|------|----------|--------------------|-----------|--------------|
+| Daily | Mon-Fri 09:30 | 15 min | Scrum master | yes | `plans/sprints/<…>/daily/<date>.md` |
+| Refinement | Wednesday | 60 min | Scrum master | yes | `plans/initiatives/<i>/tickets/` |
+| Planning | Wednesday | 90 min | Scrum master | yes | `plans/sprints/<…>/planning.md` |
+| Review | Wednesday | 30–60 min | Scrum master | yes | `plans/sprints/<…>/review.md` |
+| Retro | Wednesday | 60 min | Scrum master | yes | `plans/sprints/<…>/retro.md` |
+
+== plans/agile/constitution.md
+# Engineering constitution
+
+Version: 1.0.0
+
+Confirmed by: Tech lead — 2026-10-01
+
+## Articles
+
+### Article 1 — Simplicity first (MUST)
+
+Prefer the smallest design that satisfies the spec; no speculative abstractions.
+
+### Article 2 — Integration-first testing (SHOULD)
+
+Exercise real boundaries before mocks.
+
+## Amendments
+
+| Version | Date | Change | Rationale | Decided by |
+|---------|------|--------|-----------|------------|
+| 1.0.0 | 2026-10-01 | Initial articles | Team kickoff | Tech lead |
+
+== plans/agile/definition-of-done.md
+# Definition of Done
+
+> Filled by the team. Until filled, items below are **Proposed** defaults. Closing an item against this list is a human decision (N0).
+>
+> When the team confirms this file, add a line `Confirmed by: <role or name> — <YYYY-MM-DD>` right below this note.
+
+Confirmed by: Scrum master — 2026-10-01
+
+## Code
+
+1. Implements the spec without expanding it
+2. Build, linters, unit tests green
+
+## Review
+
+1. Reviewed and approved per the team's review conventions
+
+## Verification
+
+1. `specs/<initiative>/verification.md` has a row per scenario with evidence
+2. Verdict ✅, or ⚠️ with a dated follow-up
+
+## Documentation
+
+1. User-facing or operational docs updated, or `N/A — reason`
+
+## Out of scope respected
+
+1. Nothing outside the spec shipped silently
+
+## Not Done when
+
+1. Any scenario lacks evidence
+2. A ⚠️ verdict has no follow-up plan
+
+== plans/agile/definition-of-ready.md
+# Definition of Ready
+
+> Filled by the team. Until filled, items below are **Proposed** defaults. An item is Ready only when every mandatory line is ✅ **explicitly** — never by inference.
+>
+> When the team confirms this file, add a line `Confirmed by: <role or name> — <YYYY-MM-DD>` right below this note.
+
+Confirmed by: Scrum master — 2026-10-01
+
+## Mandatory
+
+1. Problem and value stated, attributed to who asked
+2. Acceptance criteria in Gherkin: happy path, negative path per failure mode, applicable edge cases
+3. Out of scope explicit
+4. Dependencies identified with an owner role
+5. Estimated by the team, ≤ 13 points
+6. Open questions that block the sprint: none
+
+## Architectural (when the item changes code)
+
+1. Bounded-context owner known
+2. Public surface delta known
+3. `specs/<initiative>/spec.md` passes `check-spec`
+
+## Not Ready when
+
+1. Any criterion is **Proposed** and nobody confirmed it
+2. Two stakeholders contradict each other and it is unresolved
+3. The item depends on data or a system nobody verified
+
+== plans/agile/kpi-directives.md
+# KPI Directives
+
+> Filled by the team. The agent computes only the KPIs defined here, with the counting rules written here.
+>
+> When the team confirms this file, add a line `Confirmed by: <role or name> — <YYYY-MM-DD>` right below this note.
+
+| KPI | Definition | Counting rule | Source | Threshold (only after 2 baseline cycles) |
+|-----|------------|---------------|--------|------------------------------------------|
+| Velocity | Points done per sprint | Items meeting the DoD by sprint end | Tracker | — |
+| Carry-over | Committed items not done | — | Tracker | — |
+| Cycle time | Start → done, median | Working days | Tracker / events | — |
+
+## Gate zero
+
+A measure that is invalid or incomplete gets **no state** and **no number**: write `not measurable — <reason>`. Classify work by initiative, not by commit prefix.
+
+== plans/agile/language.md
+# Language
+
+> Filled by the team. Default: the language of the user's messages.
+>
+> When the team confirms this file, add a line `Confirmed by: <role or name> — <YYYY-MM-DD>` right below this note.
+
+Confirmed by: Scrum master — 2026-10-01
+
+1. Artifacts (specs, plans, drafts) language: en
+2. Gherkin keyword language: en
+3. Epistemic labels: Verified, Documented, Proposed
+4. "No attribution" phrase: no attribution available
+5. Identifiers in code and file names: English, kebab-case for files and folders
+
+Keyword tables → the skill's `frameworks/gherkin.md`.
+
+== plans/agile/methodology.md
+# Methodology
+
+> Filled by the team. Until filled, values below are **Proposed** defaults.
+>
+> When the team confirms this file, add a line `Confirmed by: <role or name> — <YYYY-MM-DD>` right below this note.
+
+Confirmed by: Scrum master — 2026-10-01
+
+## Cadence
+
+1. Sprint length: 2 weeks
+2. Sprint naming: `<YYYY>-S<NN>`
+3. Quarter rhythm: 6 sprints and 1 buffer week
+
+## Estimation
+
+1. Scale: Fibonacci 1, 2, 3, 5, 8, 13
+2. Split at: 13 · Forbidden in sprint: ≥ 20
+3. Agent estimates: after the team votes (sealed before)
+
+## Working agreements
+
+1. Reviews within one working day
+
+## Transcripts
+
+1. Recording consent announced at the start of every session: yes
+2. Retention of raw transcripts: deleted after the draft is refined
+3. Classification: production-sensitive
+
+## Language
+
+See `language.md`.
+
+== plans/agile/metrics/events.jsonl
+
+== plans/agile/team.md
+# Team
+
+> Filled by the team. Record only what the team chooses to record. Names are optional; roles are enough for the agent.
+>
+> When the team confirms this file, add a line `Confirmed by: <role or name> — <YYYY-MM-DD>` right below this note.
+
+Confirmed by: Scrum master — 2026-10-01
+
+| Role | Name (optional) | Areas owned | Usual capacity (days/sprint) | Notes |
+|------|-----------------|-------------|------------------------------|-------|
+| Product owner | | Backlog | 2 | |
+| Scrum master | | | | |
+| Developer | | Payments API | 8 | |
+| QA | | | | |
+
+Time off and support load per sprint are recorded in the sprint's `planning.md`, not here.
+
+== plans/decisions/.gitkeep
+
+== plans/drafts/.gitkeep
+
+== plans/initiatives/.gitkeep
+
+== plans/sprints/.gitkeep
+
+== specs/.gitkeep
+
+== specs/demo/spec.md
+# spec
+
+Fixture template.

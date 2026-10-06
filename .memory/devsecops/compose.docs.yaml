@@ -1,0 +1,47 @@
+name: devsecops
+
+x-docs: &docs
+  read_only: true
+  network_mode: none
+  cap_drop: [ALL]
+  security_opt: ["no-new-privileges:true"]
+  tmpfs: [/tmp]
+  profiles: [docs]
+
+services:
+  docs-markdownlint:
+    <<: *docs
+    image: davidanson/markdownlint-cli2:v0.23.3@sha256:d5f3f3f04b2e285dcbcdcd13b4454d119e273e3c393a9dabd163dba4abad526d
+    working_dir: /workdir
+    volumes:
+      - ../..:/workdir:ro
+      - type: tmpfs            # hides .memory/local (credentials, tokens, raw results) from the container
+        target: /workdir/.memory/local
+        tmpfs: { size: 65536 }
+      - ./config:/cfg:ro
+    command: ["--config", "/cfg/.markdownlint-cli2.jsonc", "**/*.md", "#node_modules", "#.memory"]
+
+  docs-vale:
+    <<: *docs
+    image: jdkato/vale:v3.24.0@sha256:f5a09410093936d4919d868120786da9789e2652ac321c66a895403eca020ae4
+    volumes:
+      - ../..:/src:ro
+      - type: tmpfs            # hides .memory/local (credentials, tokens, raw results) from the container
+        target: /src/.memory/local
+        tmpfs: { size: 65536 }
+      - ./config/vale:/cfg:ro
+      - ../local/devsecops/results/${RUN_DATE:-undated}:/out
+    command: ["--config=/cfg/.vale.ini", "--output=JSON", "/src/docs", "/src/README.md"]
+
+  docs-lychee:
+    <<: *docs
+    image: lycheeverse/lychee:0.24.2@sha256:e2d19e57cf6ab037026f20b8e449a1f30d9d7f81eef4194763aab2eab20bd28d
+    volumes:
+      - ../..:/src:ro
+      - type: tmpfs            # hides .memory/local (credentials, tokens, raw results) from the container
+        target: /src/.memory/local
+        tmpfs: { size: 65536 }
+      - ../local/devsecops/results/${RUN_DATE:-undated}:/out
+    command: ["--offline", "--root-dir", "/src", "--format", "json",
+              "--exclude-path", "/templates/", "--exclude-path", "/fixtures/",
+              "--output", "/out/lychee.json", "/src/**/*.md"]

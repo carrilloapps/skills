@@ -1,0 +1,4 @@
+check-spec — specs/no-scenarios
+1. error spec.md [fr-missing] no Functional requirements table with FR-### rows
+2. error spec.md [no-scenarios] no Gherkin scenario (Scenario:/Escenario:)
+Result: 2 error(s), 0 warning(s) — FAIL

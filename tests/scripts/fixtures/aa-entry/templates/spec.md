@@ -1,0 +1,3 @@
+# spec
+
+Fixture template.

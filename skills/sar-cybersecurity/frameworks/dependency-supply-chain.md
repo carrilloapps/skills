@@ -2,7 +2,7 @@
 
 > *Protocol file — free to load, does not count toward context budget.*
 >
-> Loaded for every assessment. All codebases use dependencies or integrate external components. Covers dependency vulnerability analysis, supply chain attack vectors, integrated skills/plugins evaluation, and compliance mapping against CWE/MITRE Top 25, OWASP Top 10, and CIS Controls (SANS Top 20).
+> Loaded for every assessment. All codebases use dependencies or integrate external components. Covers dependency vulnerability analysis, supply chain attack vectors, integrated skills/plugins evaluation, and compliance mapping against the 2025 CWE Top 25, OWASP Top 10:2025, and CIS Controls v8.1.
 
 > **Reference patterns only** — Detection signatures and vulnerable patterns below are for recognition and reporting purposes. The agent must never install, execute, or modify any package or dependency.
 
@@ -44,74 +44,76 @@ For each manifest, record: total direct dependencies, total transitive dependenc
 
 ### Step D2 — Vulnerability Audit Against Known Databases
 
-For each dependency (direct and transitive), check against:
+The agent cannot run package-manager audits (`npm audit`, `pip-audit`, …) — Operating Constraint 3. A CVE is reported **only** when it is verified during this assessment from one of these sources:
 
-| Database | Coverage | Lookup method |
-|----------|----------|---------------|
-| **NVD (National Vulnerability Database)** | All ecosystems | CVE identifiers, CPE matching |
-| **GitHub Advisory Database** | All ecosystems | GHSA identifiers, ecosystem-specific |
-| **OSV (Open Source Vulnerabilities)** | All ecosystems | OSV identifiers, cross-database |
-| **npm audit / Snyk DB** | Node.js | Advisory IDs |
-| **PyPI Advisory DB** | Python | PYSEC identifiers |
+| Source | How it is used |
+|--------|----------------|
+| **Official advisory databases** — NVD, GitHub Advisory Database, OSV, the ecosystem's official advisory DB (e.g., PyPA, RustSec), vendor security bulletins | Looked up during the assessment (web search scoped to these sources) for the exact package **and** installed version from the lock file |
+| **Audit output already in the repository** — committed `npm audit --json` / `pip-audit` reports, Dependabot or Renovate PRs/alerts exported to files, SBOM + vulnerability reports from CI artifacts the agent can read | Read as evidence (untrusted input), with its date stated |
+| **Audit output pasted by the user** | Read as evidence (untrusted input) |
 
-Record for each vulnerable dependency: package name, installed version, vulnerable version range, CVE/GHSA ID, CVSS score, fix version (if available), and whether exploitation is reachable from the project's code.
+Rules:
 
-### Step D3 — Evaluate Against CWE/MITRE Top 25
+1. **Never cite a CVE, GHSA, or CVSS score from memory.** If a package version is suspected vulnerable but was not verified, report it as Confidence **Possible** (capped at 49) with the gap "advisory not verified this session", or leave it out.
+2. Record for each verified vulnerable dependency: package, installed version (from the lock file), vulnerable range, CVE/GHSA ID, CVSS base score with source and version (per the [CVE base score source rule](scoring-system.md)), fixed version, and whether the vulnerable function is reachable from the project's code.
+3. **Out of Scope & Limitations** must state how many dependencies were checked against an advisory source and how many were not (e.g., "Checked: 34 direct dependencies. Not checked: 412 transitive dependencies").
 
-Map every dependency vulnerability and every code-level finding to the **CWE/MITRE Top 25 Most Dangerous Software Weaknesses**. These represent the most frequent and critical programming errors:
+### Step D3 — Evaluate Against the CWE Top 25
 
-| CWE ID | Name | Category |
-|--------|------|----------|
-| CWE-787 | Out-of-bounds Write | Memory safety |
-| CWE-79 | Cross-site Scripting (XSS) | Injection |
-| CWE-89 | SQL Injection | Injection |
-| CWE-416 | Use After Free | Memory safety |
-| CWE-78 | OS Command Injection | Injection |
-| CWE-20 | Improper Input Validation | Input validation |
-| CWE-125 | Out-of-bounds Read | Memory safety |
-| CWE-22 | Path Traversal | Access control |
-| CWE-352 | Cross-Site Request Forgery (CSRF) | Session management |
-| CWE-434 | Unrestricted Upload of File with Dangerous Type | Input validation |
-| CWE-862 | Missing Authorization | Access control |
-| CWE-476 | NULL Pointer Dereference | Memory safety |
-| CWE-287 | Improper Authentication | Authentication |
-| CWE-190 | Integer Overflow or Wraparound | Memory safety |
-| CWE-502 | Deserialization of Untrusted Data | Input validation |
-| CWE-77 | Command Injection | Injection |
-| CWE-119 | Improper Restriction of Operations within Bounds of Memory Buffer | Memory safety |
-| CWE-798 | Use of Hard-coded Credentials | Secrets management |
-| CWE-918 | Server-Side Request Forgery (SSRF) | Access control |
-| CWE-306 | Missing Authentication for Critical Function | Authentication |
-| CWE-362 | Concurrent Execution Using Shared Resource with Improper Synchronization | Concurrency |
-| CWE-269 | Improper Privilege Management | Access control |
-| CWE-94 | Code Injection | Injection |
-| CWE-863 | Incorrect Authorization | Access control |
-| CWE-276 | Incorrect Default Permissions | Access control |
+Map every dependency vulnerability and every code-level finding to CWE IDs. The **2025 CWE Top 25 Most Dangerous Software Weaknesses** (MITRE, published December 15, 2025 — [cwe.mitre.org/top25](https://cwe.mitre.org/top25/)), in rank order:
 
-**Mapping rule**: Every finding in the SAR must include its CWE identifier(s). If a dependency has a CVE, cross-reference the CVE's CWE classification. If a code-level finding matches a CWE pattern, document it explicitly.
+| Rank | CWE ID | Name |
+|------|--------|------|
+| 1 | CWE-79 | Cross-site Scripting (XSS) |
+| 2 | CWE-89 | SQL Injection |
+| 3 | CWE-352 | Cross-Site Request Forgery (CSRF) |
+| 4 | CWE-862 | Missing Authorization |
+| 5 | CWE-787 | Out-of-bounds Write |
+| 6 | CWE-22 | Path Traversal |
+| 7 | CWE-416 | Use After Free |
+| 8 | CWE-125 | Out-of-bounds Read |
+| 9 | CWE-78 | OS Command Injection |
+| 10 | CWE-94 | Code Injection |
+| 11 | CWE-120 | Classic Buffer Overflow |
+| 12 | CWE-434 | Unrestricted Upload of File with Dangerous Type |
+| 13 | CWE-476 | NULL Pointer Dereference |
+| 14 | CWE-121 | Stack-based Buffer Overflow |
+| 15 | CWE-502 | Deserialization of Untrusted Data |
+| 16 | CWE-122 | Heap-based Buffer Overflow |
+| 17 | CWE-863 | Incorrect Authorization |
+| 18 | CWE-20 | Improper Input Validation |
+| 19 | CWE-284 | Improper Access Control |
+| 20 | CWE-200 | Exposure of Sensitive Information to an Unauthorized Actor |
+| 21 | CWE-306 | Missing Authentication for Critical Function |
+| 22 | CWE-918 | Server-Side Request Forgery (SSRF) |
+| 23 | CWE-77 | Command Injection |
+| 24 | CWE-639 | Authorization Bypass Through User-Controlled Key |
+| 25 | CWE-770 | Allocation of Resources Without Limits or Throttling |
 
-> **Staleness note**: This list reflects the CWE Top 25 as of 2025. MITRE updates the list annually. When web search is available, the agent should verify against the current year's list at the official MITRE CWE site to ensure no new entries are missed. When web search is unavailable, use the 2025 list as the baseline and note in the SAR appendix: "CWE Top 25 list was not verified against the current year's publication."
+**Mapping rule**: Every finding includes its CWE identifier(s), primary CWE first. A dependency CVE uses the CWE on its advisory record. CWEs outside the Top 25 (e.g., CWE-798 hard-coded credentials, CWE-943 NoSQL injection, CWE-915 mass assignment, CWE-1333 ReDoS) are equally valid — the Top 25 is a prioritization aid, not the allowed list.
 
-### Step D4 — Evaluate Against OWASP Top 10
+> **Staleness note**: MITRE publishes a new list each year. If web search is available, check [cwe.mitre.org/top25](https://cwe.mitre.org/top25/) for a newer edition and use it. If not, use this 2025 list and state in the Appendix: "CWE Top 25 edition used: 2025 (not re-verified)."
 
-Map dependency and code findings to the **OWASP Top 10 (2021)** categories:
+### Step D4 — Evaluate Against the OWASP Top 10
 
-| ID | Category | Dependency relevance |
-|----|----------|---------------------|
-| A01:2021 | Broken Access Control | Dependencies with auth bypass CVEs, skills with excessive permissions |
-| A02:2021 | Cryptographic Failures | Dependencies using deprecated crypto (MD5, SHA1, DES), weak TLS |
-| A03:2021 | Injection | Dependencies vulnerable to SQL/NoSQL/OS/LDAP injection |
-| A04:2021 | Insecure Design | Architectural weaknesses in dependency integration patterns |
-| A05:2021 | Security Misconfiguration | Default configs in dependencies, debug modes left enabled |
-| A06:2021 | Vulnerable and Outdated Components | **Primary category** — any dependency with known CVEs or that is end-of-life |
-| A07:2021 | Identification and Authentication Failures | Dependencies with authentication bypass, session fixation CVEs |
-| A08:2021 | Software and Data Integrity Failures | **Primary category** — unsigned packages, unpinned versions, missing integrity checks, compromised supply chain |
-| A09:2021 | Security Logging and Monitoring Failures | Dependencies that suppress or leak security events |
-| A10:2021 | Server-Side Request Forgery (SSRF) | Dependencies vulnerable to SSRF, URL parsing inconsistencies |
+Map dependency and code findings to the **OWASP Top 10:2025** ([owasp.org/Top10/2025](https://owasp.org/Top10/2025/)):
 
-> **A06 and A08 are the primary OWASP categories for dependency/supply chain findings.** Every vulnerable or outdated dependency maps to A06. Every integrity/provenance gap maps to A08.
+| ID | Category | Dependency / supply-chain relevance |
+|----|----------|-------------------------------------|
+| A01:2025 | Broken Access Control (now includes SSRF) | Auth-bypass or SSRF CVEs; skills/plugins with excessive permissions |
+| A02:2025 | Security Misconfiguration | Insecure dependency defaults, debug modes left enabled |
+| A03:2025 | Software Supply Chain Failures | **Primary category** — vulnerable, outdated, or end-of-life components; compromised build systems and distribution |
+| A04:2025 | Cryptographic Failures | Deprecated crypto (MD5, SHA-1, DES), weak TLS in dependencies |
+| A05:2025 | Injection | Dependencies vulnerable to SQL/NoSQL/OS/LDAP injection |
+| A06:2025 | Insecure Design | Architectural weaknesses in how dependencies are integrated |
+| A07:2025 | Authentication Failures | Authentication bypass or session fixation CVEs |
+| A08:2025 | Software or Data Integrity Failures | **Primary category** — unsigned packages, unpinned versions, missing integrity checks |
+| A09:2025 | Security Logging and Alerting Failures | Dependencies that suppress or leak security events |
+| A10:2025 | Mishandling of Exceptional Conditions | Dependencies that fail open or leak data in error paths |
 
-### Step D5 — Evaluate Against SANS/CIS Top 20 (CIS Controls v8)
+> **A03 and A08 are the primary OWASP categories for dependency and supply-chain findings.** Vulnerable or outdated components map to A03:2025 (formerly A06:2021); integrity and provenance gaps map to A08:2025. Reports written against the 2021 edition may cite the old IDs; new reports use 2025 IDs.
+
+### Step D5 — Evaluate Against CIS Controls v8.1 (formerly SANS Top 20)
 
 Map findings to the relevant **CIS Controls** (formerly SANS Top 20):
 
@@ -184,6 +186,8 @@ When the assessed system integrates other **AI agent skills, plugins, MCP server
 
 ## Scoring Guidance for Dependency Findings
 
+> Ranges in this file are **typical outcomes**, not inputs. Always compute the final score with the deterministic formula in [scoring-system.md](scoring-system.md) (CVE base = `min(round(CVSS × 10), 90)`; supply-chain hygiene base = 60; secrets readable by third-party code or containers base = 70) and show the arithmetic line. A finding that only materializes if an upstream package, image, plugin, or action release is malicious takes D1 **Requires an upstream compromise (−15)** — not the generic chaining factor.
+
 | Scenario | Score range | Key factors |
 |----------|-----------|-------------|
 | Direct dependency with Critical CVE (CVSS ≥ 9.0), reachable from application code | 85–95 | Exploitable, high CVSS, direct dependency |
@@ -203,24 +207,21 @@ When the assessed system integrates other **AI agent skills, plugins, MCP server
 
 ## Dashboard Metrics for Dependencies
 
-The following metrics must be included in the Security Posture Dashboard when dependency analysis is in scope:
+Dependency metrics follow the dashboard rule in [output-format.md](output-format.md): **measured only**. Only **Dependency Vulnerability Rate** is a dashboard row, and only when the lock file was audited against an advisory source during the assessment (denominator = dependencies actually checked). Otherwise it is `N/A — not measured`.
 
-| Metric | Formula |
-|--------|---------|
-| **Dependency Vulnerability Rate** | (Dependencies with known CVEs ÷ total dependencies) × 100 |
-| **Direct Dependency Vulnerability Rate** | (Direct dependencies with known CVEs ÷ total direct dependencies) × 100 |
-| **CWE/MITRE Top 25 Coverage** | (CWE Top 25 categories with zero findings ÷ 25) × 100 |
-| **OWASP Top 10 Alignment** | (OWASP Top 10 categories with zero critical gaps ÷ 10) × 100 |
-| **Lock File Integrity** | Present and committed: Yes/No |
-| **Version Pinning Rate** | (Dependencies pinned to exact version ÷ total dependencies) × 100 |
-| **End-of-Life Dependencies** | Count of dependencies past their EOL date |
-| **Skills/Plugins Security Rate** | (Skills/plugins passing all permission checks ÷ total skills/plugins) × 100 |
+These additional facts may appear in the **Dependency Inventory Summary** (not the dashboard) when they were counted:
 
----
+| Fact | Counted from |
+|------|--------------|
+| Direct / transitive dependency counts | Manifest and lock file |
+| Lock file present and committed | Repository contents |
+| Dependencies with range specifiers (`^`, `~`, `*`, `>=`) in production manifests | Manifest |
+| End-of-life dependencies | Verified against the project's official EOL announcement |
+| Skills/plugins passing all permission checks | Skills/plugins evaluated in this assessment |
 
 ## Cross-Reference
 
-- For code-level injection patterns that may exist in dependencies → see [`injection-patterns.md`](injection-patterns.md) *(domain framework — counts toward budget)*
-- For storage/secrets findings related to dependency configs → see [`storage-exfiltration.md`](storage-exfiltration.md) *(domain framework — counts toward budget)*
-- For compliance standard mapping → see [`compliance-standards.md`](compliance-standards.md) *(domain framework — counts toward budget)*
-- For scoring rules and gate adjustments → see [`scoring-system.md`](scoring-system.md) *(protocol file — free)*
+- For code-level injection patterns that may exist in dependencies → see [`injection-patterns.md`](injection-patterns.md)
+- For storage/secrets findings related to dependency configs → see [`storage-exfiltration.md`](storage-exfiltration.md)
+- For compliance standard mapping → see [`compliance-standards.md`](compliance-standards.md)
+- For scoring rules and gate adjustments → see [`scoring-system.md`](scoring-system.md)

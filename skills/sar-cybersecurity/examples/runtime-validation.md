@@ -33,23 +33,51 @@ The inline checks effectively prevent injection and enforce constraints, but the
 
 ## SAR Finding
 
-### [38] — Absence of Formal Validation Layer on Profile Update
+### [40] — Absence of Formal Validation Layer on Profile Update
 
-- **Description**: `POST /update-profile` lacks a `ValidationPipe`, DTO class, or schema validator. Inline type checks and truncation effectively prevent injection, but this pattern is fragile and not auditable.
-- **Affected Component(s)**: `src/users/users.controller.ts:82`
-- **Evidence**: `typeof body.name === 'string' ? body.name.trim().slice(0, 100) : ''` — effective but inline.
-- **Standards Violated**: OWASP Top 10 (A03:2021 Injection — partial mitigation), ISO 27001 A.14 (secure development lifecycle)
-- **Score**: **38** (Low/Warning) — mitigated at runtime, downgraded from medium per scoring adjustment rule.
-- **Suggested Mitigation Actions**:
-  1. Create a `UpdateProfileDto` with `class-validator` decorators
-  2. Apply `@UsePipes(new ValidationPipe({ whitelist: true }))` to the endpoint
-  3. Remove inline validation and trust the pipe / DTO layer
-  4. Add unit tests for the DTO validation rules
+| Field | Value |
+|-------|-------|
+| Registry ID | W02 (new) |
+| Score | 40 (Low/Warning) |
+| Confidence | Confirmed — traced body → inline checks → explicit `{ name, bio }` update |
+| Impact classification | Integrity (mitigated) |
+| CVSS v4.0 | N/A — fully mitigated |
+| CWE | CWE-20 (Improper Input Validation — defense-in-depth gap) |
+| Effort | S (< 1 day) |
+| Affected | `src/users/users.controller.ts:82` |
+
+**Description** — `POST /update-profile` has no `ValidationPipe`, DTO, or schema. Inline type checks and truncation are effective today, but they are untested, not reusable, and easy to break in the next edit.
+
+**Evidence / Trace** — see Assessment Trace above.
+
+**Score Justification**
+`Base 80 (gate: fully mitigated by inline/ad-hoc control — typeof checks + explicit field pick, fixed 40) → Final 40`
+
+- Named control: inline `typeof` checks plus explicit destructuring of `name` and `bio`.
+
+**Standards Violated** — OWASP Top 10:2025 (A05 Injection — partial mitigation), ISO/IEC 27001:2022 A.8.28 (secure coding)
+
+**Fix**
+
+```diff
+- async updateProfile(@Body() body: any, @Req() req: Request) {
+-   const name = typeof body.name === 'string' ? body.name.trim().slice(0, 100) : '';
+-   const bio = typeof body.bio === 'string' ? body.bio.trim().slice(0, 500) : '';
+-   if (!name) throw new BadRequestException('Name is required');
++ @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
++ async updateProfile(@Body() body: UpdateProfileDto, @Req() req: Request) {
++   const { name, bio } = body; // UpdateProfileDto: @IsString() @MaxLength(100) name; @IsOptional() @MaxLength(500) bio
+```
+
+**How to Verify the Fix**
+
+- DTO unit tests: `name` missing → 400; `name` as object → 400; extra field `role` → 400.
+- Existing profile-update integration test still passes.
 
 ## Key Principles Demonstrated
 
 - **Mitigation acknowledgment**: Inline logic is effective — score reflects reality, not theoretical severity
-- **Warning range**: 25–49 for mitigated risks
+- **Fixed mitigated score**: ad-hoc control → 40, formal centralized control → 30 — no judgment call
 - **Improvement path**: Recommends formal replacement without overstating urgency
 
 ## Cross-Reference

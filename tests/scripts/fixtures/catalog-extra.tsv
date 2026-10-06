@@ -1,0 +1,3 @@
+id	skill	criticality	ram_mb	disk_mb	kind	profile	compose	signals	requires	notes
+t-sast	dup	1	1	1	scanner	x	c.yaml	*		duplicate id: first catalog wins
+x-docs	extra	30	256	100	scanner	docs	.memory/devsecops/compose.x.yaml	*.md,*.json		

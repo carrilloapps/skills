@@ -1,0 +1,22 @@
+{
+  "name": "devils-advocate-guard",
+  "displayName": "Devil's Advocate Guard",
+  "version": "1.0.0",
+  "description": "Deterministic pre-execution guard for the devils-advocate skill: classifies each tool call by risk tier and forces a confirmation dialog before side effects.",
+  "author": {
+    "name": "José Carrillo",
+    "url": "https://carrillo.app"
+  },
+  "homepage": "https://github.com/carrilloapps/skills/tree/main/integrations/claude-code",
+  "repository": "https://github.com/carrilloapps/skills",
+  "license": "MIT",
+  "keywords": ["devils-advocate", "guard", "hooks", "risk-gate", "permissions"],
+  "userConfig": {
+    "strict": {
+      "type": "boolean",
+      "title": "Strict mode",
+      "description": "In auto or bypassPermissions mode, block (deny) Tier 1+ actions instead of letting them run unprompted.",
+      "default": false
+    }
+  }
+}
