@@ -5,6 +5,8 @@
 # ticket, decision record) may be created while this gate fails. Read-only.
 # --scorecard adds a maturity level per area (L0 missing · L1 started · L2 filled ·
 # L3 confirmed · L4 in use), a readiness score, and the capability slots marked "none".
+# Also reports, for information only, whether specs/ and plans/ are versioned in this
+# project: that is the team's choice (scripts/init --vcs), never a gate condition.
 #
 # Usage: check-structure.ps1 [--root DIR] [--strict] [--json] [--scorecard]     (-Root, -Strict, -Json also accepted)
 # Exit:  0 pass · 1 errors · 2 warnings with --strict · 3 configuration error
@@ -190,6 +192,23 @@ if ($Score) {
 }
 $Pct = [int][math]::Floor($ScoreSum * 100 / 20)
 
+# Versioning of specs/ and plans/ is the team's choice (scripts/init --vcs): report it,
+# never enforce it. ignored = both paths in the root .gitignore; versioned = a VCS marker
+# and no such rules; undetermined = no VCS detected at the project root.
+$VcsState = 'undetermined'
+$giLines = @()
+if (Test-Path -LiteralPath (P '.gitignore') -PathType Leaf) {
+  $giLines = [System.IO.File]::ReadAllLines((P '.gitignore')) | ForEach-Object { $_.TrimEnd("`r") }
+}
+if (($giLines -ccontains 'plans/') -and ($giLines -ccontains 'specs/')) { $VcsState = 'ignored' }
+elseif ((Test-Path -LiteralPath (P '.git')) -or (Test-Path -LiteralPath (P '.hg') -PathType Container) -or
+        (Test-Path -LiteralPath (P '.svn') -PathType Container) -or (Test-Path -LiteralPath (P '.fossil-settings') -PathType Container)) { $VcsState = 'versioned' }
+$VcsNote = switch ($VcsState) {
+  'ignored' { 'specs/ and plans/ are ignored by this project (scripts/init --vcs)' }
+  'versioned' { 'specs/ and plans/ are versioned (scripts/init --vcs)' }
+  default { 'specs/ and plans/ versioning undetermined: no version control detected' }
+}
+
 if ($Json) {
   $sb = New-Object System.Text.StringBuilder
   [void]$sb.Append('{"root":"' + (Get-JsonEsc $Label) + '","findings":[')
@@ -198,7 +217,7 @@ if ($Json) {
     [void]$sb.Append('{"n":' + ($k + 1) + ',"severity":"' + $x.Sev + '","file":"' + (Get-JsonEsc $x.File) + '","line":' + $x.Line + ',"rule":"' + $x.Rule + '","message":"' + (Get-JsonEsc $x.Msg) + '"}')
   }
   $st = 'false'; if ($Strict) { $st = 'true' }
-  [void]$sb.Append('],"errors":' + $E + ',"warnings":' + $W + ',"strict":' + $st + ',"gate":"' + $Gate + '"')
+  [void]$sb.Append('],"errors":' + $E + ',"warnings":' + $W + ',"strict":' + $st + ',"gate":"' + $Gate + '","vcs":"' + $VcsState + '"')
   if ($Score) {
     [void]$sb.Append(',"scorecard":{')
     for ($k = 0; $k -lt $Areas.Count; $k++) { [void]$sb.Append('"' + $Areas[$k] + '":' + $Levels[$k] + ',') }
@@ -217,6 +236,7 @@ if ($Json) {
   Write-Output "Result: $E error(s), $W warning(s) $EM $v"
   if ($Gate -eq 'open') { Write-Output 'Phase 0 gate: open.' }
   else { Write-Output 'Phase 0 gate: closed. Do not create specs, plans, drafts, sprint artifacts, tickets or decision records; complete the items above with the team first.' }
+  Write-Output "Versioning (informational, not a gate): $VcsNote"
   if ($Score) {
     $MD = [string][char]0x00b7
     Write-Output "Scorecard (L0 missing $MD L1 started $MD L2 filled $MD L3 confirmed $MD L4 in use):"

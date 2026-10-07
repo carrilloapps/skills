@@ -4,6 +4,8 @@
 
 The directory confirmed in Step 0. Default `docs/postmortems/` (versioned — the team's record).
 
+Whether the reports and the registry are versioned at all is **the team's choice**, the same choice agentic-agile applies to `specs/` and `plans/`: versioned gives the team a reviewable, durable record; ignored keeps incident detail on one machine. Ask in Step 0 and respect the answer; never decide it silently, and never run a VCS command to apply it. The trade-off, what changes either way, and how to switch later are owned by agentic-agile [`frameworks/artifact-versioning.md`](../../agentic-agile/frameworks/artifact-versioning.md). The public-repository rule below is a separate, stricter safeguard that applies whatever the choice.
+
 ### Public repositories
 
 If the repository is public **and** the incident exposes a vulnerability that is not yet fixed, the reports go to `.memory/local/postmortems/` instead, which is never versioned. Publishing an open vulnerability with a timeline that shows how it was triggered is a handed-over exploit. Once the fix ships, the team may move the report into the versioned directory — the agent proposes it, the team decides.

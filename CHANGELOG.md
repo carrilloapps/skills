@@ -7,9 +7,53 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ## [Unreleased]
 
+### Repository
+
+- **Permission policy for this repository** (`.claude/settings.json`) — only operations that
+  publish or rewrite shared history ask for confirmation: `git push`, `tag`, `merge`, `rebase`,
+  `filter-repo`, `remote`, the `gh` release / pr / issue / workflow / secret / variable / repo
+  commands, and `npm publish`. Local work — edits, `git commit`, branches, tests — runs
+  unprompted. The Devil's Advocate guard hook is deliberately **not** enabled here: it asks on
+  every edit by design, which is the skill's behaviour rather than a permission policy.
+- **`specs/` and `plans/` are not versioned in this repository** (root `.gitignore`, with the
+  reason in the file and in `AGENTS.md`): it is a public skill catalogue, so its Phase 0
+  artifacts are a worked example and a public spec would leak roadmap detail. This is a
+  per-project choice, not a default — most teams should version them.
+- **Faster quality gate** — `validate.sh` went from over 15 minutes to about 80 seconds: it no
+  longer runs the parity suite itself (CI has a dedicated job; `--with-parity` opts in) and it
+  prunes scratch trees (`.work/`, `.memory/local/`, `node_modules`, `.git`) from every recursive
+  scan. It now checks instead that the suite is internally consistent — every case has a golden
+  and every golden has a case.
+- **Parity runners clean up and can run one case** — a passing run removes `tests/scripts/.work/`
+  (3,033 files were being left behind, slowing every later scan; `PARITY_KEEP=1` keeps them), and
+  `--case NAME|PREFIX` (`-Case` in PowerShell) runs or regenerates a single case, which turns a
+  golden update from ~15 minutes into seconds.
+
 ### Planned
 
 - Nothing planned; open items live in `plans/drafts/` of this repository.
+
+---
+
+## agentic-agile [1.0.2] — 2026-10-07
+
+### Added
+
+- **The first run asks instead of assuming.** Phase 0 now opens with ten numbered questions —
+  cadence, capacity in working days per sprint and per role, estimation scale, DoR/DoD,
+  ceremonies, each capability slot, language, autonomy, the constitution, and whether `specs/`
+  and `plans/` are versioned — each with a *(recommended)* default. Detectable facts (configured
+  MCP servers, issue templates, a docs folder) are offered as **Documented**, never as decided;
+  every answer is recorded with a `Confirmed by: <name> (<role>) — <date>` line; "variable" is a
+  valid capacity; and an unanswered item stays an open question that keeps the gate closed rather
+  than becoming an assumption. Questions → `frameworks/sdd-phases.md`.
+- **Versioning of `specs/` and `plans/` is an explicit user choice** — `init --vcs
+  versioned|ignored|ask` (default `ask`) states the consequence of each option and writes the
+  ignore rules only when the user picks `ignored`; `check-structure` reports the current state
+  (versioned, ignored, or no VCS detected) in its output and `--json` without ever enforcing it,
+  because both answers are legitimate. New `frameworks/artifact-versioning.md` owns the
+  trade-off: who should version, what changes if they do not — including that a fresh clone
+  starts Phase 0 empty with the gate closed — and how to switch later in either direction.
 
 ---
 

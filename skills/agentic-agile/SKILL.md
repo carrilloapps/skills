@@ -9,7 +9,7 @@ description: >
   attribution, and versioned plans/specs in the project. Not for one-off coding questions.
 license: MIT
 metadata:
-  version: "1.0.1"
+  version: "1.0.2"
 ---
 
 # Agentic Agile — SDD on Scrum, with an honest agent
@@ -25,6 +25,8 @@ The agent removes the **transcription tax** of agility — capturing, drafting, 
 1. **Gate closed** (exit ≠ 0): create or edit nothing under `specs/` or `plans/` except `plans/agile/`. Say so in one line, then complete the structure **one numbered finding at a time**, asking the user or team for each fact. Never invent team facts: an unknown stays an open question and keeps the gate closed. No structure at all → offer `scripts/init` (optionally `--preset scrum|kanban|regulated`).
 2. **Gate open** (exit 0): proceed. Files that mention **Proposed** values without a `Confirmed by:` line are warnings; `--strict` closes the gate on them.
 3. `check-spec` runs this gate itself. Re-run it at the start of every session that creates artifacts.
+
+**First run — ask, do not assume.** Cadence, capacity (working days per sprint, per role), estimation scale, DoR/DoD, ceremonies, capability slots, language, autonomy, the constitution, and whether `specs/`/`plans/` are versioned exist only in the team's head. Ask one numbered question at a time with a *(recommended)* default, offer detectable facts (configured MCP servers, issue templates, a docs folder) as **Documented** rather than decided, and record each answer with `Confirmed by: <name> (<role>) — <date>`. "Variable" is a valid capacity. An unanswered item stays an open question and keeps the gate closed. The ten questions → [`sdd-phases.md`](frameworks/sdd-phases.md#first-run-questions).
 
 Rules → [`frameworks/sdd-phases.md`](frameworks/sdd-phases.md#phase-0--structure) · example → [`examples/structure-gate.md`](examples/structure-gate.md).
 
@@ -72,7 +74,7 @@ All artifacts live inside the project, in the layout below — never in global a
 
 ---
 
-## 2. Project layout (versioned unless noted)
+## 2. Project layout
 
 ```text
 plans/agile/                 operating system: methodology, definition-of-ready, definition-of-done, ceremonies, team,
@@ -88,7 +90,9 @@ plans/drafts/<YYYY-MM-DD>-<slug>.md      pre-refinement drafts from meetings
 .memory/local/agentic-agile/transcripts/ raw + normalized transcripts — NOT versioned
 ```
 
-`<initiative>` is kebab-case and identical across `specs/` and `plans/initiatives/`. Only transcripts, raw exports, and personal data go under `.memory/local/`. Before the first write there, create or extend the versioned `.memory/.gitignore` (append only missing lines, never remove user lines):
+`<initiative>` is kebab-case and identical across `specs/` and `plans/initiatives/`. Only transcripts, raw exports, and personal data go under `.memory/local/`.
+
+**Versioning them is the user's choice, never the agent's.** Versioned (the team default) means specs are reviewed in pull requests and decisions keep their history; ignored means they stay on one machine and no roadmap detail reaches the remote. `scripts/init --vcs versioned|ignored|ask` applies it; with the default `ask`, relay the question. `check-structure` reports the state, never gates on it. Trade-off and switching → [`artifact-versioning.md`](frameworks/artifact-versioning.md). Before the first write there, create or extend the versioned `.memory/.gitignore` (append only missing lines, never remove user lines):
 
 ```gitignore
 # Managed by carrilloapps/skills — ignores agent-private paths only.
@@ -98,7 +102,7 @@ local/
 *.recovered.json
 ```
 
-Mercurial, Fossil, and Subversion equivalents (file writes only, never VCS commands) → [`transcripts.md`](frameworks/transcripts.md#keeping-transcripts-out-of-version-control).
+Mercurial, Fossil, and Subversion equivalents → [`transcripts.md`](frameworks/transcripts.md#keeping-transcripts-out-of-version-control).
 
 ---
 
@@ -179,7 +183,7 @@ Each ships as `.sh` (Linux, macOS, Git Bash, WSL) and `.ps1` (Windows PowerShell
 | [`frameworks/gherkin.md`](frameworks/gherkin.md) | Scenarios, acceptance criteria, QA cases, `@FR`/`@P` tags |
 | [`frameworks/clarify.md`](frameworks/clarify.md) · [`frameworks/analyze.md`](frameworks/analyze.md) | Resolving ambiguity · cross-artifact consistency |
 | [`frameworks/traceability.md`](frameworks/traceability.md) · [`frameworks/converge.md`](frameworks/converge.md) | IDs and the trace matrix · reconciling code and spec |
-| [`frameworks/brownfield.md`](frameworks/brownfield.md) | Specs for existing code, baselines |
+| [`frameworks/brownfield.md`](frameworks/brownfield.md) · [`frameworks/artifact-versioning.md`](frameworks/artifact-versioning.md) | Specs for existing code, baselines · versioning `specs/` and `plans/` |
 | [`frameworks/intents.md`](frameworks/intents.md) · [`frameworks/presets.md`](frameworks/presets.md) | Intent → script mapping · scrum, kanban, regulated |
 | [`frameworks/scrum-ceremonies.md`](frameworks/scrum-ceremonies.md) · [`frameworks/estimation-capacity.md`](frameworks/estimation-capacity.md) | Any ceremony · planning, estimation, capacity |
 | [`frameworks/agentic-agility.md`](frameworks/agentic-agility.md) | Adoption, autonomy defaults, indicators, third-party authorization |
@@ -187,7 +191,7 @@ Each ships as `.sh` (Linux, macOS, Git Bash, WSL) and `.ps1` (Windows PowerShell
 | [`frameworks/capabilities.md`](frameworks/capabilities.md) · [`frameworks/docker-lab.md`](frameworks/docker-lab.md) | Optional tools · Docker lab |
 | [`frameworks/delivery.md`](frameworks/delivery.md) · [`frameworks/kpi.md`](frameworks/kpi.md) | Tickets, PR conformance, changelog · KPIs |
 | [`frameworks/team-safety.md`](frameworks/team-safety.md) · [`frameworks/output-format.md`](frameworks/output-format.md) | Shared docs, messages, sensitive data · format |
-| `templates/*.md` · `presets/<name>/` | Creating any artifact — never improvise (spec, checklist, design with contracts, domain model, process, tasks, verification, constitution, hooks, bug, idea, work items, ceremonies, reports, decisions, `plans/agile/`) · overrides for `init --preset` |
+| `templates/*.md` · `presets/<name>/` | Creating any artifact — never improvise one · overrides for `init --preset` |
 
 | Example | Shows |
 |---------|-------|

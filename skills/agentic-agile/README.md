@@ -3,7 +3,7 @@
 > **Spec-Driven Development on Scrum, run with an agent that drafts, checks, and connects — and never decides for the team.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-red.svg)](../../LICENSE)
-[![Version](https://img.shields.io/badge/version-1.0.1-blue.svg)](../../CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.0.2-blue.svg)](../../CHANGELOG.md)
 [![skill.sh](https://img.shields.io/badge/skill.sh-agentic--agile-black.svg)](https://skills.sh/carrilloapps/skills/agentic-agile)
 [![GitHub](https://img.shields.io/badge/GitHub-carrilloapps-181717.svg?logo=github)](https://github.com/carrilloapps/skills)
 

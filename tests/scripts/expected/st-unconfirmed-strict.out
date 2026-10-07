@@ -1,1 +1,1 @@
-{"root":"structure/unconfirmed","findings":[{"n":1,"severity":"warning","file":"plans/agile/language.md","line":0,"rule":"unconfirmed","message":"mentions Proposed values but has no 'Confirmed by:' line"}],"errors":0,"warnings":1,"strict":true,"gate":"closed","exit":2}
+{"root":"structure/unconfirmed","findings":[{"n":1,"severity":"warning","file":"plans/agile/language.md","line":0,"rule":"unconfirmed","message":"mentions Proposed values but has no 'Confirmed by:' line"}],"errors":0,"warnings":1,"strict":true,"gate":"closed","vcs":"undetermined","exit":2}

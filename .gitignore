@@ -194,3 +194,12 @@ tests/scripts/.work/
 *.bak
 dist/
 build/
+
+# ── agentic-agile artifacts: this repository's choice ────────────────────────
+# `specs/` and `plans/` are VERSIONED BY DEFAULT — they are the team's shared
+# specs and operating system, and most teams want them in review and history.
+# This repository keeps them out of git on purpose: it is a public skill
+# catalogue, and its Phase 0 artifacts are a working example, not a product.
+# To version them in your project, delete these three lines.
+plans/
+specs/

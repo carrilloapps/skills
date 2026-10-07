@@ -4,3 +4,4 @@ check-structure — structure/broken
 3. error plans/agile/definition-of-done.md:36 [checkbox] checkbox list item; use numbered or lettered items with a state
 Result: 3 error(s), 0 warning(s) — FAIL
 Phase 0 gate: closed. Do not create specs, plans, drafts, sprint artifacts, tickets or decision records; complete the items above with the team first.
+Versioning (informational, not a gate): specs/ and plans/ versioning undetermined: no version control detected

@@ -1,1 +1,4 @@
-Usage: init [--root DIR] [--preset scrum|kanban|regulated] [--dry-run]
+Usage: init [--root DIR] [--preset scrum|kanban|regulated] [--vcs versioned|ignored|ask] [--dry-run]
+  --vcs versioned  specs/ and plans/ are versioned (reviewed in pull requests, kept in history)
+  --vcs ignored    add specs/ and plans/ to the project .gitignore (they stay on this machine)
+  --vcs ask        default: print the choice for the user instead of deciding it

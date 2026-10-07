@@ -17,4 +17,10 @@
 17. create plans/agile/metrics/events.jsonl
 18. append 4 line(s) to .memory/.gitignore
 19. create .memory/local/agentic-agile/transcripts/
+Versioning choice for specs/ and plans/ (nothing written yet — relay this to the user):
+  1. versioned — the team's specs, plans, decisions and sprint records are reviewed in
+     pull requests and kept in history. Re-run: init --vcs versioned
+  2. ignored — they stay on this machine only; no roadmap detail reaches the remote.
+     Re-run: init --vcs ignored
+  Trade-off and how to switch later: frameworks/artifact-versioning.md
 Next: complete plans/agile/ with the team, then run scripts/check-structure (Phase 0 gate) before any spec, plan, draft, ticket or decision record.

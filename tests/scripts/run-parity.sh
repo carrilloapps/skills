@@ -2,7 +2,7 @@
 # run-parity — run every case in cases.tsv with each available implementation (bash, pwsh,
 # powershell.exe) and compare stdout, exit code and produced files with expected/.
 #
-# Usage: tests/scripts/run-parity.sh [--update] [--only bash|pwsh|powershell]
+# Usage: tests/scripts/run-parity.sh [--update] [--only bash|pwsh|powershell] [--case NAME|PREFIX]
 #   --update  regenerate expected/ from the bash implementation (review the diff!)
 # Exit: 0 all match · 1 at least one mismatch · 3 usage error
 set -u
@@ -11,11 +11,12 @@ export LC_ALL
 HERE=$(cd "$(dirname "$0")" && pwd)
 REPO=$(cd "$HERE/../.." && pwd)
 FIX=$HERE/fixtures EXP=$HERE/expected WORK=$HERE/.work
-UPDATE=0 ONLY=
+UPDATE=0 ONLY= CASE=
 while [ $# -gt 0 ]; do
   case "$1" in
     --update) UPDATE=1; shift ;;
     --only) ONLY=${2-}; shift 2 ;;
+    --case) CASE=${2-}; shift 2 ;;   # run or regenerate one case (or a prefix) instead of all 160+
     *) echo "run-parity: unknown option: $1" >&2; exit 3 ;;
   esac
 done
@@ -53,6 +54,7 @@ for runner in "${RUNNERS[@]}"; do
   while IFS= read -r row; do
     row=${row%$'\r'}   # tolerate CRLF checkouts (Windows core.autocrlf)
     case "$row" in ''|'#'*) continue ;; esac
+    [ -z "$CASE" ] || case "${row%%$'	'*}" in "$CASE"|"$CASE"*) ;; *) continue ;; esac
     IFS=$'\x1f' read -r name mode impl seed args want <<<"${row//$'\t'/$'\x1f'}"
     w=$WORK/$runner/$name
     rm -rf "$w"; mkdir -p "$w"

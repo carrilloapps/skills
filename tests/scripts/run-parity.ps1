@@ -3,8 +3,9 @@
 # available, with the bash implementation; compare stdout, exit code and produced files
 # with expected/.
 #
-# Usage: tests/scripts/run-parity.ps1
+# Usage: tests/scripts/run-parity.ps1 [-Case NAME|PREFIX]
 # Exit:  0 all match · 1 at least one mismatch
+param([string]$Case = '')   # run one case (or a prefix) instead of all 160+
 $ErrorActionPreference = 'Stop'
 try { [Console]::OutputEncoding = New-Object System.Text.UTF8Encoding($false) } catch { }
 $Here = $PSScriptRoot
@@ -65,6 +66,7 @@ $pass = 0; $fail = 0; $n = 0
 foreach ($runner in $Runners) {
   foreach ($row in [System.IO.File]::ReadAllLines((Join-Path $Here 'cases.tsv'), $Utf8)) {
     if ($row -eq '' -or $row.StartsWith('#')) { continue }
+    if ($Case -ne '' -and -not $row.Split("`t")[0].StartsWith($Case)) { continue }   # --case filter
     $c = $row.Split("`t")
     $name = $c[0]; $mode = $c[1]; $impl = $c[2]; $seed = $c[3]; $want = [int]$c[5]
     $argv = @(); if ($c[4] -ne '') { $argv = $c[4].Split(' ') }

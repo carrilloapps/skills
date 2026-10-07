@@ -51,6 +51,8 @@ Each skill follows the same pattern:
 
 **Project-local storage (required)**: everything an agent generates lives inside the project, in this layout — `specs/<initiative>/` and `plans/` (`plans/agile/`, `plans/sprints/`, `plans/initiatives/`, `plans/decisions/`, `plans/drafts/` — versioned specifications and plans), `docs/` (versioned team docs), `.memory/<skill>/` (versioned shared state), `.memory/local/` (private: binaries in `bin/`, virtualenvs in `venv/`, temp in `tmp/`). Never write to global agent directories (`~/.claude`, `~/.gemini`, `~/.codex`, `~/.cursor`, `~/.copilot`, `~/.config/*`) or the system temp directory without the user's explicit approval of that exact path. Full rule: `skills/ai-rules/SKILL.md` → *Project-Local Storage*.
 
+**This repository does not version `specs/` or `plans/`** (root `.gitignore`): it is a public skill catalogue, so its Phase 0 artifacts are a worked example rather than a product, and a public spec would leak roadmap detail. That is a per-project choice, not a default — `scripts/init --vcs` asks each user, and most teams should answer *versioned*. Do not "fix" the ignore rules here. Trade-off: [`skills/agentic-agile/frameworks/artifact-versioning.md`](skills/agentic-agile/frameworks/artifact-versioning.md).
+
 **Options are numbered or lettered**, never `- [ ]` checkboxes (the user approves or drops items by number: "dale con 1 y 3"). `validate.sh` rejects checkboxes under `skills/`.
 
 **Skill state** lives in `.memory/<skill>/` at the project root and is **selectively** versioned (summary here; the full rule, VCS table, and `sar` short-name note are owned by [`skills/ai-rules/frameworks/memory-convention.md`](skills/ai-rules/frameworks/memory-convention.md)):
@@ -64,7 +66,7 @@ Full rules: `skills/ai-rules/SKILL.md` and `skills/sar-cybersecurity/frameworks/
 
 **Optional capabilities**: each skill may ship `frameworks/capabilities.md` listing optional tools (pinned versions, official registries only) that it *suggests* at most once and installs only after the user approves the exact command. `SKILL.md` files never contain install commands. Installation instructions for every agent: [`docs/INSTALL.md`](docs/INSTALL.md).
 
-**Cross-skill flow**: agentic-agile (specify, plan, deliver) → Devil's Advocate (prevent) → SAR Cybersecurity (assess) → planned Postmortem Writing (learn). agentic-agile delegates its adversarial pass to Devil's Advocate, security reviews to SAR, and language/docs to ai-rules, with a minimal built-in fallback when they are not installed. Each skill is independently installable.
+**Cross-skill flow**: agentic-agile (specify, plan, deliver) → Devil's Advocate (prevent) → SAR Cybersecurity (assess) → Postmortem Writing (learn). agentic-agile delegates its adversarial pass to Devil's Advocate, security reviews to SAR, and language/docs to ai-rules, with a minimal built-in fallback when they are not installed. Each skill is independently installable.
 
 ## Version cascade
 
@@ -87,7 +89,7 @@ When bumping a skill version, update **all** of:
 | Devil's Advocate | `skills/devils-advocate/SKILL.md` | Risk-scaled pre-execution gate (Tiers 0–3) — defines WHETHER to act |
 | SAR Cybersecurity | `skills/sar-cybersecurity/SKILL.md` | Security Assessment Report generator — deterministic scoring, bilingual EN/ES reports |
 | Agentic Agile | `skills/agentic-agile/SKILL.md` | Spec-driven development on Scrum with agentic agility — gated specs/plans, ceremonies, autonomy N0–N4, attribution, transcripts, MCP capability slots |
-| Postmortem Writing | *Planned* | Incident postmortem authoring beyond the team flow in agentic-agile (scope pending decision) |
+| Postmortem Writing | `skills/postmortem-writing/SKILL.md` | Blameless incident postmortems — deterministic SEV1–SEV4 rubric, attributed timeline, verifiable actions, lessons that feed Devil's Advocate |
 
 ## Conventions
 

@@ -1,0 +1,73 @@
+== .memory/.gitignore
+# Managed by carrilloapps/skills — ignores agent-private paths only.
+# Shared team state under .memory/<skill>/ stays versioned.
+local/
+*.local.*
+*.recovered.json
+
+== plans/agile/autonomy.md
+# autonomy
+
+Fixture template.
+
+== plans/agile/capabilities.md
+# capabilities
+
+Fixture template.
+
+== plans/agile/ceremonies.md
+# ceremonies
+
+Fixture template.
+
+== plans/agile/constitution.md
+# constitution
+
+Fixture template.
+
+== plans/agile/definition-of-done.md
+# definition-of-done
+
+Fixture template.
+
+== plans/agile/definition-of-ready.md
+# definition-of-ready
+
+Fixture template.
+
+== plans/agile/hooks.md
+# hooks
+
+Fixture template.
+
+== plans/agile/kpi-directives.md
+# kpi-directives
+
+Fixture template.
+
+== plans/agile/language.md
+# language
+
+Fixture template.
+
+== plans/agile/methodology.md
+# methodology
+
+Fixture template.
+
+== plans/agile/metrics/events.jsonl
+
+== plans/agile/team.md
+# team
+
+Fixture template.
+
+== plans/decisions/.gitkeep
+
+== plans/drafts/.gitkeep
+
+== plans/initiatives/.gitkeep
+
+== plans/sprints/.gitkeep
+
+== specs/.gitkeep

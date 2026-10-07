@@ -118,6 +118,22 @@ The *Optional guard* column above links each adapter; the status matrix (stable 
 
 ---
 
-## 5. Agent-private state (`.memory/`)
+## 5. What the skills write into your project, and what you choose
+
+Everything stays inside the project — never in a global agent directory or the system temp directory.
+
+| Path | Written by | Versioned? |
+|------|-----------|-----------|
+| `specs/<initiative>/` | agentic-agile | **Your choice** — versioned by default |
+| `plans/` (`agile/`, `sprints/`, `initiatives/`, `decisions/`, `drafts/`) | agentic-agile | **Your choice** — versioned by default |
+| `docs/postmortems/` | postmortem-writing | **Your choice** — versioned by default |
+| `docs/` (project context, elementals) | ai-rules | Yes |
+| `.memory/<skill>/` (shared team state) | all skills | Yes |
+| `.memory/local/` (transcripts, caches, credentials, private reports) | all skills | **Never** |
+| `.codegraph/`, `.docgraph/` (optional tool indexes) | optional capabilities | Never |
+
+`scripts/init --vcs versioned|ignored|ask` makes the first choice explicit; the default (`ask`) prints the two options and their consequences instead of deciding for you, and nothing is written to `.gitignore` until you answer. SAR and postmortem-writing additionally keep reports out of version control when the repository is public and the finding or incident exposes an unfixed vulnerability, whatever you chose. Trade-off and how to switch later: [`skills/agentic-agile/frameworks/artifact-versioning.md`](../skills/agentic-agile/frameworks/artifact-versioning.md).
+
+## 6. Agent-private state (`.memory/`)
 
 Skills that keep state write to `.memory/<skill>/` at the project root with selective versioning (shared team state versioned; `local/`, `*.local.*`, `*.recovered.json` ignored by a versioned `.memory/.gitignore`). Summary in [`AGENTS.md` → *Skill state*](../AGENTS.md); the full rule is owned by [`skills/ai-rules/frameworks/memory-convention.md`](../skills/ai-rules/frameworks/memory-convention.md).

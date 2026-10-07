@@ -2,6 +2,7 @@ check-structure — agile-project
 No findings.
 Result: 0 error(s), 0 warning(s) — PASS
 Phase 0 gate: open.
+Versioning (informational, not a gate): specs/ and plans/ versioning undetermined: no version control detected
 Scorecard (L0 missing · L1 started · L2 filled · L3 confirmed · L4 in use):
 1. process — L4
 2. capabilities — L3

@@ -52,6 +52,8 @@ It will not write a postmortem while the incident is active. During an incident 
 | `.memory/local/postmortems/…` | No | Reports instead of the above **when the repository is public and the incident exposes an unfixed vulnerability** |
 | `.memory/postmortem-writing/incidents.json` | Yes | Incident registry: severity, metrics, action state, lessons |
 
+Whether these are versioned is your choice — see agentic-agile [`frameworks/artifact-versioning.md`](../agentic-agile/frameworks/artifact-versioning.md); the public-repository rule above applies either way.
+
 Nothing is written outside the project — no global agent directories, no system temp ([ai-rules](../ai-rules/) *Project-Local Storage*).
 
 ## Report structure

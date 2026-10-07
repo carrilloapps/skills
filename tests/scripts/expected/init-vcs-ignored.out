@@ -1,4 +1,4 @@
-1. create plans/agile/methodology.md (preset kanban)
+1. create plans/agile/methodology.md
 2. create plans/agile/definition-of-ready.md
 3. create plans/agile/definition-of-done.md
 4. create plans/agile/ceremonies.md
@@ -16,11 +16,7 @@
 16. create specs/.gitkeep
 17. create plans/agile/metrics/events.jsonl
 18. append 5 line(s) to .memory/.gitignore
-19. create .memory/local/agentic-agile/transcripts/
-Versioning choice for specs/ and plans/ (nothing written yet — relay this to the user):
-  1. versioned — the team's specs, plans, decisions and sprint records are reviewed in
-     pull requests and kept in history. Re-run: init --vcs versioned
-  2. ignored — they stay on this machine only; no roadmap detail reaches the remote.
-     Re-run: init --vcs ignored
-  Trade-off and how to switch later: frameworks/artifact-versioning.md
+19. append 5 line(s) to .gitignore (specs/ and plans/ not versioned)
+20. create .memory/local/agentic-agile/transcripts/
+Versioning: specs/ and plans/ are ignored by this project — they stay on this machine.
 Next: complete plans/agile/ with the team, then run scripts/check-structure (Phase 0 gate) before any spec, plan, draft, ticket or decision record.

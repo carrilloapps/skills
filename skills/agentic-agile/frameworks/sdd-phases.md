@@ -53,6 +53,24 @@ How the agent closes the gap: one numbered finding at a time, asking the person 
 
 ---
 
+## First run questions
+
+These facts exist only in the team's head. Before writing `plans/agile/`, the agent asks for them one numbered question at a time, each with a *(recommended)* default the user can accept or replace. Detectable facts are offered as **Documented**, never as decided.
+
+1. **Cadence** — sprint length, or Kanban with WIP limits (`--preset kanban`).
+2. **Capacity** — usual working days per sprint **per role**; "variable" is a valid answer and planning then takes the number from each sprint's `planning.md`.
+3. **Estimation scale** — the scale and the point at which an item must be split.
+4. **Definition of Ready and Definition of Done** — at least three items each; if the repository already enforces checks, offer them as *Documented* and ask the user to confirm.
+5. **Ceremonies** — which ones the team actually holds, and who leads each.
+6. **Capability slots** — for each slot (tracker, docs, chat, observability, transcript source, warehouse, code graph, doc graph): which tool fills it, `none` (it would help but is missing — `doctor` reports it as a gap), or `not applicable` (it would add nothing here). Offer what is detectable (configured MCP servers, `.github/ISSUE_TEMPLATE/`, a docs folder) as *Documented*, never as decided.
+7. **Language** — the artifact and Gherkin keyword language.
+8. **Autonomy** — the level per task, and the status of each adoption precondition.
+9. **Constitution** — accept the default articles or amend them, with the decision attributed.
+10. **Versioning of `specs/` and `plans/`** — `scripts/init --vcs` asks this one (versioned is the default and right for most teams) → [`artifact-versioning.md`](frameworks/artifact-versioning.md).
+
+Record each answer with a `Confirmed by: <name> (<role>) — <date>` line. An unanswered item stays an open question and keeps the gate closed; it never becomes an assumption.
+
+
 ## Phase 1 — Spec (`spec.md`)
 
 | Section | Required content |

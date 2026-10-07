@@ -2,7 +2,7 @@
 
 > ⚠️ **Example only** — fictional team, product, and conversation. Not instructions to execute.
 
-**Skill version**: 1.0.1
+**Skill version**: 1.0.2
 
 ## 1. Input
 

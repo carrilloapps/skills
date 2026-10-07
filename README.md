@@ -19,7 +19,7 @@
 | [🔴 **devils-advocate**](skills/devils-advocate/) | Adversarial pre-execution gate — risk-scaled, evidence-based critique that returns a corrected plan and waits for your approval | [![v3.0.1](https://img.shields.io/badge/v3.0.1-blue.svg)](CHANGELOG.md) | `npx skills add carrilloapps/skills@devils-advocate` |
 | [🛡️ **sar-cybersecurity**](skills/sar-cybersecurity/) | Automated Security Assessment Report (SAR) generator — deep cybersecurity analysis mapped to 21 baseline compliance standards | [![v2.0.1](https://img.shields.io/badge/v2.0.1-blue.svg)](CHANGELOG.md) | `npx skills add carrilloapps/skills@sar-cybersecurity` |
 | [📋 **ai-rules**](skills/ai-rules/) | Personal behavioral rules for AI tools — documentation discipline, secure practices, code quality, version control, and structured estimation | [![v1.1.1](https://img.shields.io/badge/v1.1.1-blue.svg)](CHANGELOG.md) | `npx skills add carrilloapps/skills@ai-rules` |
-| [🔁 **agentic-agile**](skills/agentic-agile/) | Spec-driven development on Scrum with agentic agility — gated specs and plans, ceremonies, autonomy levels, attribution, transcripts and MCP integrations by capability | [![v1.0.1](https://img.shields.io/badge/v1.0.1-blue.svg)](CHANGELOG.md) | `npx skills add carrilloapps/skills@agentic-agile` |
+| [🔁 **agentic-agile**](skills/agentic-agile/) | Spec-driven development on Scrum with agentic agility — gated specs and plans, ceremonies, autonomy levels, attribution, transcripts and MCP integrations by capability | [![v1.0.2](https://img.shields.io/badge/v1.0.2-blue.svg)](CHANGELOG.md) | `npx skills add carrilloapps/skills@agentic-agile` |
 | [📓 **postmortem-writing**](skills/postmortem-writing/) | Blameless incident postmortems — deterministic SEV1–SEV4 rubric, attributed timeline, contributing factors, verifiable actions, and lessons that feed devils-advocate | [![v1.0.0](https://img.shields.io/badge/v1.0.0-blue.svg)](CHANGELOG.md) | `npx skills add carrilloapps/skills@postmortem-writing` |
 
 ---
@@ -509,7 +509,7 @@ Defines the baseline behavioral contract that all AI agents must follow. Works a
 <details>
 <summary><b>🔁 Agentic Agile</b> — Spec-driven development (SDD) on Scrum, run by agents with explicit autonomy limits. Covers everything GitHub Spec Kit and AI Unified Process lead in (constitution, requirement IDs and traceability, clarify, analyze, converge, brownfield baseline) and adds a verified team operating system, Scrum, autonomy levels, attribution, transcripts, and deterministic validators in CI</summary>
 
-**Install** `npx skills add carrilloapps/skills@agentic-agile` · [Skill folder](skills/agentic-agile/) · [Full documentation](skills/agentic-agile/README.md) · [![v1.0.1](https://img.shields.io/badge/v1.0.1-blue.svg)](skills/agentic-agile/README.md)
+**Install** `npx skills add carrilloapps/skills@agentic-agile` · [Skill folder](skills/agentic-agile/) · [Full documentation](skills/agentic-agile/README.md) · [![v1.0.2](https://img.shields.io/badge/v1.0.2-blue.svg)](skills/agentic-agile/README.md)
 
 | Area | What it provides |
 |---|---|

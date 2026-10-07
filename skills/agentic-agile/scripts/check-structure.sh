@@ -11,6 +11,8 @@
 # spans, HTML tags and autolinks are ignored. Read-only. PowerShell twin: check-structure.ps1.
 # --scorecard adds a maturity level per area (L0 missing · L1 started · L2 filled ·
 # L3 confirmed · L4 in use), a readiness score, and the capability slots marked "none".
+# Also reports, for information only, whether specs/ and plans/ are versioned in this
+# project: that is the team's choice (scripts/init --vcs), never a gate condition.
 #
 # Usage: check-structure.sh [--root DIR] [--strict] [--json] [--scorecard]
 # Exit:  0 pass · 1 errors · 2 warnings with --strict · 3 configuration error
@@ -181,6 +183,20 @@ if [ $E -gt 0 ]; then EXIT=1; elif [ $STRICT -eq 1 ] && [ $W -gt 0 ]; then EXIT=
 GATE=closed; [ $EXIT -eq 0 ] && GATE=open
 jesc() { local s=$1; s=${s//\\/\\\\}; s=${s//\"/\\\"}; s=${s//$'\t'/\\t}; s=$(printf '%s' "$s" | tr -d '\000-\010\013-\037'); printf '%s' "$s"; }
 
+# Versioning of specs/ and plans/ is the team's choice (scripts/init --vcs): report it,
+# never enforce it. ignored = both paths in the root .gitignore; versioned = a VCS marker
+# and no such rules; undetermined = no VCS detected at the project root.
+VCS_STATE=undetermined
+gi_has() { [ -f "$ROOT/.gitignore" ] && tr -d '\r' <"$ROOT/.gitignore" | grep -Fxq -- "$1"; }
+if gi_has 'plans/' && gi_has 'specs/'; then VCS_STATE=ignored
+elif [ -e "$ROOT/.git" ] || [ -d "$ROOT/.hg" ] || [ -d "$ROOT/.svn" ] || [ -d "$ROOT/.fossil-settings" ]; then VCS_STATE=versioned
+fi
+case $VCS_STATE in
+  ignored) VCS_NOTE="specs/ and plans/ are ignored by this project (scripts/init --vcs)" ;;
+  versioned) VCS_NOTE="specs/ and plans/ are versioned (scripts/init --vcs)" ;;
+  *) VCS_NOTE="specs/ and plans/ versioning undetermined: no version control detected" ;;
+esac
+
 # ── Scorecard ────────────────────────────────────────────────────────────────
 AREAS=(process capabilities autonomy metrics transcripts)
 area_files() {
@@ -226,7 +242,7 @@ if [ $JSON -eq 1 ]; then
     out+="{\"n\":$((i + 1)),\"severity\":\"${F_SEV[i]}\",\"file\":\"$(jesc "${F_FILE[i]}")\",\"line\":${F_LINE[i]},\"rule\":\"${F_RULE[i]}\",\"message\":\"$(jesc "${F_MSG[i]}")\"}"
   done
   if [ $STRICT -eq 1 ]; then st=true; else st=false; fi
-  out+="],\"errors\":$E,\"warnings\":$W,\"strict\":$st,\"gate\":\"$GATE\""
+  out+="],\"errors\":$E,\"warnings\":$W,\"strict\":$st,\"gate\":\"$GATE\",\"vcs\":\"$VCS_STATE\""
   if [ $SCORE -eq 1 ]; then
     out+=",\"scorecard\":{"
     for ((i = 0; i < ${#AREAS[@]}; i++)); do out+="\"${AREAS[i]}\":${LEVELS[i]},"; done
@@ -246,6 +262,7 @@ else
   echo "Result: $E error(s), $W warning(s) — $verdict"
   if [ $GATE = open ]; then echo "Phase 0 gate: open."
   else echo "Phase 0 gate: closed. Do not create specs, plans, drafts, sprint artifacts, tickets or decision records; complete the items above with the team first."; fi
+  echo "Versioning (informational, not a gate): $VCS_NOTE"
   if [ $SCORE -eq 1 ]; then
     echo "Scorecard (L0 missing · L1 started · L2 filled · L3 confirmed · L4 in use):"
     for ((i = 0; i < ${#AREAS[@]}; i++)); do printf '%d. %s — L%s\n' $((i + 1)) "${AREAS[i]}" "${LEVELS[i]}"; done
