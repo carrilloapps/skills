@@ -9,6 +9,15 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ### Repository
 
+- **CI runs without warnings** — every annotation the Actions runs reported is gone:
+  `actions/checkout` → v7.0.1 and `actions/setup-node` → v7.0.0 (both run on Node 24, so the
+  Node 20 deprecation notice disappears), `actions/upload-artifact` → v7.0.2, the Ubuntu runner
+  pinned to `ubuntu-24.04` so the October 2026 migration to Ubuntu 26 cannot change it under us,
+  `setup-uv` with `enable-cache: false` (there are no Python manifests here, so its dependency
+  cache could never be invalidated and the action said so), and the guard tests on Node 22 LTS
+  instead of the deprecated Node 20. Every action stays pinned by commit SHA with its version in
+  a trailing comment.
+
 - **Permission policy for this repository** (`.claude/settings.json`) — only operations that
   publish or rewrite shared history ask for confirmation: `git push`, `tag`, `merge`, `rebase`,
   `filter-repo`, `remote`, the `gh` release / pr / issue / workflow / secret / variable / repo
