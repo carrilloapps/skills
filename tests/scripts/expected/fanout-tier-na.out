@@ -1,0 +1,9 @@
+fanout — aa-dispatch/proj (demo)
+1. create specs/demo/dispatch/D001-hand-built-due-date-for-fr-001.md (I001, Req FR-001, default/<model-not-recorded>)
+2. create specs/demo/dispatch.md
+Truncated at --limit 1; the list has more items than this dispatch covers.
+No specs/demo/spec.md yet: the briefs point at it, so run 'aa specify demo' and fill Phase 1 before dispatching them.
+Model for tier default not recorded in plans/agile/capabilities.md (Slots row 'Model · default'). Relay this to the user:
+  1. record the model for this tier in plans/agile/capabilities.md, or re-run with --model <name> (recommended: the smallest model that can pass the acceptance criteria)
+  2. run the briefs with each agent's default model and no routing
+Result: 1 brief(s) from plans/initiatives/demo/inventory.md — would create 1, skip 0 (dry run)

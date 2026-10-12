@@ -1,0 +1,109 @@
+== plans/agile/capabilities.md
+# Capabilities
+
+## Slots
+
+| Slot | Tool / MCP | Version | Config file (project-level) | Owning or enrichment |
+|------|------------|---------|-----------------------------|----------------------|
+| Tracker | GitHub Issues | | | owning |
+| Model · small | small-model-1 | | | owning |
+| Model · default | not applicable | | | owning |
+| Model · deep | deep-model-1 | | | owning |
+| Agent runner | runner --model {{MODEL}} --brief {{BRIEF}} | | | owning |
+
+== plans/initiatives/demo/inventory.md
+# Inventory: demo
+
+| ID | Item | Location | Source | Label | Priority | Status |
+|----|------|----------|--------|-------|----------|--------|
+| I001 | Hand-built due date for FR-001 | src/billing/invoice.ts:88 | S1 | Verified | P1 | open |
+| I002 | Localized subject line \| not ISO | src/billing/reminder.ts:34 | S1 | Verified | P1 | open |
+| I003 | Export header formats the date inline | src/reports/export.ts:120 | S1 | Verified | P2 | open |
+| I004 | Backfill script, already migrated | scripts/backfill.py:17 | S2 | Documented | P3 | done |
+
+== plans/initiatives/demo/raw-list.md
+# Findings relayed by the agent
+
+1. src/api/export.ts:12 missing auth check on the export route
+2. pagination is unbounded in listInvoices() for FR-003
+- plain finding with no location
+
+== plans/initiatives/pre/inventory.md
+# Inventory: pre
+
+| ID | Item | Location | Source | Label | Priority | Status |
+|----|------|----------|--------|-------|----------|--------|
+| I001 | Already dispatched item | src/pre.ts:1 | S1 | Verified | P1 | open |
+
+== specs/.gitkeep
+
+== specs/good/dispatch.md
+# Dispatch: good
+
+Source specs/good/tasks.md - 2 brief(s) - small (m9) - N2 - tasks specs/good/tasks.md
+
+| Brief | Title | Item | Req | Tier | Model | Autonomy | Status | Result |
+|-------|-------|------|-----|------|-------|----------|--------|--------|
+| [D001](dispatch/D001-write-the-failing-export-test.md) | Write the failing export test | T002 | FR-001 | small | m9 | N2 | todo | - |
+| [D002](dispatch/D002-write-the-failing-refusal-test.md) | Write the failing refusal test | T003 | FR-002 | small | m9 | N2 | todo | - |
+
+Runner: <agent-cli> --model {{MODEL}} "Execute the brief at {{BRIEF}} exactly as written. Do not touch files outside its allow-list. If a decision is needed, stop and return the question."
+
+== specs/good/dispatch/D001-write-the-failing-export-test.md
+# Brief D001: Write the failing export test
+
+Initiative good - item T002 from specs/good/tasks.md - req FR-001 - N2 - small (m9)
+
+Run: <agent-cli> --model m9 "Execute the brief at specs/good/dispatch/D001-write-the-failing-export-test.md exactly as written. Do not touch files outside its allow-list. If a decision is needed, stop and return the question."
+
+Item: Write the failing export test
+Location: -
+Spec: specs/good/spec.md
+Tasks: specs/good/tasks.md
+Goal: <one sentence written before dispatch>
+
+== specs/good/dispatch/D002-write-the-failing-refusal-test.md
+# Brief D002: Write the failing refusal test
+
+Initiative good - item T003 from specs/good/tasks.md - req FR-002 - N2 - small (m9)
+
+Run: <agent-cli> --model m9 "Execute the brief at specs/good/dispatch/D002-write-the-failing-refusal-test.md exactly as written. Do not touch files outside its allow-list. If a decision is needed, stop and return the question."
+
+Item: Write the failing refusal test
+Location: -
+Spec: specs/good/spec.md
+Tasks: specs/good/tasks.md
+Goal: <one sentence written before dispatch>
+
+== specs/good/tasks.md
+# Tasks: good
+
+| ID | P | Req | Task | Depends | Est | Status |
+|----|---|-----|------|---------|-----|--------|
+| T001 | | - | Create the export module skeleton | - | 1 | done |
+| T002 | [P] | FR-001 | Write the failing export test | T001 | 2 | todo |
+| T003 | [P] | FR-002 | Write the failing refusal test | T001 | 1 | todo |
+
+== specs/pre/dispatch.md
+# Dispatch: pre
+
+Source plans/initiatives/pre/inventory.md - 1 brief(s) - small (small-model-1) - N2 - tasks specs/pre/tasks.md
+
+| Brief | Title | Item | Req | Tier | Model | Autonomy | Status | Result |
+|-------|-------|------|-----|------|-------|----------|--------|--------|
+| [D001](dispatch/D001-already-dispatched-item.md) | Already dispatched item | I001 | unmapped | small | small-model-1 | N2 | todo | - |
+
+Runner: runner --model {{MODEL}} --brief {{BRIEF}}
+
+== specs/pre/dispatch/D001-already-dispatched-item.md
+# Brief D001: Already dispatched item
+
+Initiative pre - item I001 from plans/initiatives/pre/inventory.md - req unmapped - N2 - small (small-model-1)
+
+Run: runner --model small-model-1 --brief specs/pre/dispatch/D001-already-dispatched-item.md
+
+Item: Already dispatched item
+Location: src/pre.ts:1
+Spec: specs/pre/spec.md
+Tasks: specs/pre/tasks.md
+Goal: <one sentence written before dispatch>

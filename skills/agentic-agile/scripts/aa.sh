@@ -30,8 +30,10 @@ Intents:
 9. trace / analyze / baseline        traceability, cross-artifact analysis, accepted findings
 10. audit                            hygiene of the team's system (scripts/audit-agile)
 11. converge <slug>                  trace + analyze gaps as numbered next tasks
-12. import-speckit [--from DIR] [--write]  convert a Spec Kit project (dry run by default)
-13. help                             this list
+12. discover <slug> --pattern RE     deep sweep into plans/initiatives/<slug>/inventory.md (scripts/discover)
+13. fanout <slug> [--from FILE]      one self-contained SDD brief per item (scripts/fanout)
+14. import-speckit [--from DIR] [--write]  convert a Spec Kit project (dry run by default)
+15. help                             this list
 Common option: --root DIR (project root, default: current directory).
 EOF
 }
@@ -60,6 +62,8 @@ sib() { # $1 script name (fixed list), rest = args → runs it and exits with it
     trace) f="$(cd "$(dirname "$0")" && pwd)/trace.sh" ;;
     analyze) f="$(cd "$(dirname "$0")" && pwd)/analyze.sh" ;;
     baseline) f="$(cd "$(dirname "$0")" && pwd)/baseline.sh" ;;
+    discover) f="$(cd "$(dirname "$0")" && pwd)/discover.sh" ;;
+    fanout) f="$(cd "$(dirname "$0")" && pwd)/fanout.sh" ;;
     import-speckit) f="$(cd "$(dirname "$0")" && pwd)/import-speckit.sh" ;;
     *) die "unknown script: $1" ;;
   esac
@@ -127,6 +131,8 @@ case "$INTENT" in
   trace) sib trace "${ARGS[@]}" ;;
   analyze) sib analyze "${ARGS[@]}" ;;
   baseline) sib baseline "${ARGS[@]}" ;;
+  discover) sib discover "${ARGS[@]}" ;;
+  fanout) sib fanout "${ARGS[@]}" ;;
   import-speckit) sib import-speckit "${ARGS[@]}" ;;
   verify) need_slug; sib check-spec "$SPEC" --root "$ROOT" ${REST[@]+"${REST[@]}"} ;;
 

@@ -44,6 +44,64 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ---
 
+## agentic-agile [1.1.0] — 2026-10-12
+
+### Added
+
+- **`discover` — a deep search that returns one list, not a wall of matches.** `scripts/discover
+  <slug>` sweeps every text file under the project for one regular expression per facet
+  (`--pattern`, repeatable), normalizes findings the agent produced elsewhere — web, MCP,
+  tracker, another tool — through `--from FILE`, deduplicates by location and text, and writes
+  `plans/initiatives/<slug>/inventory.md`: one row per item with a stable `I###`, its
+  `path:line`, the facet that found it, and its label (**Verified** for a line read this run,
+  **Documented** for an external list). Bounded by design — a text-extension allow-list,
+  `--include` / `--exclude` globs, `--max-bytes`, and `--limit` (default 200) that says when it
+  truncated. Read-only except that one file, no network, Phase 0 gate first. The judgement half
+  of a deep search — facet expansion, source order, saturation, contrasting findings with the
+  real system — is the agent's protocol in `frameworks/discover.md`.
+- **`fanout` — one list becomes many self-contained SDD briefs, each routed to a model tier.**
+  `scripts/fanout <slug> --from <list>` reads an inventory, a `tasks.md`, a converge dump, or any
+  Markdown table or numbered list, and writes one brief per item into
+  `specs/<slug>/dispatch/<D###>-<slug>.md` plus the manifest `specs/<slug>/dispatch.md`. A brief
+  (`templates/dispatch-task.md`) carries the item verbatim with its location, the `FR-###` it
+  serves, the project facts the executor cannot infer, a **file allow-list** that is its blast
+  radius, a tagged Gherkin criterion with the exact command that proves it, the escalation rule,
+  and its own resolved runner command — so the cheapest capable model can execute it without the
+  rest of the project in context. Filters for real work only: `--priority P1`, `--only IDS`,
+  `--limit` (default 50), and rows whose Status is done or dropped are skipped.
+- **Model routing is the team's decision, recorded once.** `templates/capabilities.md` gained
+  five Slots rows — `Search`, `Model · small`, `Model · default`, `Model · deep`, and
+  `Agent runner` (a one-line command with `{{MODEL}}` and `{{BRIEF}}` placeholders). `fanout`
+  reads them, `--model-tier` picks the tier and `--model NAME` overrides it; when a tier is not
+  recorded the script **asks with numbered options instead of choosing**, because the cost of the
+  wrong model is the team's to accept. Any agent that takes a prompt and a model flag runs a
+  brief — Claude Code, opencode, antigravity, cursor, codex, gemini-cli — so the exact flags
+  stay in each tool's documentation and `frameworks/fanout.md` guarantees only that a brief needs
+  nothing but a model and a path.
+- **Guardrails are part of the fan-out, not an afterthought** (`frameworks/fanout.md`): autonomy
+  ceiling N3, the never-delegated list holding at every tier, the executor never editing the
+  spec, parallel briefs only where the allow-lists are disjoint, an `unmapped` requirement being
+  a stop rather than a default, results coming back as numbered proposals for `tasks.md` and
+  `verification.md`, and `scripts/trace` — not a row saying done — closing the loop. A brief
+  that returns `blocked` escalates to the next tier with its question added, never by relaxing
+  its allow-list.
+- `aa discover` and `aa fanout` dispatch both from the single entry point, with `.sh` / `.ps1`
+  twins, parity cases and goldens, and the end-to-end example exercising them in every shell.
+  New example: `examples/discover-fanout.md`.
+
+### Changed
+
+- **Two template families are one file each, so the skill stays under 100 files.** The Cisco
+  `skill-scanner` used by skills.sh raises `EXCESSIVE_FILE_COUNT` above `max_file_count = 100`, and
+  the nine files this release adds would have crossed it. No content was dropped: the six sprint
+  ceremony templates (planning, daily, review, retro, report and the three status reports) are now
+  `templates/sprint-ceremonies.md` parts A to H, and the four work-item templates (draft, bug, idea
+  assessment, QA regression) are `templates/work-items.md` parts A to D — the same
+  several-templates-in-one-file pattern `status-reports.md` already used, with each part naming the
+  artifact path it is copied to. The agent copies the part, never the file. 107 → **99 files**.
+
+---
+
 ## agentic-agile [1.0.2] — 2026-10-07
 
 ### Added

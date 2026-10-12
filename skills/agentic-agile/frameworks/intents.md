@@ -16,6 +16,8 @@ Slash commands exist only in some agents. Intents work in all of them: the user 
 | `analyze` | Cross-artifact consistency, then the semantic pass | [`analyze.md`](analyze.md) | `analyze` |
 | `trace` | Requirement → scenario → task → test → verdict matrix | [`traceability.md`](traceability.md) | `trace` |
 | `converge` | Classify code ↔ spec gaps, append convergence tasks | [`converge.md`](converge.md) | `trace`, `analyze` (grouped by `aa converge`) |
+| `discover` | Deep search: expand facets, sweep the project, normalize external findings into one inventory with stable IDs | [`discover.md`](discover.md) | `discover <slug> --pattern RE` / `--from FILE` |
+| `fanout` | Split that list into one self-contained brief per item, each routed to a model tier | [`fanout.md`](fanout.md), `templates/dispatch-task.md` | `fanout <slug> --from <list>` |
 | `verify` | `verification.md` with evidence per requirement | `templates/verification.md` | `check-spec`, `trace` |
 | `baseline` | Record or check accepted existing findings | [`brownfield.md`](brownfield.md) | `baseline` |
 | `audit` | Hygiene of the team's system | [`sdd-phases.md`](sdd-phases.md#hygiene-after-phase-0) | `audit-agile` |

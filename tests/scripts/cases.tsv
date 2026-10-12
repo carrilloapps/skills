@@ -166,3 +166,28 @@ init-vcs-versioned	init	init	-	--vcs versioned	0
 init-vcs-ignored	init	init	-	--vcs ignored	0
 init-vcs-ignored-present	init	init	init-vcs-seed	--vcs ignored	0
 init-vcs-bad	init	init	-	--vcs maybe	3
+discover-sweep	repo	discover	-	demo --root agile-project --pattern FR-001 --pattern @P1 --skip-structure --dry-run	0
+discover-json	repo	discover	-	demo --root agile-project --pattern FR-001 --skip-structure --dry-run --json	0
+discover-none	repo	discover	-	demo --root agile-project --pattern ZZZNOPE --skip-structure --dry-run	1
+discover-include	repo	discover	-	demo --root agile-project --pattern FR-001 --include specs/good/spec.md --skip-structure --dry-run --json	0
+discover-badslug	repo	discover	-	Demo_X --root agile-project --pattern FR-001	3
+discover-nopattern	repo	discover	-	demo --root agile-project --skip-structure	3
+discover-badout	repo	discover	-	demo --root agile-project --pattern FR-001 --out ../x.md --skip-structure	3
+discover-gate	repo	discover	-	demo --root project-empty --pattern FR-001	1
+discover-write	skill	discover	aa-dispatch/proj	fresh --pattern FR-001 --skip-structure --limit 2	0
+discover-exists	skill	discover	aa-dispatch/proj	demo --pattern FR-001 --skip-structure	1
+discover-from	skill	discover	aa-dispatch/proj	demo --from plans/initiatives/demo/raw-list.md --skip-structure --out plans/initiatives/demo/relayed.md	0
+fanout-write	skill	fanout	aa-dispatch/proj	demo --skip-structure --limit 2	0
+fanout-priority	skill	fanout	aa-dispatch/proj	demo --skip-structure --priority P1 --model-tier deep	0
+fanout-list	skill	fanout	aa-dispatch/proj	demo --from plans/initiatives/demo/raw-list.md --skip-structure	0
+fanout-tasks	skill	fanout	aa-dispatch/proj	good --from specs/good/tasks.md --skip-structure --model m9	0
+fanout-exists	skill	fanout	aa-dispatch/proj	pre --skip-structure	0
+fanout-json	repo	fanout	-	demo --root aa-dispatch/proj --skip-structure --limit 2 --dry-run --json	0
+fanout-only	repo	fanout	-	demo --root aa-dispatch/proj --skip-structure --only I002,I003 --dry-run	0
+fanout-nosource	repo	fanout	-	demo --root agile-project --skip-structure	3
+fanout-badtier	repo	fanout	-	demo --root aa-dispatch/proj --model-tier huge	3
+fanout-noitem	repo	fanout	-	demo --root aa-dispatch/proj --from specs/.gitkeep --skip-structure	1
+fanout-gate	repo	fanout	-	demo --root aa-dispatch/proj	1
+aa-discover	skill	aa	aa-dispatch/proj	discover demo --pattern FR-001 --skip-structure --dry-run	0
+aa-fanout	skill	aa	aa-dispatch/proj	fanout demo --skip-structure --limit 1 --dry-run	0
+fanout-tier-na	repo	fanout	-	demo --root aa-dispatch/proj --skip-structure --model-tier default --limit 1 --dry-run	0

@@ -1,0 +1,6 @@
+fanout — . (demo)
+1. create specs/demo/dispatch/D001-hand-built-due-date-for-fr-001.md (I001, Req FR-001, small/small-model-1)
+2. create specs/demo/dispatch.md
+Truncated at --limit 1; the list has more items than this dispatch covers.
+No specs/demo/spec.md yet: the briefs point at it, so run 'aa specify demo' and fill Phase 1 before dispatching them.
+Result: 1 brief(s) from plans/initiatives/demo/inventory.md — would create 1, skip 0 (dry run)

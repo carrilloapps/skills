@@ -16,6 +16,11 @@ The skill talks to **capabilities**, not vendors. `plans/agile/capabilities.md` 
 | **Warehouse / semantic layer** | Business data and metrics | dbt Semantic Layer, Metabase, a read-only SQL MCP | Which values exist, what volume moves |
 | **Code graph** | How the code works today | codegraph (via `devils-advocate` capabilities) | Contrast and blast radius |
 | **Doc / memory graph** | Search over project docs and `plans/` | docgraph (via `ai-rules` capabilities) | Finding prior decisions and specs |
+| **Search** | Deep search beyond the repository sweep | A code or doc graph, a tracker search, scoped web search | Expanding a question into facets — [`discover.md`](discover.md) |
+| **Model · small / default / deep** | Which model identifier each tier maps to | Any model the team pays for | Routing a fan-out brief to the cheapest capable model — [`fanout.md`](fanout.md) |
+| **Agent runner** | The one-line command that runs a brief | `claude -p --model …`, or another agent's run subcommand | Executing a brief with `{{MODEL}}` and `{{BRIEF}}` substituted |
+
+The last four slots are read by `scripts/fanout`, not called over MCP: they are local configuration, so no availability check applies. An empty cell closes the Phase 0 gate like any other slot — a team that does not route by model writes `not applicable`, and fanout then asks for the model instead of assuming one.
 
 ## Availability rule
 

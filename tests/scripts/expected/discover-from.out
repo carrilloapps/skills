@@ -1,0 +1,5 @@
+discover — . (demo)
+I001 src/api/export.ts:12 — missing auth check on the export route
+I002 - — pagination is unbounded in listInvoices() for FR-003
+I003 - — plain finding with no location
+Result: 3 item(s) from 1 source(s) — wrote plans/initiatives/demo/relayed.md

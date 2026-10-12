@@ -46,6 +46,11 @@ for r in "${RUNNERS[@]}"; do
   run "[$cmd] baseline --write --dry-run" $cmd "$S/baseline.$ext" --write --dry-run --root "$WORK" --today 2026-10-05
   run "[$cmd] doctor" $cmd "$S/doctor.$ext" --root "$WORK" --today 2026-10-05
   run "[$cmd] aa converge" $cmd "$S/aa.$ext" converge invoice-reminders --root "$WORK"
+  # discover writes the inventory (--force, so every runner rewrites the same file); fanout then
+  # reads it in --dry-run, which keeps the project identical for the next runner. tasks.md is not
+  # the source here on purpose: every task in the finished example is done, and fanout skips those.
+  run "[$cmd] discover" $cmd "$S/discover.$ext" invoice-reminders --root "$WORK" --pattern 'FR-00[0-9]' --limit 5 --force
+  run "[$cmd] fanout --dry-run" $cmd "$S/fanout.$ext" invoice-reminders --root "$WORK" --dry-run --limit 3
 done
 
 [ $KEEP -eq 1 ] || rm -rf "$WORK"

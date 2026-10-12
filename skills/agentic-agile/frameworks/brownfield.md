@@ -13,7 +13,7 @@ For a system that already exists without specs. The goal is a living spec that m
    - `domain-model.md` — entities and state machines from schemas and models;
    - `contracts/` — the current public surface as OpenAPI/AsyncAPI, if none exists.
 4. Label everything **Proposed** with the file that proves it (`src/orders/service.ts:42`). Behavior nobody can explain becomes an open question, not a requirement.
-5. The owner role confirms each FR before the spec leaves *Draft*. Confirmed requirements are what the code does — intended or not; bugs found here go to `templates/bug.md`, not into the spec.
+5. The owner role confirms each FR before the spec leaves *Draft*. Confirmed requirements are what the code does — intended or not; bugs found here go to `templates/work-items.md` (part B), not into the spec.
 
 ## 2. Baseline existing findings
 

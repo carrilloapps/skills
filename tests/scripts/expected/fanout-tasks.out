@@ -1,0 +1,7 @@
+fanout — . (good)
+1. create specs/good/dispatch/D001-write-the-failing-export-test.md (T002, Req FR-001, small/m9)
+2. create specs/good/dispatch/D002-write-the-failing-refusal-test.md (T003, Req FR-002, small/m9)
+3. create specs/good/dispatch.md
+No specs/good/spec.md yet: the briefs point at it, so run 'aa specify good' and fill Phase 1 before dispatching them.
+Runner command not recorded in plans/agile/capabilities.md (Slots row 'Agent runner'); the briefs carry the generic shape with <agent-cli> to fill in.
+Result: 2 brief(s) from specs/good/tasks.md — created 2, skipped 0, manifest specs/good/dispatch.md

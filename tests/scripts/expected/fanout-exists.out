@@ -1,0 +1,6 @@
+fanout — . (pre)
+1. skip specs/pre/dispatch/D001-already-dispatched-item.md (exists)
+2. skip specs/pre/dispatch.md (exists)
+No specs/pre/spec.md yet: the briefs point at it, so run 'aa specify pre' and fill Phase 1 before dispatching them.
+Unmapped: 1 brief(s) serve no FR-### — map them in specs/pre/tasks.md before implementation, or drop them as not-work.
+Result: 1 brief(s) from plans/initiatives/pre/inventory.md — created 0, skipped 1, manifest specs/pre/dispatch.md

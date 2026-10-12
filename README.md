@@ -19,7 +19,7 @@
 | [🔴 **devils-advocate**](skills/devils-advocate/) | Adversarial pre-execution gate — risk-scaled, evidence-based critique that returns a corrected plan and waits for your approval | [![v3.0.1](https://img.shields.io/badge/v3.0.1-blue.svg)](CHANGELOG.md) | `npx skills add carrilloapps/skills@devils-advocate` |
 | [🛡️ **sar-cybersecurity**](skills/sar-cybersecurity/) | Automated Security Assessment Report (SAR) generator — deep cybersecurity analysis mapped to 21 baseline compliance standards | [![v2.0.1](https://img.shields.io/badge/v2.0.1-blue.svg)](CHANGELOG.md) | `npx skills add carrilloapps/skills@sar-cybersecurity` |
 | [📋 **ai-rules**](skills/ai-rules/) | Personal behavioral rules for AI tools — documentation discipline, secure practices, code quality, version control, and structured estimation | [![v1.1.1](https://img.shields.io/badge/v1.1.1-blue.svg)](CHANGELOG.md) | `npx skills add carrilloapps/skills@ai-rules` |
-| [🔁 **agentic-agile**](skills/agentic-agile/) | Spec-driven development on Scrum with agentic agility — gated specs and plans, ceremonies, autonomy levels, attribution, transcripts and MCP integrations by capability | [![v1.0.2](https://img.shields.io/badge/v1.0.2-blue.svg)](CHANGELOG.md) | `npx skills add carrilloapps/skills@agentic-agile` |
+| [🔁 **agentic-agile**](skills/agentic-agile/) | Spec-driven development on Scrum with agentic agility — gated specs and plans, ceremonies, autonomy levels, attribution, transcripts and MCP integrations by capability | [![v1.1.0](https://img.shields.io/badge/v1.1.0-blue.svg)](CHANGELOG.md) | `npx skills add carrilloapps/skills@agentic-agile` |
 | [📓 **postmortem-writing**](skills/postmortem-writing/) | Blameless incident postmortems — deterministic SEV1–SEV4 rubric, attributed timeline, contributing factors, verifiable actions, and lessons that feed devils-advocate | [![v1.0.0](https://img.shields.io/badge/v1.0.0-blue.svg)](CHANGELOG.md) | `npx skills add carrilloapps/skills@postmortem-writing` |
 
 ---
@@ -509,7 +509,7 @@ Defines the baseline behavioral contract that all AI agents must follow. Works a
 <details>
 <summary><b>🔁 Agentic Agile</b> — Spec-driven development (SDD) on Scrum, run by agents with explicit autonomy limits. Covers everything GitHub Spec Kit and AI Unified Process lead in (constitution, requirement IDs and traceability, clarify, analyze, converge, brownfield baseline) and adds a verified team operating system, Scrum, autonomy levels, attribution, transcripts, and deterministic validators in CI</summary>
 
-**Install** `npx skills add carrilloapps/skills@agentic-agile` · [Skill folder](skills/agentic-agile/) · [Full documentation](skills/agentic-agile/README.md) · [![v1.0.2](https://img.shields.io/badge/v1.0.2-blue.svg)](skills/agentic-agile/README.md)
+**Install** `npx skills add carrilloapps/skills@agentic-agile` · [Skill folder](skills/agentic-agile/) · [Full documentation](skills/agentic-agile/README.md) · [![v1.1.0](https://img.shields.io/badge/v1.1.0-blue.svg)](skills/agentic-agile/README.md)
 
 | Area | What it provides |
 |---|---|
@@ -522,7 +522,8 @@ Defines the baseline behavioral contract that all AI agents must follow. Works a
 | Integrations | Capability slots (tracker, docs, observability, transcripts, warehouse, chat, code graph) checked before use — never invented |
 | Layout | `specs/<initiative>/` and `plans/` (team operating system in `plans/agile/`, sprints, initiatives, decisions, drafts) versioned; raw transcripts only in `.memory/local/` |
 | Traceability and analysis | `trace` (requirement → scenario → task → ticket → test → verdict), `analyze` (deterministic cross-artifact checks, CRITICAL–LOW), `baseline` (brownfield: only new findings fail), `import-speckit` (migrate GitHub Spec Kit projects) |
-| Scripts | `aa <intent>` single entry point (specify · clarify · plan · tasks · verify · trace · analyze · converge · …), `init --preset scrum\|kanban\|regulated`, `check-structure` (`--scorecard`), `check-spec` (`--all`, `--tickets`), `trace`, `analyze`, `baseline`, `audit-agile`, `doctor`, `import-speckit`, `transcript-normalize`, `lab-probe` — twin `.sh` + `.ps1` with parity tests (Linux, macOS, Windows) and an end-to-end example validated in CI |
+| Deep search and fan-out | `discover` turns a question into **one list** — one regular expression per facet plus the findings the agent gathered elsewhere, deduplicated, with `path:line` evidence and stable `I###` IDs. `fanout` splits that list into self-contained briefs (item verbatim, requirement, file allow-list, Gherkin criterion, escalation rule) routed to the model tier the team recorded in `capabilities.md` — cheapest capable model executes, judgement stays at the top tier, and any agent that takes a prompt and a model flag can run a brief |
+| Scripts | `aa <intent>` single entry point (specify · clarify · plan · tasks · verify · trace · analyze · converge · discover · fanout · …), `init --preset scrum\|kanban\|regulated`, `check-structure` (`--scorecard`), `check-spec` (`--all`, `--tickets`), `trace`, `analyze`, `baseline`, `discover`, `fanout`, `audit-agile`, `doctor`, `import-speckit`, `transcript-normalize`, `lab-probe` — twin `.sh` + `.ps1` with parity tests (Linux, macOS, Windows) and an end-to-end example validated in CI |
 
 → Full documentation: [`skills/agentic-agile/README.md`](skills/agentic-agile/README.md)
 
@@ -679,13 +680,13 @@ carrilloapps/skills/
 │   └── sync.sh · sync.ps1            ← vendor shared scripts into every skill (--check in CI)
 ├── skills/
 │   ├── agentic-agile/                ← SKILL.md · README.md · metadata.json
-│   │   ├── examples/                 ← 9 reference examples (incl. end-to-end, validated in CI)
-│   │   ├── frameworks/               ← 20 frameworks + lab-catalog.tsv
+│   │   ├── examples/                 ← 10 reference examples (incl. end-to-end, validated in CI)
+│   │   ├── frameworks/               ← 23 frameworks + lab-catalog.tsv
 │   │   ├── presets/                  ← kanban/ · regulated/ (scrum = templates/)
-│   │   ├── scripts/                  ← 12 scripts × (.sh / .ps1): aa, analyze, audit-agile, baseline,
-│   │   │                                check-spec, check-structure, doctor, import-speckit, init,
-│   │   │                                lab-probe, trace, transcript-normalize
-│   │   └── templates/                ← 35 templates
+│   │   ├── scripts/                  ← 14 scripts × (.sh / .ps1): aa, analyze, audit-agile, baseline,
+│   │   │                                check-spec, check-structure, discover, doctor, fanout,
+│   │   │                                import-speckit, init, lab-probe, trace, transcript-normalize
+│   │   └── templates/                ← 29 templates (families bundled: sprint-ceremonies, work-items)
 │   ├── ai-rules/                     ← SKILL.md · README.md · metadata.json
 │   │   ├── frameworks/               ← capabilities.md, docker-lab.md + lab-catalog.tsv
 │   │   └── scripts/                  ← lab-probe (.sh / .ps1, vendored)

@@ -11,6 +11,8 @@ Intents:
 9. trace / analyze / baseline        traceability, cross-artifact analysis, accepted findings
 10. audit                            hygiene of the team's system (scripts/audit-agile)
 11. converge <slug>                  trace + analyze gaps as numbered next tasks
-12. import-speckit [--from DIR] [--write]  convert a Spec Kit project (dry run by default)
-13. help                             this list
+12. discover <slug> --pattern RE     deep sweep into plans/initiatives/<slug>/inventory.md (scripts/discover)
+13. fanout <slug> [--from FILE]      one self-contained SDD brief per item (scripts/fanout)
+14. import-speckit [--from DIR] [--write]  convert a Spec Kit project (dry run by default)
+15. help                             this list
 Common option: --root DIR (project root, default: current directory).

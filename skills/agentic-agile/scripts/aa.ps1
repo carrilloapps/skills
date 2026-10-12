@@ -29,8 +29,10 @@ function Show-Usage {
   Write-Output '9. trace / analyze / baseline        traceability, cross-artifact analysis, accepted findings'
   Write-Output '10. audit                            hygiene of the team''s system (scripts/audit-agile)'
   Write-Output '11. converge <slug>                  trace + analyze gaps as numbered next tasks'
-  Write-Output '12. import-speckit [--from DIR] [--write]  convert a Spec Kit project (dry run by default)'
-  Write-Output '13. help                             this list'
+  Write-Output '12. discover <slug> --pattern RE     deep sweep into plans/initiatives/<slug>/inventory.md (scripts/discover)'
+  Write-Output '13. fanout <slug> [--from FILE]      one self-contained SDD brief per item (scripts/fanout)'
+  Write-Output '14. import-speckit [--from DIR] [--write]  convert a Spec Kit project (dry run by default)'
+  Write-Output '15. help                             this list'
   Write-Output 'Common option: --root DIR (project root, default: current directory).'
 }
 
@@ -95,6 +97,8 @@ switch -CaseSensitive ($Intent) {
   'trace' { Invoke-Sib 'trace' $Argv }
   'analyze' { Invoke-Sib 'analyze' $Argv }
   'baseline' { Invoke-Sib 'baseline' $Argv }
+  'discover' { Invoke-Sib 'discover' $Argv }
+  'fanout' { Invoke-Sib 'fanout' $Argv }
   'import-speckit' { Invoke-Sib 'import-speckit' $Argv }
   'verify' { Use-Slug; Invoke-Sib 'check-spec' (@($script:Spec, '--root', $Root) + $Rest) }
 

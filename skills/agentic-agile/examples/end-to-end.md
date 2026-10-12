@@ -2,7 +2,7 @@
 
 > ⚠️ **Example only** — a fictional mini project (an "overdue invoice reminders" feature). Each `### path` section below is one file of the project; none of it is real code to run.
 
-**Skill version**: 1.0.2
+**Skill version**: 1.1.0
 
 Recreate the files under any folder (empty folders: `plans/drafts/`) and point the scripts at it with `--root <folder>`. Verified 2026-10-06 by `tests/scripts/run-e2e.sh` of the skills repository (bash, pwsh 7, Windows PowerShell 5.1): the extracted tree passes `check-structure --strict`, `check-spec --strict --tickets`, `check-spec --all`, `trace`, `analyze`, and `audit-agile`.
 
@@ -226,6 +226,11 @@ Confirmed by: Scrum master — 2026-10-01
 | Warehouse / semantic layer | none | | | enrichment |
 | Code graph | codegraph | | | enrichment |
 | Doc / memory graph | none | | | enrichment |
+| Search | ripgrep + scripts/discover | | | owning |
+| Model · small | claude-haiku-5-5 | | | owning |
+| Model · default | claude-sonnet-5-5 | | | owning |
+| Model · deep | claude-opus-5 | | | owning |
+| Agent runner | claude -p --model {{MODEL}} "Execute the brief at {{BRIEF}}" | | | owning |
 
 ## Authorized third-party capabilities (four questions)
 

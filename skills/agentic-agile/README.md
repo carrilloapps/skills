@@ -3,7 +3,7 @@
 > **Spec-Driven Development on Scrum, run with an agent that drafts, checks, and connects — and never decides for the team.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-red.svg)](../../LICENSE)
-[![Version](https://img.shields.io/badge/version-1.0.2-blue.svg)](../../CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.1.0-blue.svg)](../../CHANGELOG.md)
 [![skill.sh](https://img.shields.io/badge/skill.sh-agentic--agile-black.svg)](https://skills.sh/carrilloapps/skills/agentic-agile)
 [![GitHub](https://img.shields.io/badge/GitHub-carrilloapps-181717.svg?logo=github)](https://github.com/carrilloapps/skills)
 
@@ -20,6 +20,7 @@ Agentic Agile is an [agent skill](https://skills.sh) for 70+ AI coding agents. I
 - **Tasks with parallelism** — `T###`, `[P]`, `Req`, dependencies validated for cycles, Fibonacci after the vote, P1 as an independently shippable MVP
 - **Brownfield and migration** — reverse-engineer specs from existing code, baseline existing findings so only new ones fail, and `import-speckit` for Spec Kit projects
 - **Domain model, contracts, process** — Mermaid entity and state diagrams, OpenAPI/AsyncAPI with `x-requirements`, process flows whose paths become end-to-end scenarios
+- **Deep search and fan-out with model routing** — `discover` turns a question into one list with stable IDs and `path:line` evidence; `fanout` splits that list into self-contained briefs (item, requirement, file allow-list, Gherkin criterion, escalation rule) routed to the model tier the team recorded, so the cheapest capable model executes while judgement stays at the top tier — in Claude Code, opencode, antigravity, cursor, codex, or any agent that takes a prompt and a model flag
 - **Presets and intents** — `init --preset scrum|kanban|regulated`; `aa <intent>` as one entry point that works in every agent
 - **Full Gherkin** — en/es grammar (Rule/Regla, Background/Antecedentes, Scenario Outline/Esquema, Examples, tags, data tables, doc strings, `# language:`), Given/When/Then in every scenario, `Origin:` per scenario, QA test cases in Gherkin (1 happy + 1 negative per failure mode + edge cases), results only with evidence
 - **Scrum ceremonies mapped to agent actions** — pre-refinement from transcripts, adversarial refinement, capacity planning with cross-team dependencies, daily and weekly health, review, close with KPI gate zero and seven close phases, retro, quarterly review, executive summaries, blameless postmortems, decisions
@@ -40,8 +41,8 @@ Per-agent paths, global installs, and manual install → [`docs/INSTALL.md`](../
 
 ## Project layout
 
-1. `specs/<initiative>/` — spec, requirements checklist, design, domain model, contracts, process, tasks, verification (versioned).
-2. `plans/agile/` — the team's operating system incl. constitution and hooks; `plans/sprints/`, `plans/initiatives/`, `plans/decisions/`, `plans/drafts/` (versioned).
+1. `specs/<initiative>/` — spec, requirements checklist, design, domain model, contracts, process, tasks, verification, plus `dispatch.md` and `dispatch/` when a list is fanned out (versioned).
+2. `plans/agile/` — the team's operating system incl. constitution and hooks; `plans/sprints/`, `plans/initiatives/` (overview, `inventory.md` from a deep search, tickets), `plans/decisions/`, `plans/drafts/` (versioned).
 3. `.memory/local/agentic-agile/` — raw and normalized transcripts only (never versioned).
 4. Nothing is written to global agent directories. Full layout: `SKILL.md` §2.
 
@@ -56,6 +57,8 @@ To run the scripts yourself, call them from your project root through the folder
 bash .agents/skills/agentic-agile/scripts/aa.sh init --root .
 bash .agents/skills/agentic-agile/scripts/aa.sh structure --root .
 bash .agents/skills/agentic-agile/scripts/aa.sh specify invoice-reminders --root .
+bash .agents/skills/agentic-agile/scripts/aa.sh discover invoice-reminders --pattern 'TODO' --root .
+bash .agents/skills/agentic-agile/scripts/aa.sh fanout invoice-reminders --priority P1 --root .
 ```
 
 ```powershell
@@ -72,13 +75,15 @@ Every script exists as `.sh` and `.ps1` with identical behavior; the agent runs 
 
 | Script | What it does (flags: `--help`) |
 |--------|-------------------------------|
-| `aa <intent>` | Single entry point: `init`, `structure`, `doctor`, `specify`, `clarify`, `plan`, `tasks`, `analyze`, `trace`, `converge`, `verify`, `baseline`, `audit`, `import-speckit` |
+| `aa <intent>` | Single entry point: `init`, `structure`, `doctor`, `specify`, `clarify`, `plan`, `tasks`, `analyze`, `trace`, `converge`, `discover`, `fanout`, `verify`, `baseline`, `audit`, `import-speckit` |
 | `init` | Scaffolds `plans/agile/`, `plans/{sprints,initiatives,decisions,drafts}/`, `specs/`, `.memory/.gitignore`; presets `scrum`, `kanban`, `regulated`; never overwrites |
 | `check-structure` | **Phase 0 gate** — `plans/agile/` complete and confirmed; `--scorecard` adds maturity L0–L4 and a readiness score |
 | `check-spec` | Runs the gate, then validates spec, Gherkin, clarifications, checklist, tasks, verification; `--tickets` for work items, `--all` for every initiative |
 | `analyze` | Cross-artifact consistency with CRITICAL–LOW severities and stable IDs, read-only |
 | `trace` | Requirement → scenario → task → ticket → test → verdict matrix |
 | `baseline` | Records accepted existing findings; `--check` fails only on new ones |
+| `discover` | Deep sweep (`--pattern`, repeatable) plus external lists (`--from`) → `plans/initiatives/<slug>/inventory.md`, one row per item with `path:line`, stable `I###` IDs, dedupe, `--limit` |
+| `fanout` | One self-contained brief per item → `specs/<slug>/dispatch/`, each with its file allow-list, acceptance criteria, escalation rule and model tier; `--priority`, `--only`, `--model-tier`, `--model` |
 | `import-speckit` | Converts a Spec Kit project (`.specify/`, `specs/NNN-*`) into `plans/agile/` + `specs/`; dry run by default |
 | `audit-agile` | Hygiene: overdue decision reviews, template drift, broken links, sprints without a report, Done initiatives without a passing verification |
 | `doctor` | One screen: gate, scorecard, hygiene, Docker lab availability, capability gaps, lettered next actions |
@@ -90,8 +95,9 @@ Every script exists as `.sh` and `.ps1` with identical behavior; the agent runs 
 | Area | Frameworks | Templates |
 |------|-----------|-----------|
 | SDD | `sdd-phases.md`, `gherkin.md`, `clarify.md`, `analyze.md`, `traceability.md`, `converge.md`, `brownfield.md`, `intents.md` | spec, requirements-checklist, design, domain-model, process, tasks, verification, constitution, hooks, bug, idea-assessment |
-| Ceremonies | `scrum-ceremonies.md`, `estimation-capacity.md`, `kpi.md` | sprint-planning, daily, status-reports (weekly, quarterly, executive), sprint-review, sprint-report, retro |
-| Delivery | `delivery.md` | work-item-draft, ticket-conventions, initiative-overview, impact-analysis, migration-plan, spike-poc, qa-regression |
+| Search and fan-out | `discover.md`, `fanout.md` | dispatch, dispatch-task |
+| Ceremonies | `scrum-ceremonies.md`, `estimation-capacity.md`, `kpi.md` | sprint-ceremonies (planning, daily, review, retro, report, weekly, quarterly, executive — one file, copy the part) |
+| Delivery | `delivery.md` | work-items (draft, bug, idea assessment, QA regression — one file, copy the part), ticket-conventions, initiative-overview, impact-analysis, migration-plan, spike-poc |
 | Learning | `scrum-ceremonies.md` (postmortem flow) | postmortem, decision-record |
 | Team and tools | `agentic-agility.md`, `integrations.md`, `transcripts.md`, `team-safety.md`, `capabilities.md`, `docker-lab.md` | methodology, definition-of-ready, definition-of-done, ceremonies, team, capabilities, kpi-directives, language, autonomy |
 | Presets | `presets.md` | `presets/scrum`, `presets/kanban` (flow, WIP limits), `presets/regulated` (audit trail, segregation of duties) |
@@ -110,6 +116,7 @@ Every script exists as `.sh` and `.ps1` with identical behavior; the agent runs 
 | [`decision-record.md`](examples/decision-record.md) | Decision with who decided and a review date |
 | [`pr-conformance.md`](examples/pr-conformance.md) | PR checked against the spec; unmapped change sent back to Phase 1 |
 | [`postmortem.md`](examples/postmortem.md) | Blameless postmortem with owned actions |
+| [`discover-fanout.md`](examples/discover-fanout.md) | Deep search → inventory → briefs run by a small model → one blocked brief escalated to a human |
 
 ## Works with the other skills
 

@@ -16,6 +16,13 @@
 | Warehouse / semantic layer | | | | enrichment |
 | Code graph | | | | enrichment |
 | Doc / memory graph | | | | enrichment |
+| Search | | | | enrichment |
+| Model · small | | | | owning |
+| Model · default | | | | owning |
+| Model · deep | | | | owning |
+| Agent runner | | | | owning |
+
+The last five rows are read by `scripts/fanout`. **Model · small / default / deep** hold the model identifier each tier maps to — small is the cheapest model that can execute a self-contained brief, deep is the one reserved for design and ambiguity; put the identifier in the *Tool / MCP* column. **Agent runner** holds the one-line command that runs a brief in the team's agent, with `{{MODEL}}` and `{{BRIEF}}` as placeholders (for example `claude -p --model {{MODEL}} "Execute the brief at {{BRIEF}}"`); fill it from that agent's own `--help`. Like every other slot, an empty cell keeps the Phase 0 gate closed: a team that does not route by model writes `not applicable`, and fanout then asks for the model instead of assuming one.
 
 ## Authorized third-party capabilities (four questions)
 

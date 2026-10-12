@@ -200,6 +200,8 @@ build/
 # specs and operating system, and most teams want them in review and history.
 # This repository keeps them out of git on purpose: it is a public skill
 # catalogue, and its Phase 0 artifacts are a working example, not a product.
-# To version them in your project, delete these three lines.
-plans/
-specs/
+# To version them in your project, delete these two lines. They are anchored to the
+# repository root on purpose: the test fixtures under tests/scripts/fixtures/ contain
+# plans/ and specs/ trees of their own, and those ARE versioned.
+/plans/
+/specs/

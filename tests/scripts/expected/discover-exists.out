@@ -1,0 +1,3 @@
+discover — . (demo)
+1. skip plans/initiatives/demo/inventory.md (exists)
+Result: plans/initiatives/demo/inventory.md exists; re-run with --force to replace it (IDs are renumbered) or pass --out PATH — FAIL

@@ -1,0 +1,4 @@
+discover — . (fresh)
+I001 plans/initiatives/demo/inventory.md:5 — | I001 | Hand-built due date for FR-001 | src/billing/invoice.ts:88 | S1 | Verified | P1 | open |
+I002 specs/good/tasks.md:6 — | T002 | [P] | FR-001 | Write the failing export test | T001 | 2 | todo |
+Result: 2 item(s) from 1 source(s) — wrote plans/initiatives/fresh/inventory.md

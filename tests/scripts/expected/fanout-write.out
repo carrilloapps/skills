@@ -1,0 +1,8 @@
+fanout — . (demo)
+1. create specs/demo/dispatch/D001-hand-built-due-date-for-fr-001.md (I001, Req FR-001, small/small-model-1)
+2. create specs/demo/dispatch/D002-localized-subject-line-not-iso.md (I002, Req unmapped, small/small-model-1)
+3. create specs/demo/dispatch.md
+Truncated at --limit 2; the list has more items than this dispatch covers.
+No specs/demo/spec.md yet: the briefs point at it, so run 'aa specify demo' and fill Phase 1 before dispatching them.
+Unmapped: 1 brief(s) serve no FR-### — map them in specs/demo/tasks.md before implementation, or drop them as not-work.
+Result: 2 brief(s) from plans/initiatives/demo/inventory.md — created 2, skipped 0, manifest specs/demo/dispatch.md

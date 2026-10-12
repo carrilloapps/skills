@@ -18,7 +18,7 @@ Exit codes: `0` all cases match · `1` at least one mismatch · `3` usage error.
 | Path | Contents |
 |------|----------|
 | `cases.tsv` | One case per row: `name`, `mode`, `impl`, `seed`, `args`, expected `exit` |
-| `fixtures/` | Fixture families: `project-*` (lab-probe), `specs/` (check-spec), `structure/` (check-structure), `agile-project/` + `agile-templates/` (audit-agile, doctor), `aa-*` (`aa`, `import-speckit`, presets, trace, analyze, baseline), `transcripts/`, `catalog-*.tsv`, and `res-*.json` resource snapshots — committed, including their `node_modules/` and `.memory/local/` folders |
+| `fixtures/` | Fixture families: `project-*` (lab-probe), `specs/` (check-spec), `structure/` (check-structure), `agile-project/` + `agile-templates/` (audit-agile, doctor), `aa-*` (`aa`, `import-speckit`, presets, trace, analyze, baseline, `aa-dispatch` for `discover` / `fanout`), `transcripts/`, `catalog-*.tsv`, and `res-*.json` resource snapshots — committed, including their `node_modules/` and `.memory/local/` folders |
 | `expected/` | Golden outputs: `<name>.out` (stdout) and, for file-writing modes, `<name>.tree` (files produced) |
 | `.work/` | Scratch directory for each run (git-ignored) |
 

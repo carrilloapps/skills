@@ -1,0 +1,71 @@
+== plans/agile/capabilities.md
+# Capabilities
+
+## Slots
+
+| Slot | Tool / MCP | Version | Config file (project-level) | Owning or enrichment |
+|------|------------|---------|-----------------------------|----------------------|
+| Tracker | GitHub Issues | | | owning |
+| Model · small | small-model-1 | | | owning |
+| Model · default | not applicable | | | owning |
+| Model · deep | deep-model-1 | | | owning |
+| Agent runner | runner --model {{MODEL}} --brief {{BRIEF}} | | | owning |
+
+== plans/initiatives/demo/inventory.md
+# Inventory: demo
+
+| ID | Item | Location | Source | Label | Priority | Status |
+|----|------|----------|--------|-------|----------|--------|
+| I001 | Hand-built due date for FR-001 | src/billing/invoice.ts:88 | S1 | Verified | P1 | open |
+| I002 | Localized subject line \| not ISO | src/billing/reminder.ts:34 | S1 | Verified | P1 | open |
+| I003 | Export header formats the date inline | src/reports/export.ts:120 | S1 | Verified | P2 | open |
+| I004 | Backfill script, already migrated | scripts/backfill.py:17 | S2 | Documented | P3 | done |
+
+== plans/initiatives/demo/raw-list.md
+# Findings relayed by the agent
+
+1. src/api/export.ts:12 missing auth check on the export route
+2. pagination is unbounded in listInvoices() for FR-003
+- plain finding with no location
+
+== plans/initiatives/pre/inventory.md
+# Inventory: pre
+
+| ID | Item | Location | Source | Label | Priority | Status |
+|----|------|----------|--------|-------|----------|--------|
+| I001 | Already dispatched item | src/pre.ts:1 | S1 | Verified | P1 | open |
+
+== specs/.gitkeep
+
+== specs/good/tasks.md
+# Tasks: good
+
+| ID | P | Req | Task | Depends | Est | Status |
+|----|---|-----|------|---------|-----|--------|
+| T001 | | - | Create the export module skeleton | - | 1 | done |
+| T002 | [P] | FR-001 | Write the failing export test | T001 | 2 | todo |
+| T003 | [P] | FR-002 | Write the failing refusal test | T001 | 1 | todo |
+
+== specs/pre/dispatch.md
+# Dispatch: pre
+
+Source plans/initiatives/pre/inventory.md - 1 brief(s) - small (small-model-1) - N2 - tasks specs/pre/tasks.md
+
+| Brief | Title | Item | Req | Tier | Model | Autonomy | Status | Result |
+|-------|-------|------|-----|------|-------|----------|--------|--------|
+| [D001](dispatch/D001-already-dispatched-item.md) | Already dispatched item | I001 | unmapped | small | small-model-1 | N2 | todo | - |
+
+Runner: runner --model {{MODEL}} --brief {{BRIEF}}
+
+== specs/pre/dispatch/D001-already-dispatched-item.md
+# Brief D001: Already dispatched item
+
+Initiative pre - item I001 from plans/initiatives/pre/inventory.md - req unmapped - N2 - small (small-model-1)
+
+Run: runner --model small-model-1 --brief specs/pre/dispatch/D001-already-dispatched-item.md
+
+Item: Already dispatched item
+Location: src/pre.ts:1
+Spec: specs/pre/spec.md
+Tasks: specs/pre/tasks.md
+Goal: <one sentence written before dispatch>

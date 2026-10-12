@@ -1,0 +1,4 @@
+discover — agile-project (demo)
+I001 specs/good/spec.md:9 — | FR-001 | Sum every cart line | P1 |
+I002 specs/good/spec.md:28 — @smoke @FR-001 @P1
+Result: 2 item(s) from 2 source(s) — would write plans/initiatives/demo/inventory.md (dry run)
