@@ -648,6 +648,24 @@ while IFS= read -r -d '' ps; do
 done < <(find "$REPO_ROOT/skills" "$REPO_ROOT/shared" "$REPO_ROOT/scripts" "$REPO_ROOT/tests/scripts" "$REPO_ROOT/integrations" -name '*.ps1' -not -path '*/.work/*' -print0 2>/dev/null)
 (( PS_ISSUES == 0 )) && ok "All .ps1 files are ASCII outside comments (Windows PowerShell 5.1 safe)"
 
+# ─── Check 33: per-skill file budget (packaging limit) ───────────────────────
+section "Skill file budget"
+BUDGET_ISSUES=0
+for skill_dir in "$REPO_ROOT/skills/"*/; do
+  [ -f "$skill_dir/SKILL.md" ] || continue
+  sname=$(basename "$skill_dir")
+  count=$(find "$skill_dir" -type f | wc -l | tr -d ' ')
+  if (( count > 99 )); then
+    fail "$sname has $count files — over the 99-file budget (skills.sh scanners flag EXCESSIVE_FILE_COUNT above 100; merge files instead of dropping capability)"
+    ((++BUDGET_ISSUES))
+  elif (( count > 95 )); then
+    ok "$sname: $count files — within budget, ${count} of 99 used (little headroom)"
+  else
+    ok "$sname: $count files — within the 99-file budget"
+  fi
+done
+(( BUDGET_ISSUES == 0 )) || true
+
 # ─── Summary ──────────────────────────────────────────────────────────────────
 echo
 echo "════════════════════════════════════════════"

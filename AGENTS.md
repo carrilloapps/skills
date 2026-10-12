@@ -37,6 +37,10 @@ There is no build step. Executable artifacts: `scripts/validate.sh`, `scripts/au
 
 **agentic-agile Phase 0**: agentic-agile enforces a Phase 0 gate — run `skills/agentic-agile/scripts/check-structure` before creating anything under `specs/` or `plans/` (other than `plans/agile/`).
 
+**File budget (required)**: at most **99 files per skill** — the skills.sh scanners raise `EXCESSIVE_FILE_COUNT` above 100. When a skill nears the ceiling, **merge files; never drop capability** (that is why `converge.md` lives inside `traceability.md` and `presets.md` inside `intents.md`). `validate.sh` check 33 fails above 99 and warns from 96.
+
+**Untrusted content protocol (required)**: every skill that ingests third-party content declares the seven-rule protocol in its `SKILL.md` *and* repeats the boundary block at the top of each framework or example that ingests. It is the operational answer to Snyk `W011`; the rules and the injection-recognition list are owned by [`.ai-context.md`](.ai-context.md) → *Mandatory Safeguards Checklist*, item 7.
+
 **Multi-OS script parity (required)**: every skill script ships as a POSIX `.sh` **and** a PowerShell `.ps1` (Windows PowerShell 5.1 and pwsh 7) with identical flags, outputs, exit codes, and side effects — no runtime dependencies, no network, no installs, read-only except documented writes inside the project. A script without its twin fails `validate.sh`.
 
 ## Architecture
@@ -85,10 +89,10 @@ When bumping a skill version, update **all** of:
 
 | Skill | Path | Purpose |
 |-------|------|---------|
-| ai-rules | `skills/ai-rules/SKILL.md` | Behavioral baseline — loads first, defines HOW to act (docs, code quality, language, version control, estimation) |
+| ai-rules | `skills/ai-rules/SKILL.md` | Behavioral baseline — loads first, defines HOW to act (docs, SOLID and Clean Code with measurable thresholds, the advanced `AGENTS.md` template, language, version control, estimation) |
 | Devil's Advocate | `skills/devils-advocate/SKILL.md` | Risk-scaled pre-execution gate (Tiers 0–3) — defines WHETHER to act |
-| SAR Cybersecurity | `skills/sar-cybersecurity/SKILL.md` | Security Assessment Report generator — deterministic scoring, bilingual EN/ES reports |
-| Agentic Agile | `skills/agentic-agile/SKILL.md` | Spec-driven development on Scrum with agentic agility — gated specs/plans, ceremonies, autonomy N0–N4, attribution, transcripts, MCP capability slots |
+| SAR Cybersecurity | `skills/sar-cybersecurity/SKILL.md` | Security Assessment Report generator — deterministic scoring, bilingual EN/ES reports, 20-control pre-launch gate |
+| Agentic Agile | `skills/agentic-agile/SKILL.md` | Spec-driven development on Scrum with agentic agility — gated specs/plans, ceremonies, autonomy N0–N4, attribution, transcripts, MCP capability slots, 100% coverage and mutation test policy |
 | Postmortem Writing | `skills/postmortem-writing/SKILL.md` | Blameless incident postmortems — deterministic SEV1–SEV4 rubric, attributed timeline, verifiable actions, lessons that feed Devil's Advocate |
 
 ## Conventions

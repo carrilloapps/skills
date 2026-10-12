@@ -28,7 +28,16 @@ EVIDENCE: <YYYY-MM-DDTHH:MMZ> · <artifact: test name, CI run, log or screenshot
 
 ## 4.4 Coverage
 
-<Coverage of the changed code; uncovered lines and why. Requirement coverage comes from `trace` — paste its summary line.>
+| Metric | Value | Gate | Verdict |
+|--------|-------|------|---------|
+| Unit coverage, changed code | <n>% lines · <n>% branches | 100% | ✅ / ❌ |
+| Unit coverage, project | <n>% | 100% of the declared set, or the recorded baseline in a brownfield ratchet | ✅ / ❌ |
+| New coverage exclusions | <n> | Each with a row in `docs/coverage-exclusions.md` | ✅ / ❌ |
+| Mutation score, changed files | <n>% | <team minimum> | ✅ / ❌ |
+| Surviving mutants | <n> | Each killed, or declared equivalent with its reason | ✅ / ❌ |
+| `@P1` scenarios with an e2e test | <n> of <n> | All | ✅ / ❌ |
+
+<Uncovered lines and why; surviving mutants and the decision on each. Requirement coverage comes from `trace` — paste its summary line.> Policy: `frameworks/test-policy.md`.
 
 ## 4.5 Verdict
 

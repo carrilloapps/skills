@@ -136,7 +136,7 @@ Also required: module/file map, interface signatures, data-model changes, rollou
 - Scripts and tooling follow multi-OS parity when the project requires it.
 - `implementation.md` is optional: decisions taken while coding, deviations, links to PRs.
 - Tests reference the `FR-###` they verify (name, tag, or comment); `trace` follows them ([`traceability.md`](traceability.md)).
-- After each task phase, converge ([`converge.md`](converge.md)): classify gaps between code and spec and append them as convergence tasks.
+- After each task phase, converge ([`traceability.md` → *Converge*](traceability.md#converge--keeping-code-and-spec-aligned)): classify gaps between code and spec and append them as convergence tasks.
 
 **Gate to Phase 4:** build, linters, and unit tests pass.
 
@@ -149,10 +149,10 @@ Also required: module/file map, interface signatures, data-model changes, rollou
 | 4.1 Test matrix | One row per scenario of 1.2: `Req` (FR/SC), type (unit, integration, e2e, manual), result (✅ ⚠️ ❌), evidence; every FR/SC appears at least once |
 | 4.2 Edge-case battery | Edge cases discovered during implementation, with the passing and failing runs |
 | 4.3 Evidence | Every ✅ points to concrete evidence: test name, CI run, log excerpt, screenshot path |
-| 4.4 Coverage | Coverage of the changed code; uncovered code justified |
+| 4.4 Coverage | 100% of the declared set on changed code — lines, branches, functions, statements; every exclusion registered; mutation score on changed files at or above the team minimum; `@P1` scenarios covered end to end ([`test-policy.md`](test-policy.md) — policy, and the per-stack tooling that enforces it) |
 | 4.5 Verdict | ✅ done · ⚠️ done with a dated follow-up plan · ❌ back to Phase 3 |
 
-**Gate to close:** verdict ✅, or ⚠️ with a follow-up plan linked from `plans/initiatives/<i>/overview.md`.
+**Gate to close:** verdict ✅, or ⚠️ with a follow-up plan linked from `plans/initiatives/<i>/overview.md`. A coverage, mutation, or security gate that was lowered instead of met is not a ⚠️ — it is ❌ until the team records the decision.
 
 ---
 

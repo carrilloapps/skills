@@ -31,4 +31,4 @@ Order: Setup → Foundational (blocks every story) → one phase per priority gr
 |----|---|-----|------|---------|-----|--------|
 | T005 | | - | <docs, cleanup, observability per Article 6> | T004 | - | todo |
 
-Convergence tasks, when `converge` finds gaps, are appended as `## Phase N: Convergence` with the same table and the gap class in the Task text (missing / partial / contradictory / unrequested) — see the skill's `frameworks/converge.md`.
+Convergence tasks, when `converge` finds gaps, are appended as `## Phase N: Convergence` with the same table and the gap class in the Task text (missing / partial / contradictory / unrequested) — see the skill's `frameworks/traceability.md` → *Converge*.

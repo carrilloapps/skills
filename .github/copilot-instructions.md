@@ -20,10 +20,10 @@ This repository contains the following skills:
 
 | Skill | Path | Role |
 |-------|------|------|
-| ai-rules | `skills/ai-rules/SKILL.md` | Behavioral baseline — loads first |
+| ai-rules | `skills/ai-rules/SKILL.md` | Behavioral baseline — loads first; SOLID and Clean Code thresholds in `frameworks/code-craft.md`, advanced `AGENTS.md` in `frameworks/agents-template.md` |
 | Devil's Advocate | `skills/devils-advocate/SKILL.md` | Risk-scaled pre-execution gate (Tiers 0–3) |
-| SAR Cybersecurity | `skills/sar-cybersecurity/SKILL.md` | Deep security analysis on request |
-| Agentic Agile | `skills/agentic-agile/SKILL.md` | Spec-driven development on Scrum — Phase 0 structure gate, Gherkin specs, ceremonies, autonomy N0–N4 |
+| SAR Cybersecurity | `skills/sar-cybersecurity/SKILL.md` | Deep security analysis on request; 20-control pre-launch gate in `frameworks/launch-gate.md` |
+| Agentic Agile | `skills/agentic-agile/SKILL.md` | Spec-driven development on Scrum — Phase 0 structure gate, Gherkin specs, ceremonies, autonomy N0–N4, test policy in `frameworks/test-policy.md` |
 | Postmortem Writing | *Planned* | Post-incident learning |
 
 ## Quality gate

@@ -73,7 +73,7 @@ Report only facts with sources: items without movement for N days, PRs waiting f
 
 ## Review and close
 
-Before review, run `trace` per initiative in the sprint ([`traceability.md`](traceability.md)) and converge any gap ([`converge.md`](converge.md)); the review shows requirement coverage, not just finished tickets.
+Before review, run `trace` per initiative in the sprint ([`traceability.md`](traceability.md)) and converge any gap ([`traceability.md` → *Converge*](traceability.md#converge--keeping-code-and-spec-aligned)); the review shows requirement coverage, not just finished tickets.
 
 - Review lists what was done against the sprint goal, with links to each `verification.md` verdict.
 - The report computes the KPIs defined in `plans/agile/kpi-directives.md` only, following gate zero, the state tree, and the seven close phases in [`kpi.md`](kpi.md). If a measure is invalid or incomplete, write "not measurable — <reason>" instead of a number (no state assigned to an invalid measure).

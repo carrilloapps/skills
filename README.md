@@ -16,11 +16,11 @@
 
 | Skill | Description | Version | Install |
 |-------|-------------|---------|---------|
-| [🔴 **devils-advocate**](skills/devils-advocate/) | Adversarial pre-execution gate — risk-scaled, evidence-based critique that returns a corrected plan and waits for your approval | [![v3.0.1](https://img.shields.io/badge/v3.0.1-blue.svg)](CHANGELOG.md) | `npx skills add carrilloapps/skills@devils-advocate` |
-| [🛡️ **sar-cybersecurity**](skills/sar-cybersecurity/) | Automated Security Assessment Report (SAR) generator — deep cybersecurity analysis mapped to 21 baseline compliance standards | [![v2.0.1](https://img.shields.io/badge/v2.0.1-blue.svg)](CHANGELOG.md) | `npx skills add carrilloapps/skills@sar-cybersecurity` |
-| [📋 **ai-rules**](skills/ai-rules/) | Personal behavioral rules for AI tools — documentation discipline, secure practices, code quality, version control, and structured estimation | [![v1.1.1](https://img.shields.io/badge/v1.1.1-blue.svg)](CHANGELOG.md) | `npx skills add carrilloapps/skills@ai-rules` |
-| [🔁 **agentic-agile**](skills/agentic-agile/) | Spec-driven development on Scrum with agentic agility — gated specs and plans, ceremonies, autonomy levels, attribution, transcripts and MCP integrations by capability | [![v1.1.0](https://img.shields.io/badge/v1.1.0-blue.svg)](CHANGELOG.md) | `npx skills add carrilloapps/skills@agentic-agile` |
-| [📓 **postmortem-writing**](skills/postmortem-writing/) | Blameless incident postmortems — deterministic SEV1–SEV4 rubric, attributed timeline, contributing factors, verifiable actions, and lessons that feed devils-advocate | [![v1.0.0](https://img.shields.io/badge/v1.0.0-blue.svg)](CHANGELOG.md) | `npx skills add carrilloapps/skills@postmortem-writing` |
+| [🔴 **devils-advocate**](skills/devils-advocate/) | Adversarial pre-execution gate — risk-scaled, evidence-based critique that returns a corrected plan and waits for your approval | [![v3.1.0](https://img.shields.io/badge/v3.1.0-blue.svg)](CHANGELOG.md) | `npx skills add carrilloapps/skills@devils-advocate` |
+| [🛡️ **sar-cybersecurity**](skills/sar-cybersecurity/) | Automated Security Assessment Report (SAR) generator — deep cybersecurity analysis mapped to 21 baseline compliance standards | [![v2.2.0](https://img.shields.io/badge/v2.2.0-blue.svg)](CHANGELOG.md) | `npx skills add carrilloapps/skills@sar-cybersecurity` |
+| [📋 **ai-rules**](skills/ai-rules/) | Personal behavioral rules for AI tools — documentation discipline, secure practices, SOLID and Clean Code with measurable thresholds, version control, and structured estimation | [![v1.3.0](https://img.shields.io/badge/v1.3.0-blue.svg)](CHANGELOG.md) | `npx skills add carrilloapps/skills@ai-rules` |
+| [🔁 **agentic-agile**](skills/agentic-agile/) | Spec-driven development on Scrum with agentic agility — gated specs and plans, ceremonies, autonomy levels, attribution, transcripts and MCP integrations by capability | [![v1.3.0](https://img.shields.io/badge/v1.3.0-blue.svg)](CHANGELOG.md) | `npx skills add carrilloapps/skills@agentic-agile` |
+| [📓 **postmortem-writing**](skills/postmortem-writing/) | Blameless incident postmortems — deterministic SEV1–SEV4 rubric, attributed timeline, contributing factors, verifiable actions, and lessons that feed devils-advocate | [![v1.1.0](https://img.shields.io/badge/v1.1.0-blue.svg)](CHANGELOG.md) | `npx skills add carrilloapps/skills@postmortem-writing` |
 
 ---
 
@@ -388,7 +388,7 @@ Equivalent CLI command, when the agent is supported: `npx skills add carrilloapp
 <details>
 <summary><b>🔴 Devil's Advocate</b> — An adversarial pre-execution gate for 70+ AI coding agents — short, evidence-based critiques that change the plan</summary>
 
-**Install** `npx skills add carrilloapps/skills@devils-advocate` · [Skill folder](skills/devils-advocate/) · [Full documentation](skills/devils-advocate/README.md) · [![v3.0.1](https://img.shields.io/badge/v3.0.1-blue.svg)](skills/devils-advocate/README.md)
+**Install** `npx skills add carrilloapps/skills@devils-advocate` · [Skill folder](skills/devils-advocate/) · [Full documentation](skills/devils-advocate/README.md) · [![v3.1.0](https://img.shields.io/badge/v3.1.0-blue.svg)](skills/devils-advocate/README.md)
 
 AI tools are increasingly capable of executing complex, multi-step operations — creating files, calling APIs, running migrations, deploying services. Devil's Advocate adds the adversarial voice that asks: **"Should we?"**
 
@@ -441,7 +441,7 @@ flowchart LR
 <details>
 <summary><b>🛡️ SAR Cybersecurity</b> — Automated Security Assessment Report (SAR) generator — deep cybersecurity analysis mapped to 21 baseline compliance standards</summary>
 
-**Install** `npx skills add carrilloapps/skills@sar-cybersecurity` · [Skill folder](skills/sar-cybersecurity/) · [Full documentation](skills/sar-cybersecurity/README.md) · [![v2.0.1](https://img.shields.io/badge/v2.0.1-blue.svg)](skills/sar-cybersecurity/README.md)
+**Install** `npx skills add carrilloapps/skills@sar-cybersecurity` · [Skill folder](skills/sar-cybersecurity/) · [Full documentation](skills/sar-cybersecurity/README.md) · [![v2.2.0](https://img.shields.io/badge/v2.2.0-blue.svg)](skills/sar-cybersecurity/README.md)
 
 Transforms any AI agent into a senior cybersecurity expert that produces professional, bilingual (EN/ES) Security Assessment Reports with full compliance standard mapping.
 
@@ -464,6 +464,8 @@ flowchart LR
 | Injection Patterns | SQL, NoSQL operator, Regex/ReDoS, Mass Assignment, GraphQL abuse, ORM/ODM-specific |
 | Storage & Exfiltration | S3/GCS/Azure Blob, secrets in source, file uploads, logging, message queues, CDN, IaC |
 | Database Access | SQL (PostgreSQL, MySQL), NoSQL (MongoDB, DynamoDB), Redis — index verification, bounded queries |
+| Edge, Session & Response | TLS and HSTS, security headers and CORS, session cookies and tokens, password hashing, rate limiting and automation control, excessive data exposure |
+| Pre-Launch Gate | 20 controls with `Pass` / `Fail` / `N/A` / `Unknown` verdicts, cited evidence, written exceptions with an expiry date, and a derived readiness verdict |
 | Compliance Mapping | 21 baseline standards (plus an expanded reference): ISO/IEC 27001:2022, NIST CSF 2.0, OWASP Top 10:2025, PCI-DSS, GDPR, MITRE ATT&CK, CWE Top 25, and more |
 
 **Key features:**
@@ -485,7 +487,7 @@ flowchart LR
 <details>
 <summary><b>📋 AI Rules</b> — Personal behavioral rules for AI tools — documentation discipline, secure practices, code quality, and structured estimation across any project</summary>
 
-**Install** `npx skills add carrilloapps/skills@ai-rules` · [Skill folder](skills/ai-rules/) · [Full documentation](skills/ai-rules/README.md) · [![v1.1.1](https://img.shields.io/badge/v1.1.1-blue.svg)](skills/ai-rules/README.md)
+**Install** `npx skills add carrilloapps/skills@ai-rules` · [Skill folder](skills/ai-rules/) · [Full documentation](skills/ai-rules/README.md) · [![v1.3.0](https://img.shields.io/badge/v1.3.0-blue.svg)](skills/ai-rules/README.md)
 
 Defines the baseline behavioral contract that all AI agents must follow. Works as a cross-cutting layer beneath Devil's Advocate.
 
@@ -496,7 +498,8 @@ Defines the baseline behavioral contract that all AI agents must follow. Works a
 | Security | Never reproduce or transmit secrets (redact when reporting), no dangerous commands, schema-checked and bounded DB queries |
 | Documentation storage | Team-facing docs in `docs/` (versioned); shared skill state in `.memory/<skill>/` (versioned); agent-private state in `.memory/local/` (ignored — Git/Jujutsu, Mercurial, Fossil, SVN instruction) |
 | Documentation format | Native Markdown, no decorative emoji, cross-references over duplication, Mermaid diagrams |
-| Code quality | SOLID · KISS · DRY, `docs/elementals.md` to prevent duplicate components (updated only when elements change) |
+| Code quality | SOLID · KISS · DRY in a fixed precedence, a smell → principle → refactor table, Clean Code thresholds a linter can fail on (complexity ≤ 10, ≤ 30 lines, ≤ 3 parameters, nesting ≤ 3), over-engineering treated as a finding, `docs/elementals.md` to prevent duplicate components |
+| Agent contract | Advanced `AGENTS.md` template wiring every capability — load order, gate, storage, quality thresholds, security baseline, autonomy, capability slots — created only after approval |
 | Version control | Explicit approval before every VCS write, Conventional Commits, focused commits, `AGENTS.md` suggested on approval |
 | Estimation | Confidence (High/Medium/Low + reason) · effort by capacity mode · pivot potential · risk factors |
 
@@ -509,7 +512,7 @@ Defines the baseline behavioral contract that all AI agents must follow. Works a
 <details>
 <summary><b>🔁 Agentic Agile</b> — Spec-driven development (SDD) on Scrum, run by agents with explicit autonomy limits. Covers everything GitHub Spec Kit and AI Unified Process lead in (constitution, requirement IDs and traceability, clarify, analyze, converge, brownfield baseline) and adds a verified team operating system, Scrum, autonomy levels, attribution, transcripts, and deterministic validators in CI</summary>
 
-**Install** `npx skills add carrilloapps/skills@agentic-agile` · [Skill folder](skills/agentic-agile/) · [Full documentation](skills/agentic-agile/README.md) · [![v1.1.0](https://img.shields.io/badge/v1.1.0-blue.svg)](skills/agentic-agile/README.md)
+**Install** `npx skills add carrilloapps/skills@agentic-agile` · [Skill folder](skills/agentic-agile/) · [Full documentation](skills/agentic-agile/README.md) · [![v1.3.0](https://img.shields.io/badge/v1.3.0-blue.svg)](skills/agentic-agile/README.md)
 
 | Area | What it provides |
 |---|---|
@@ -517,6 +520,7 @@ Defines the baseline behavioral contract that all AI agents must follow. Works a
 | SDD | Phase −1 constitution (versioned MUST/SHOULD articles) → four gated phases: Spec (`FR-###`/`SC-###`, P1–P3, Gherkin, clarifications with attribution) → Design (8 elements, constitution check, domain model, contracts, process) → `tasks.md` (`T###`, `[P]`, no cycles) → Implementation (converge loop) → Verification (evidence matrix, ✅/⚠️/❌ verdict) |
 | Gherkin | Full en/es grammar (Rule/Regla, Background/Antecedentes, Scenario Outline/Esquema, Examples, tags, data tables, doc strings); every scenario needs Given/When/Then and an `Origin:`; QA test cases in Gherkin; results need evidence |
 | Scrum | Refinement, planning (capacity, Fibonacci), daily and weekly health, review, KPI close (gate zero, seven phases), retro, quarterly review, executive summary, postmortem, decision records |
+| Testing | 100% unit coverage of a declared set, with every exclusion in a versioned register (reason, date, owner); mutation score as the signal coverage cannot give; runner, coverage, mutation and e2e tooling for 12 stacks; brownfield ratchet and flaky-test policy |
 | Delivery | Plan → tickets with exact-payload approval, PR conformance against the spec (unmapped change = scope expansion), changelog by initiative |
 | Agentic agility | Autonomy levels N0–N4, epistemic labels, mandatory attribution, anti-anchoring estimates, adversarial pass (delegates to Devil's Advocate) |
 | Integrations | Capability slots (tracker, docs, observability, transcripts, warehouse, chat, code graph) checked before use — never invented |
@@ -534,7 +538,7 @@ Defines the baseline behavioral contract that all AI agents must follow. Works a
 <details>
 <summary><b>📓 Postmortem Writing</b> — Blameless incident postmortems: a deterministic severity rubric, an attributed timeline, contributing factors instead of a single root cause, and actions a reader can verify</summary>
 
-**Install** `npx skills add carrilloapps/skills@postmortem-writing` · [Skill folder](skills/postmortem-writing/) · [Full documentation](skills/postmortem-writing/README.md) · [![v1.0.0](https://img.shields.io/badge/v1.0.0-blue.svg)](skills/postmortem-writing/README.md)
+**Install** `npx skills add carrilloapps/skills@postmortem-writing` · [Skill folder](skills/postmortem-writing/) · [Full documentation](skills/postmortem-writing/README.md) · [![v1.1.0](https://img.shields.io/badge/v1.1.0-blue.svg)](skills/postmortem-writing/README.md)
 
 | Area | What it provides |
 |---|---|
