@@ -73,6 +73,11 @@ jobs:
         shell: bash
         run: bash tests/scripts/run-e2e.sh
 
+      - name: dd-import path guard (SAR Docker lab)
+        if: runner.os == 'Linux'
+        shell: bash
+        run: bash tests/scripts/run-dd-import-guard.sh
+
   skills-audit:
     # Local equivalents of the skills.sh audits that can run offline:
     # agentskills validate (Agent Skills spec) + Cisco skill-scanner (no --use-llm / --use-virustotal,

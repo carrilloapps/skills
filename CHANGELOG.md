@@ -44,7 +44,45 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ---
 
+## sar-cybersecurity [2.2.1] — 2026-10-12
+
+### Security
+
+- **`dd-import.sh` no longer accepts a path outside the results directory** (`frameworks/docker-lab.md`, and the instantiated copy in `.memory/devsecops/config/`). The file argument is operator input and was concatenated straight into `/state/results/$2`, so `../../` escaped the directory and any file the container could read was posted to DefectDojo. It now rejects an empty argument, an absolute path and any `..` segment, resolves the folder physically, requires the resolved path to stay under the physically resolved results directory (which also stops a symlinked directory), and requires a regular, non-symlinked file. This answers the Socket anomaly alert of 2026-10-12 (severity 62%, confidence 96%).
+- **One password per dashboard.** SonarQube and DefectDojo no longer share one `DASHBOARD_PASSWORD`: `bootstrap.sh init` generates independent `SONAR_PASSWORD` and `DD_ADMIN_PASSWORD` values (20 characters each, each refused if weak, each reaching `curl` only through its own 0600 config), so compromising one dashboard does not hand over the other. This answers the second half of the same Socket alert. `DASHBOARD_USER` (the username `admin`, not a secret) is unchanged.
+- **How ingested content arrives is now stated** in the untrusted content protocol: every artifact is supplied by the operator — files in the named target, pasted text, output of an approved command — and the skill never browses public user-generated sources (arbitrary web pages, forums, social media, or an endpoint named in the material it reads). That acquisition path, not the mitigation, is what Snyk's `W011` keys on.
+
+---
+
+## [3.1.1] — 2026-10-12
+
+### Changed
+
+- `frameworks/docker-lab.md` follows SAR's per-dashboard credentials: PgHero gets a password of its own instead of copying the shared dashboard one from `credentials.env`.
+
+---
+
+## agentic-agile [1.3.1] — 2026-10-12
+
+### Changed
+
+- **How ingested content arrives is now stated** in the untrusted content protocol: transcripts, threads, documents and imported specs come from project-local paths or the thread, repository files from the path the user pointed at, and tool output from MCP servers the team configured — the skill never browses public user-generated sources. The safety boundary also says *scoped web-search results* instead of *web content*, which is what the skill actually reads. Both target Snyk's `W011`, whose trigger is fetching from public or user-controlled sources.
+
+---
+
+## postmortem-writing [1.1.1] — 2026-10-12
+
+### Changed
+
+- **How ingested content arrives is now stated** in the untrusted content protocol: logs, exports, ticket text and monitoring output are supplied by the operator from project-local paths or the thread, plus the output of approved read-only commands; the skill never browses public user-generated sources. Targets Snyk's `W011`.
+
+---
+
 ## Repository — 2026-10-12
+
+### Added
+
+- **`tests/scripts/run-dd-import-guard.sh`** — a behavioural test for the path guard in the SAR lab's `dd-import.sh`. It extracts the template that ships in the skill, asserts the instantiated copy under `.memory/devsecops/config/` has not drifted from it, then runs eight cases against a sandbox with `curl` stubbed: a real results file is sent, while traversal, nested traversal, an absolute path, a missing file, an empty argument, a symlinked file and a symlinked directory are each refused with exit 2. The two symlink cases are skipped on filesystems that cannot create symlinks (Git Bash on Windows) and run in CI on Linux.
 
 ### Changed
 

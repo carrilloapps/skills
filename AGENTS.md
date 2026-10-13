@@ -27,7 +27,7 @@ This applies to `SKILL.md`, `frameworks/`, `checklists/`, `examples/`, `scripts/
 Run before every commit — all must pass (CI runs them too):
 
 1. `bash scripts/validate.sh` — the repository quality gate.
-2. `bash tests/scripts/run-parity.sh` (or `pwsh tests/scripts/run-parity.ps1`) — `.sh` / `.ps1` parity tests against golden outputs (Ubuntu and Windows in CI); `bash tests/scripts/run-e2e.sh` rebuilds the agentic-agile end-to-end example and runs every validator in each available shell.
+2. `bash tests/scripts/run-parity.sh` (or `pwsh tests/scripts/run-parity.ps1`) — `.sh` / `.ps1` parity tests against golden outputs (Ubuntu and Windows in CI); `bash tests/scripts/run-e2e.sh` rebuilds the agentic-agile end-to-end example and runs every validator in each available shell; `bash tests/scripts/run-dd-import-guard.sh` checks the path guard in the SAR lab's `dd-import.sh` template (symlink cases need a POSIX filesystem).
 3. `node --test integrations/core/core.test.mjs integrations/*/test/*.test.mjs` and `node integrations/sync-core.mjs --check` — guard classifier and adapters.
 4. `bash shared/sync.sh --check` — vendored shared scripts identical in every skill (after editing `shared/scripts/`, run `bash shared/sync.sh`).
 

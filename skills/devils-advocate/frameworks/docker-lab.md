@@ -39,8 +39,8 @@ If SAR's SonarQube (`sar-sonarqube`) is already running, **consume it instead of
 | `.memory/devsecops/baselines/` | Yes | Accepted findings (e.g. `jscpd-baseline.json`) so re-runs only show new issues |
 | `.memory/devsecops/images.lock` | Yes | One lock shared by every lab skill (section per skill): `image:tag@digest` per line. Each lab skill appends its own section on its first approved pull (`docker buildx imagetools inspect <image:tag>`) |
 | `.memory/local/devsecops/results/<YYYY-MM-DD>/` | No (`local/`) | Raw outputs (`lizard.csv`, `jscpd/`, `depcruise.json`, …) |
-| `.memory/local/devsecops/pghero.env` | No | `DATABASE_URL` of the **local** dev database (read-only role) + `PGHERO_USERNAME`/`PGHERO_PASSWORD` copied from `credentials.env` |
-| `.memory/local/devsecops/credentials.env` | No | Shared dashboard login, generated once by SAR's `sar-bootstrap`. Never print it in chat |
+| `.memory/local/devsecops/pghero.env` | No | `DATABASE_URL` of the **local** dev database (read-only role) + `PGHERO_USERNAME`/`PGHERO_PASSWORD`, a login of PgHero's own |
+| `.memory/local/devsecops/credentials.env` | No | One login per dashboard, generated once by SAR's `sar-bootstrap`. Never print it in chat |
 | `.memory/local/devsecops/env/sonar-scanner.env` | No | `SONAR_TOKEN` for the SonarQube Web API reads in §4 (written by `sar-bootstrap apply`) |
 
 The `.memory/.gitignore` rule (`local/`) already covers every private path above.
@@ -141,8 +141,8 @@ services:
   da-pghero:
     profiles: [perf]
     image: ankane/pghero:v4.0.1@sha256:e58290f7ee6e66994c14621dcf495c33519a21d2fec0cbc1f37b2593f8f86470
-    # pghero.env (ignored) holds DATABASE_URL plus PGHERO_USERNAME / PGHERO_PASSWORD copied by the agent
-    # from credentials.env (DASHBOARD_USER / DASHBOARD_PASSWORD) with its file-write tool — never printed.
+    # pghero.env (ignored) holds DATABASE_URL plus PGHERO_USERNAME / PGHERO_PASSWORD written by the agent
+    # with its file-write tool: a password of its own, never reused from another dashboard, never printed.
     # No ${VAR:?} interpolation here: it would make every other da-* service fail to parse.
     env_file: [../local/devsecops/pghero.env]
     extra_hosts: ["host.docker.internal:host-gateway"]

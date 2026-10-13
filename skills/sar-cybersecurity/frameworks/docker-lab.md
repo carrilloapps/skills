@@ -443,11 +443,11 @@ Notes:
 
 ## 6. Config files (versioned, in `.memory/devsecops/config/`)
 
-### `bootstrap.sh` — one generated credential for every dashboard
+### `bootstrap.sh` — one generated credential per dashboard
 
 ```sh
 #!/bin/sh
-# sar-bootstrap — generates (init) and applies (apply) ONE local dashboard credential.
+# sar-bootstrap — generates (init) and applies (apply) one local credential PER dashboard.
 # Never prints secrets. Secrets reach curl only through 0600 config files read with -K
 # (never argv, never a pipe). Output files are owned by the owner of the mounted folder.
 set -eu
@@ -467,21 +467,22 @@ q() { printf '%s' "$1" | sed 's/\\/\\\\/g; s/"/\\"/g'; }   # escape for a curl c
 
 init() {
   touch "$CRED"
-  P=$(val DASHBOARD_PASSWORD "$CRED")
-  if [ -z "$P" ]; then P="$(rand 16)Aa1-"; put DASHBOARD_PASSWORD "$CRED" "$P"; fi
-  strong "$P" || { echo "DASHBOARD_PASSWORD in credentials.env is too weak (>= 12 chars, upper, lower, digit, special)." >&2; exit 1; }
+  # One independent password per dashboard: a leak of one does not open the other.
+  for K in SONAR_PASSWORD DD_ADMIN_PASSWORD; do
+    P=$(val "$K" "$CRED"); [ -n "$P" ] || { P="$(rand 16)Aa1-"; put "$K" "$CRED" "$P"; }
+    strong "$P" || { echo "$K in credentials.env is too weak (>= 12 chars, upper, lower, digit, special)." >&2; exit 1; }
+  done
   DB=$(val POSTGRES_PASSWORD "$CRED"); [ -n "$DB" ] || DB=$(rand 32)
   put DASHBOARD_USER "$CRED" admin
   put POSTGRES_PASSWORD "$CRED" "$DB"
   put SONAR_JDBC_PASSWORD "$CRED" "$DB"
   put DD_ADMIN_USER "$CRED" admin
-  put DD_ADMIN_PASSWORD "$CRED" "$P"
   put DD_DATABASE_URL "$CRED" "postgresql://defectdojo:$DB@sar-dd-postgres:5432/defectdojo"
   put DD_SECRET_KEY "$CRED" "$(rand 50)"
   put DD_CREDENTIAL_AES_256_KEY "$CRED" "$(rand 32)"
   derive
   touch "$TOK"; own "$CRED" "$TOK"
-  echo "Credential ready: .memory/local/devsecops/credentials.env (user: admin). Same password for every dashboard."
+  echo "Credentials ready: .memory/local/devsecops/credentials.env (user: admin). One password per dashboard: SONAR_PASSWORD, DD_ADMIN_PASSWORD."
 }
 
 # One env file per container, holding only the keys it needs (re-derived on every init),
@@ -495,11 +496,11 @@ derive() {
   envf defectdojo.env DD_DATABASE_URL DD_SECRET_KEY DD_CREDENTIAL_AES_256_KEY
   envf defectdojo-admin.env DD_ADMIN_USER DD_ADMIN_PASSWORD
   [ -f "$ENV/sonar-scanner.env" ] || { : >"$ENV/sonar-scanner.env"; own "$ENV/sonar-scanner.env"; }   # filled by apply
-  W=$(q "$(val DASHBOARD_PASSWORD "$CRED")")
-  printf 'user = "admin:%s"\n' "$W" >"$RC/sonar-admin.rc"
-  # SonarQube's documented first-boot login is admin/admin; this config replaces it with the shared password.
-  printf 'user = "admin:admin"\ndata-urlencode = "login=admin"\ndata-urlencode = "previousPassword=admin"\ndata-urlencode = "password=%s"\n' "$W" >"$RC/sonar-first-login.rc"
-  printf 'data-urlencode = "username=admin"\ndata-urlencode = "password=%s"\n' "$W" >"$RC/dojo-login.rc"
+  SW=$(q "$(val SONAR_PASSWORD "$CRED")"); DW=$(q "$(val DD_ADMIN_PASSWORD "$CRED")")
+  printf 'user = "admin:%s"\n' "$SW" >"$RC/sonar-admin.rc"
+  # SonarQube's documented first-boot login is admin/admin; this config replaces it with SONAR_PASSWORD.
+  printf 'user = "admin:admin"\ndata-urlencode = "login=admin"\ndata-urlencode = "previousPassword=admin"\ndata-urlencode = "password=%s"\n' "$SW" >"$RC/sonar-first-login.rc"
+  printf 'data-urlencode = "username=admin"\ndata-urlencode = "password=%s"\n' "$DW" >"$RC/dojo-login.rc"
   own "$RC"/*.rc
 }
 
@@ -535,19 +536,28 @@ apply() {
 case "${1:-init}" in init) init ;; apply) apply ;; *) echo "usage: bootstrap.sh init|apply" >&2; exit 2 ;; esac
 ```
 
-The password is 20 characters (16 random alphanumerics + one character of each required class), satisfies SonarQube's fixed policy and DefectDojo's defaults, and is the **same** for SonarQube and DefectDojo (user `admin` in both — SonarQube does not allow renaming its built-in admin at bootstrap). To choose your own, write `DASHBOARD_PASSWORD=<value>` into `credentials.env` **before** the first `init`; `init` refuses weak values. The skill never prints the password and never writes it into versioned files — it tells the user the file path.
+Each password is 20 characters (16 random alphanumerics + one character of each required class) and satisfies SonarQube's fixed policy and DefectDojo's defaults. SonarQube and DefectDojo get **independent** passwords (`SONAR_PASSWORD`, `DD_ADMIN_PASSWORD`), so compromising one dashboard does not hand over the other; the user is `admin` in both — SonarQube does not allow renaming its built-in admin at bootstrap. To choose your own, write `SONAR_PASSWORD=<value>` or `DD_ADMIN_PASSWORD=<value>` into `credentials.env` **before** the first `init`; `init` refuses weak values. The skill never prints a password and never writes one into versioned files — it tells the user the file path.
 
 ### `dd-import.sh` — push one result to DefectDojo
 
 ```sh
 #!/bin/sh
-# usage: dd-import.sh "<scan_type>" <results-relative-file> <product> <engagement>
+# usage: dd-import.sh "<scan_type>" <file-relative-to-results> <product> <engagement>
 # The API token reaches curl only through the 0600 config written by `bootstrap.sh apply`.
 set -eu
 RC=/state/curl/dojo-api.rc
 [ -f "$RC" ] || { echo "No DefectDojo API config — run: bootstrap.sh apply" >&2; exit 1; }
+# $2 is operator input: reject absolute paths and traversal, resolve the folder physically,
+# then require a regular (non-symlink) file still under $RESULTS before anything is posted.
+RESULTS=/state/results
+case "${2:-}" in ""|/*|..|../*|*/..|*/../*) echo "dd-import: give a path relative to results/, without '..'" >&2; exit 2 ;; esac
+BASE=$(cd "$RESULTS" && pwd -P) || exit 2
+DIR=$(cd "$RESULTS/$(dirname "$2")" && pwd -P) || exit 2
+FILE="$DIR/$(basename "$2")"
+case "$DIR" in "$BASE"|"$BASE"/*) ;; *) echo "dd-import: resolved path escapes $RESULTS: $2" >&2; exit 2 ;; esac
+[ -f "$FILE" ] && [ ! -L "$FILE" ] || { echo "dd-import: not a regular file under results/: $2" >&2; exit 2; }
 curl -fsS -K "$RC" -X POST http://sar-dd-nginx:8080/api/v2/import-scan/ \
-  -F "scan_type=$1" -F "file=@/state/results/$2" \
+  -F "scan_type=$1" -F "file=@$FILE" \
   -F "product_name=$3" -F "engagement_name=$4" -F "product_type_name=SAR" \
   -F "auto_create_context=true" -F "active=true" -F "verified=false" \
   -o /dev/null -w "DefectDojo import: HTTP %{http_code}\n"

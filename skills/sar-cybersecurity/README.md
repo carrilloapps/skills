@@ -3,7 +3,7 @@
 > **Automated Security Assessment Report (SAR) generator — deep cybersecurity analysis mapped to 21 baseline compliance standards.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-red.svg)](../../LICENSE)
-[![Version](https://img.shields.io/badge/version-2.2.0-blue.svg)](../../CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-2.2.1-blue.svg)](../../CHANGELOG.md)
 [![skill.sh](https://img.shields.io/badge/skill.sh-sar--cybersecurity-black.svg)](https://skills.sh/carrilloapps/skills/sar-cybersecurity)
 [![GitHub](https://img.shields.io/badge/GitHub-carrilloapps-181717.svg?logo=github)](https://github.com/carrilloapps/skills)
 [![X / Twitter](https://img.shields.io/badge/@carrilloapps-000000.svg?logo=x)](https://x.com/carrilloapps)
@@ -570,7 +570,7 @@ When Docker is available, the SAR can suggest — **once, according to the detec
 | dashboards | on request, one at a time | **SonarQube CE** (`127.0.0.1:9000`) · **DefectDojo** (`127.0.0.1:8080`, imports every scanner above) |
 | DAST (separate file) | your app running in a local container | ZAP API scan (incl. rule 40033 NoSQL injection) · Nuclei (non-intrusive tags) |
 
-**One credential for every dashboard.** A one-shot `sar-bootstrap` container generates a 20-character password once per machine (user `admin`) into `.memory/local/devsecops/credentials.env` (never versioned, never shown in chat), applies it to SonarQube and DefectDojo, and stores the scanner/API tokens in `tokens.env`. To use your own, write `DASHBOARD_PASSWORD=` into that file before the first start — weak values are refused (≥ 12 chars with upper, lower, digit, special). No default password is ever published in the skill, and DefectDojo's upstream default secret keys are replaced by generated ones.
+**One credential per dashboard.** A one-shot `sar-bootstrap` container generates an independent 20-character password per dashboard once per machine (user `admin`; `SONAR_PASSWORD` and `DD_ADMIN_PASSWORD`) into `.memory/local/devsecops/credentials.env` (never versioned, never shown in chat), applies each to its own dashboard, and stores the scanner/API tokens in `tokens.env`. A leak of one dashboard therefore does not open the other. To use your own, write `SONAR_PASSWORD=` or `DD_ADMIN_PASSWORD=` into that file before the first start — weak values are refused (≥ 12 chars with upper, lower, digit, special). No default password is ever published in the skill, and DefectDojo's upstream default secret keys are replaced by generated ones.
 
 Results land in `.memory/local/devsecops/results/<date>/`; the SAR ingests them as untrusted evidence, merges duplicates by CWE + file, still traces and scores each one, and lists every tool run (version + image digest) in *Scope & Methodology*. Optionally, results are pushed to DefectDojo (one engagement per SAR). SonarQube needs `vm.max_map_count ≥ 524288` on the Docker host — the skill tells you the command for your platform and never runs it.
 

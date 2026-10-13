@@ -308,6 +308,7 @@ When merging a batch of fixes, follow this checklist to cut a release:
    | sar-cybersecurity | `sar-vX.Y.Z` | `SAR Cybersecurity vX.Y.Z` |
    | ai-rules | `ai-rules-vX.Y.Z` | `ai-rules vX.Y.Z` |
    | agentic-agile | `agentic-agile-vX.Y.Z` | `agentic-agile vX.Y.Z` |
+   | postmortem-writing | `postmortem-writing-vX.Y.Z` | `postmortem-writing vX.Y.Z` |
 
    ```bash
    git add -A

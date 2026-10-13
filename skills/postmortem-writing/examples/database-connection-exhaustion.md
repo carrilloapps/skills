@@ -2,7 +2,7 @@
 
 > ⚠️ **Example only** — a fictional incident at a fictional company. Every service name, alert ID, commit, and log line is synthetic. Nothing here describes a real system and no command is meant to be executed.
 
-**Skill version**: 1.1.0
+**Skill version**: 1.1.1
 
 <!-- markdownlint-disable MD025 -->
 <!-- The sections below embed a full report document, which carries its own top-level heading. -->
