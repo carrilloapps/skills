@@ -2,7 +2,7 @@
 
 > ⚠️ **Example only** — fictional decision.
 
-**Skill version**: 1.3.1
+**Skill version**: 1.3.2
 
 User: "Record that we're keeping refunds out of the export."
 

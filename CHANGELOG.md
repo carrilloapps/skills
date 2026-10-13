@@ -44,6 +44,14 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ---
 
+## agentic-agile [1.3.2] — 2026-10-12
+
+### Fixed
+
+- **The end-to-end example passed its own hygiene audit again.** `plans/agile/definition-of-done.md` in `examples/end-to-end.md` had not followed the template when v1.3.0 added the **Tests** and **Security** sections (unit coverage and mutation policy, launch-gate regression, no secrets), so `audit-agile` reported two `template-drift` findings against the worked example and `doctor` returned ATTENTION because of them. The example's Definition of Done now carries the full template, and `tests/scripts/run-e2e.sh` is green in every shell (33 checks).
+
+---
+
 ## sar-cybersecurity [2.2.1] — 2026-10-12
 
 ### Security
